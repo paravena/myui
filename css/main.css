@@ -1,0 +1,269 @@
+body {
+	font-family: "Trebuchet MS", Tahoma, sans-serif;
+	font-size: 14px;
+	background-repeat: no-repeat;
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	color: #36f;
+	font-size: 24px;
+}
+
+h2 {
+	color: #36f;
+	font-size: 20px;
+}
+
+
+h3 {
+	color: #36f;
+	font-size: 18px;
+}
+
+h4 {
+	color: black;
+	font-size: 16px;
+	border-bottom: 1px dotted dimgray;
+}
+
+h5 {
+	color: #36f;
+	font-size: 16px;
+}
+
+h6 {
+	color: white;
+	font-size: 14px;
+	margin:0;
+}
+
+
+div.toolbar {
+	height: 30px;
+	background: url('../images/tbbg.png') repeat-x;
+	padding: 3px 5px;
+	color: white;
+}
+
+div.header {
+	position: relative;
+	width: 900px;
+	height: 100px;
+}
+
+div.about {
+	position: absolute;
+	width: 880px;
+	height: 280px;
+	padding: 10px;
+}
+
+div.container {
+	position: relative;
+	width: 900px;
+	margin-left: 52px;
+	margin-right: 52px;
+	z-index:0;
+}
+
+div.left {
+	position: absolute;
+	left: 0;
+	top: 430px;
+	width: 150px;
+	height: 800px;
+	padding: 10px;
+}
+
+div.body {
+	position: absolute;
+	left: 170px;
+	top: 430px;
+	width: 440px;
+	height: 800px;	
+	padding: 10px;
+	background-color: white;
+	color: dimgray;
+}
+
+div.right {
+	position: absolute;
+	right: 0;
+	top: 430px;
+	width: 250px;
+	height: 800px;
+	padding: 10px;
+	background-color: #ddd;
+}
+
+ul.mainMenu {
+	list-style-image: none;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+ul.mainMenu li {
+	margin-top: 10px;
+}
+
+ul.mainMenu li a {
+	background-position: top left;
+	font-size: 16px;
+	font-weight: bold;
+	color: dimgray;
+	text-decoration: none;
+	padding: 5px 0;
+	padding-left: 34px; 
+	
+}
+
+ul.mainMenu li a:hover {
+	color: #36f;
+}
+
+ul.mainMenu li a#home {
+	background: url(../images/home-link.png) no-repeat;
+}
+
+ul.mainMenu li a#home:hover {
+	background-position: 0 -31px;
+}
+
+ul.mainMenu li a#docs {
+	background: url(../images/docs-link.png) no-repeat;
+}
+
+ul.mainMenu li a#docs:hover {
+	background-position: 0 -31px;
+}
+
+ul.mainMenu li a#samples {
+	background: url(../images/samples-link.png) no-repeat;
+}
+
+ul.mainMenu li a#samples:hover {
+	background-position: 0 -31px;
+}
+
+ul.mainMenu li a#download {
+	background: url(../images/download-link.png) no-repeat;
+}
+
+ul.mainMenu li a#download:hover {
+	background-position: 0 -31px;
+}
+
+
+h1#logo {
+	background:url(../images/mtg-logo.png) no-repeat;
+	margin: 0;
+	width: 300px;
+	height: 100px;
+	float: left;
+}
+
+div.samples {
+	position: absolute;
+	width: 880px;
+	height: 250px;
+	padding: 10px;
+}
+
+div.toolbar a {
+	color: white;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+div.toolbar a:hover {
+	text-decoration: underline;
+}
+
+a {
+	color: #36f;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+table.defTable thead tr {
+	background-color: #ccc 
+}
+
+table.defTable thead th {
+	text-align: left;
+}
+
+table.defTable tbody td {
+	padding: 2px;
+}
+
+div.torn {
+	position: absolute;
+	top: 400px;
+	width: 240px;
+	height: 440px;
+	background: url(../images/torn.gif) no-repeat center;
+	padding: 30px;
+}
+
+ul.features li {
+	font-size: 16px;
+}
+
+.dropshadow {
+	background: url(../images/shadowAlpha.png) no-repeat bottom right !important;
+	background: url(../images/shadow.gif) no-repeat bottom right;
+	margin: 10px 0 10px 10px !important;
+	margin: 10px 0 10px 5px;
+}
+.dropshadow p {
+	position:relative;
+	bottom:6px;
+	right: 6px;
+	border: 1px solid dimgray;
+	padding:4px;
+	font-size:14px;
+	margin: 0px;
+	background-color:white;
+}
+
+div.contactPanel {
+	position: absolute;
+	width: 880px;
+	height: 100px;
+	top: 30px;
+	left: 0;
+	/*background: url(../images/bg_body.png) repeat;*/
+	background-color: dimgray;
+	color: white;
+	vertical-align:top;
+	padding: 10px;
+	z-index: 30;
+}
+
+table.contactTable th {
+	font-weight: normal;
+	color: deepskyblue;
+	vertical-align: middle;
+	line-height: 16px;
+}
+
+table.contactTable td {
+	text-align: center;
+}
+
+table.contactTable a {
+	text-decorarion: none;
+	color: white
+}
+
+table.contactTable a:hover {
+	text-decorarion: underline;
+}

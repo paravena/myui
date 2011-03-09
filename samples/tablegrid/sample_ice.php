@@ -10,9 +10,9 @@
         <title>MyTableGrid Last Sample</title>
         <link type="text/css" href="../../css/myui/tablegrid.css" rel="stylesheet">
         <link type="text/css" href="../../css/myui/calendar.css" rel="stylesheet">
-        <script type="text/javascript" src="../../scripts/lib/prototype/back/prototype.js"></script>
-        <script type="text/javascript" src="../../scripts/lib/scriptaculous/scriptaculous.js"></script>
-        <script type="text/javascript" src="../../scripts/lib/myui/myui.js"></script>
+        <script type="text/javascript" src="../../scripts/prototype/prototype.js"></script>
+        <script type="text/javascript" src="../../scripts/scriptaculous/scriptaculous.js"></script>
+        <script type="text/javascript" src="../../scripts/myui/myui.js"></script>
     </head>
     <script type="text/javascript">
 
