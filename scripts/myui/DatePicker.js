@@ -1,9 +1,3 @@
-
-// CalendarDateSelect version 1.15 - a prototype based date picker
-// Questions, comments, bugs? - see the project page: http://code.google.com/p/calendardateselect
-if (typeof Prototype == 'undefined') alert("CalendarDateSelect Error: Prototype could not be found. Please make sure that your application's layout includes prototype.js (.g. <%= javascript_include_tag :defaults %>) *before* it includes DatePicker.js (.g. <%= calendar_date_select_includes %>).");
-if (Prototype.Version < "1.6") alert("Prototype 1.6.0 is required.  If using earlier version of prototype, please use calendar_date_select version 1.8.3");
-
 var _translations = {
     "OK" : "OK",
     "Now" :  "Now",
@@ -137,7 +131,7 @@ CalendarDateSelect.prototype = {
 
         if (this.options.get('month_year') == 'dropdowns') {
             this.month_select = new SelectBox(header_div, $R(0, 11).map(function(m) {
-                return [Date.MONTHS[m], m]
+                return [Date.MONTH_NAMES[m], m]
             }), {className: 'month', onchange: function () {
                 this.navMonth(this.month_select.getValue())
             }.bindAsEventListener(this)});
@@ -327,7 +321,7 @@ CalendarDateSelect.prototype = {
 
             this.year_select.setValue(y);
         } else {
-            this.month_year_label.update(Date.MONTHS[m] + " " + y.toString());
+            this.month_year_label.update(Date.MONTH_NAMES[m] + " " + y.toString());
         }
     },
 
