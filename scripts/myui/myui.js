@@ -35,7 +35,7 @@ var MyUI = {
         }).each(function(s) {
             var path = s.src.replace(js, '');
             var includes = s.src.match(/\?.*load=([a-z,]*)/);
-            (includes ? includes[1] : 'Utilities,Date,DatePicker,format,TableGrid,KeyTable,controls,Autocompleter,ComboBox').split(',').each(
+            (includes ? includes[1] : 'Utilities,Date,DatePicker,TableGrid,KeyTable,controls,Autocompleter,ComboBox').split(',').each(
                 function(include) {
                     MyUI.require(path + include + '.js');
             });
