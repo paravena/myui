@@ -71,7 +71,7 @@ function LZ(x) {
  * is a valid date. Else returns false.
  * It is recommended that you trim whitespace around the value before
  * passing it to this function, as whitespace is NOT ignored!
- */
+ **/
 Date.prototype.isDate = function(val, format) {
     var date = Date.getDateFromFormat(val, format);
     return date != 0;
@@ -84,7 +84,7 @@ Date.prototype.isDate = function(val, format) {
  *   1 if date1 is greater than date2
  *   0 if date2 is greater than date1 of if they are the same
  *  -1 if either of the dates is in an invalid format
- */
+ **/
 Date.prototype.compareDates = function(date1, dateFormat1, date2, dateFormat2) {
     var d1 = Date.getDateFromFormat(date1, dateFormat1);
     var d2 = Date.getDateFromFormat(date2, dateFormat2);
@@ -96,11 +96,50 @@ Date.prototype.compareDates = function(date1, dateFormat1, date2, dateFormat2) {
     return 0;
 };
 
+Date.prototype.getAMPMHour = function() {
+    var hour = this.getHours();
+    return (hour == 0) ? 12 : (hour > 12 ? hour - 12 : hour )
+};
+
+Date.prototype.getAMPM = function() {
+    return (this.getHours() < 12) ? "AM" : "PM";
+};
+
+Date.prototype.stripTime = function() {
+    return new Date(this.getFullYear(), this.getMonth(), this.getDate());
+};
+
+Date.prototype.daysDistance = function(compareDate) {
+    return Math.round((compareDate - this) / Date.ONE_DAY);
+};
+
+Date.prototype.getDifference = function(date) {
+    return this.getTime() - date.getTime();
+};
+
+Date.prototype.isBefore = function(d) {
+    return this.getTime() < d.getTime();
+};
+
+Date.prototype.getUTCTime = function() {
+    return Date.UTC(this.getFullYear(),
+            this.getMonth(),
+            this.getDate(),
+            this.getHours(),
+            this.getMinutes(),
+            this.getSeconds(),
+            this.getMilliseconds());
+};
+
+Date.prototype.getTimeSince = function(d) {
+    return this.getUTCTime() - d.getUTCTime();
+};
+
 /**
  * formatDate (date_object, format)
  * Returns a date in the output format specified.
  * The format string uses the same abbreviations as in getDateFromFormat()
- */
+ **/
 Date.prototype.format = function(format) {
     format = format + "";
     var result = "";

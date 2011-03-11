@@ -21,6 +21,7 @@ CalendarDateSelect.prototype = {
         // initialize the date control
         this.options = $H({
             embedded: false,
+            format: 'MM/dd/yyyy',
             popup: null,
             time: false,
             buttons: true,
@@ -33,7 +34,10 @@ CalendarDateSelect.prototype = {
             onchange: this.targetElement.onchange,
             valid_date_check: null
         }).merge(options || {});
-        this.use_time = this.options.get("time");
+
+        this.use_time = this.options.get('time');
+        this.format = this.options.get('format');
+
         this._parseDate();
         this._callback("before_show");
         this._initCalendarDiv();
@@ -354,7 +358,7 @@ CalendarDateSelect.prototype = {
         hoverDate.setYear(element.year);
         hoverDate.setMonth(element.month);
         hoverDate.setDate(element.day);
-        this._updateFooter(hoverDate.toFormattedString(this.use_time));
+        this._updateFooter(hoverDate.format(this.format));
     },
 
     _dayHoverOut : function(element) {
@@ -381,13 +385,13 @@ CalendarDateSelect.prototype = {
     },
 
     dateString : function() {
-        return (this.selection_made) ? this.selected_date.toFormattedString(this.use_time) : "&#160;";
+        return (this.selection_made) ? this.selected_date.format(this.format) : "&#160;";
     },
 
     _parseDate : function() {
         var value = $F(this.targetElement).strip();
         this.selection_made = (value != '');
-        this.date = value == '' ? NaN : Date.parseFormattedString(this.options.get('date') || value);
+        this.date = value == '' ? NaN : Date.parseDate(this.options.get('date') || value, this.format);
         if (isNaN(this.date)) this.date = new Date();
         if (!this.validYear(this.date.getFullYear())) this.date.setYear((this.date.getFullYear() < this.yearRange().start) ? this.yearRange().start : this.yearRange().end);
         this.selected_date = new Date(this.date);
