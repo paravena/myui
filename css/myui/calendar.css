@@ -21,14 +21,14 @@ iframe.ie6_blocker {
     color: black;
 }
 
-.calendar_date_select .cds_buttons {
+.calendar_date_select .mdp_buttons {
     text-align: center;
     padding: 2px 0;
     vertical-align: middle;
     background: url(images/hrow.gif) repeat-x;
 }
 
-.calendar_date_select .cds_footer {
+.calendar_date_select .mdp_footer {
     /* bottom line */
     background-color: #ddd;
     padding: 3px;
@@ -42,13 +42,13 @@ iframe.ie6_blocker {
     padding: 0;
 }
 
-.calendar_date_select .cds_header {
+.calendar_date_select .mdp_header {
     padding: 3px 0;
     background-color: #ddd;
     text-align: center;
 }
 
-.calendar_date_select .cds_header span {
+.calendar_date_select .mdp_header span {
     font-size: 11px;
     color: black;
     font-weight: bold;
@@ -58,10 +58,10 @@ iframe.ie6_blocker {
     font-size: 11px;
 }
 
-.calendar_date_select .cds_header a:hover {
+.calendar_date_select .mdp_header a:hover {
     color: white;
 }
-.calendar_date_select .cds_header a {
+.calendar_date_select .mdp_header a {
     width: 18px;
     height: 17px;
     text-decoration: none;
@@ -69,26 +69,26 @@ iframe.ie6_blocker {
     color: black !important;
 }
 
-.calendar_date_select .cds_header a.prev {
+.calendar_date_select .mdp_header a.prev {
     float: left;
 }
-.calendar_date_select .cds_header a.next {
+.calendar_date_select .mdp_header a.next {
     float: right;
 }
-.calendar_date_select .cds_header a.close {
+.calendar_date_select .mdp_header a.close {
     float: right;
     display: none;
 }
 
-.calendar_date_select .cds_header select.month {
+.calendar_date_select .mdp_header select.month {
     width: 80px;
 }
 
-.calendar_date_select .cds_header select.year {
+.calendar_date_select .mdp_header select.year {
     width: 50px;
 }
 
-.calendar_date_select .cds_buttons a {
+.calendar_date_select .mdp_buttons a {
     color: black;
     vertical-align: middle;
     font-size: 9px;

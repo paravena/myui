@@ -25,12 +25,12 @@ CalendarDateSelect.prototype = {
             popup: null,
             time: false,
             buttons: true,
-            clear_button: true,
-            year_range: 10,
+            clearButton: true,
+            yearRange: 10,
             close_on_click: null,
-            minute_interval: 5,
-            popup_by: this.targetElement,
-            month_year: 'dropdowns',
+            minuteInterval: 5,
+            popupBy: this.targetElement,
+            monthYear: 'dropdowns',
             onchange: this.targetElement.onchange,
             valid_date_check: null
         }).merge(options || {});
@@ -39,7 +39,7 @@ CalendarDateSelect.prototype = {
         this.format = this.options.get('format');
 
         this._parseDate();
-        this._callback("before_show");
+        this._callback('before_show');
         this._initCalendarDiv();
         if (!this.options.get("embedded")) {
             this._positionCalendarDiv();
@@ -57,10 +57,10 @@ CalendarDateSelect.prototype = {
         var c_width = c_dim.width;
         var w_top = Utilities.getWindowScrollTop();
         var w_height = Utilities.getWindowHeight();
-        var e_dim = $(this.options.get('popup_by')).cumulativeOffset();
+        var e_dim = $(this.options.get('popupBy')).cumulativeOffset();
         var e_top = e_dim[1];
         var e_left = e_dim[0];
-        var e_height = $(this.options.get('popup_by')).getDimensions().height;
+        var e_height = $(this.options.get('popupBy')).getDimensions().height;
         var e_bottom = e_top + e_height;
 
         if ((( e_bottom + c_height ) > (w_top + w_height)) && ( e_bottom - c_height > w_top )) above = true;
@@ -99,15 +99,23 @@ CalendarDateSelect.prototype = {
             parent = document.body;
             style = { position:"absolute", visibility: "hidden", left:0, top:0 };
         }
-        this._calendarDiv = $(parent).build('div', {className: "calendar_date_select"}, style);
-
+        this._calendarDiv = new Element('div', {className: 'calendar_date_select'}).setStyle(style);
         // create the divs
-        this.top_div = this._calendarDiv.build('div', {className: 'cds_top'}, {clear:'left'});
-        this.header_div = this._calendarDiv.build('div', {className: 'cds_header'}, {clear:'left'});
-        this.body_div = this._calendarDiv.build('div', {className: 'cds_body'}, {clear:'left'});
-        this.buttons_div = this._calendarDiv.build('div', {className: 'cds_buttons'}, {clear:'left'});
-        this.footer_div = this._calendarDiv.build('div', {className: 'cds_footer'}, {clear:'left'});
-        this.bottom_div = this._calendarDiv.build('div', {className: 'cds_bottom'}, {clear:'left'});
+        this._topDiv = new Element('div', {className: 'mdp_top'}).setStyle({clear:'left'});
+        this._headerDiv = new Element('div', {className: 'mdp_header'}).setStyle({clear:'left'});
+        this._bodyDiv = new Element('div', {className: 'mdp_body'}).setStyle({clear:'left'});
+        this._buttonsDiv = new Element('div', {className: 'mdp_buttons'}).setStyle({clear:'left'});
+        this._footerDiv = new Element('div', {className: 'mdp_footer'}).setStyle({clear:'left'});
+        this._bottomDiv = new Element('div', {className: 'mdp_bottom'}).setStyle({clear:'left'});
+
+        this._calendarDiv.insert(this._topDiv);
+        this._calendarDiv.insert(this._headerDiv);
+        this._calendarDiv.insert(this._bodyDiv);
+        this._calendarDiv.insert(this._buttonsDiv);
+        this._calendarDiv.insert(this._footerDiv);
+        this._calendarDiv.insert(this._bottomDiv);
+
+        $(parent).insert(this._calendarDiv);
 
         this._initHeaderDiv();
         this._initButtonsDiv();
@@ -119,7 +127,7 @@ CalendarDateSelect.prototype = {
     },
 
     _initHeaderDiv : function() {
-        var header_div = this.header_div;
+        var header_div = this._headerDiv;
         this.close_button = header_div.build('a', { innerHTML: 'x', href: '#', onclick: function () {
             this._close();
             return false;
@@ -135,7 +143,7 @@ CalendarDateSelect.prototype = {
             return false;
         }.bindAsEventListener(this), className: 'prev' });
 
-        if (this.options.get('month_year') == 'dropdowns') {
+        if (this.options.get('monthYear') == 'dropdowns') {
             this.month_select = new SelectBox(header_div, $R(0, 11).map(function(m) {
                 return [Date.MONTH_NAMES[m], m]
             }), {className: 'month', onchange: function () {
@@ -153,7 +161,7 @@ CalendarDateSelect.prototype = {
     },
 
     _initCalendarGrid : function() {
-        var body_div = this.body_div;
+        var body_div = this._bodyDiv;
         this.calendar_day_grid = [];
         var days_table = body_div.build('table', { cellPadding: '0px', cellSpacing: '0px', width: '100%'});
         // make the weekdays!
@@ -168,10 +176,7 @@ CalendarDateSelect.prototype = {
         for (var cell_index = 0; cell_index < 42; cell_index++) {
             weekday = (cell_index + Date.FIRST_DAY_OF_WEEK) % 7;
             //var days_row = null;
-            var days_row = null;
-            if (cell_index % 7 == 0)
-                days_row = days_tbody.build("tr", {className: 'row_' + row_number++});
-
+            if (cell_index % 7 == 0) days_row = days_tbody.build("tr", {className: 'row_' + row_number++});
             (this.calendar_day_grid[cell_index] = days_row.build("td", {
                 calendar_date_select: this,
                 onmouseover: function () {
@@ -192,7 +197,7 @@ CalendarDateSelect.prototype = {
     },
 
     _initButtonsDiv : function() {
-        var buttons_div = this.buttons_div;
+        var buttons_div = this._buttonsDiv;
         if (this.options.get('time')) {
             var blank_time = $A(this.options.get('time') == 'mixed' ? [[' - ', '']] : []);
             buttons_div.build("span", {innerHTML:"@", className: "at_sign"});
@@ -215,7 +220,7 @@ CalendarDateSelect.prototype = {
             var that = this;
             this.minute_select = new SelectBox(buttons_div,
                     blank_time.concat($R(0, 59).select(function(x) {
-                        return (x % that.options.get('minute_interval') == 0)
+                        return (x % that.options.get('minuteInterval') == 0)
                     }).map(function(x) {
                         //return $A([ Date.padded2(x), x]);
                         return $A([x.toPaddedString(2), x]);
@@ -252,14 +257,14 @@ CalendarDateSelect.prototype = {
                 }.bindAsEventListener(this)
             });
 
-            if (!this.options.get("embedded") && !this._closeOnClick()) {
+            if (!this.options.get('embedded') && !this._closeOnClick()) {
                 buttons_div.build("span", {innerHTML: "&#160;|&#160;", className:"button_separator"});
                 buttons_div.build("a", { innerHTML: _translations["OK"], href: "#", onclick: function() {
                     this._close();
                     return false;
                 }.bindAsEventListener(this) });
             }
-            if (this.options.get('clear_button')) {
+            if (this.options.get('clearButton')) {
                 buttons_div.build("span", {innerHTML: "&#160;|&#160;", className:"button_separator"});
                 buttons_div.build("a", { innerHTML: _translations["Clear"], href: "#", onclick: function() {
                     this.clearDate();
@@ -322,7 +327,7 @@ CalendarDateSelect.prototype = {
         var m = this.date.getMonth();
         var y = this.date.getFullYear();
         // set the month
-        if (this.options.get("month_year") == "dropdowns") {
+        if (this.options.get("monthYear") == "dropdowns") {
             this.month_select.setValue(m, false);
 
             var e = this.year_select.element;
@@ -340,14 +345,14 @@ CalendarDateSelect.prototype = {
 
     yearRange : function() {
         if (!this.flexibleYearRange())
-            return $R(this.options.get("year_range")[0], this.options.get("year_range")[1]);
+            return $R(this.options.get("yearRange")[0], this.options.get("yearRange")[1]);
 
         var y = this.date.getFullYear();
-        return $R(y - this.options.get("year_range"), y + this.options.get("year_range"));
+        return $R(y - this.options.get("yearRange"), y + this.options.get("yearRange"));
     },
 
     flexibleYearRange : function() {
-        return (typeof(this.options.get("year_range")) == "number");
+        return (typeof(this.options.get("yearRange")) == "number");
     },
 
     validYear : function(year) {
@@ -406,8 +411,8 @@ CalendarDateSelect.prototype = {
 
     _updateFooter : function(text) {
         if (!text) text = this.dateString();
-        this.footer_div.purgeChildren();
-        this.footer_div.build("span", {innerHTML: text});
+        this._footerDiv.purgeChildren();
+        this._footerDiv.build("span", {innerHTML: text});
     },
 
     clearDate : function() {
@@ -436,7 +441,7 @@ CalendarDateSelect.prototype = {
         }
 
         if (!isNaN(parts.get("hour"))) this.selected_date.setHours(parts.get("hour"));
-        if (!isNaN(parts.get("minute"))) this.selected_date.setMinutes(Utilities.floorToInterval(parts.get("minute"), this.options.get("minute_interval")));
+        if (!isNaN(parts.get("minute"))) this.selected_date.setMinutes(Utilities.floorToInterval(parts.get("minute"), this.options.get("minuteInterval")));
         if (parts.get("hour") === "" || parts.get("minute") === "")
             this.setUseTime(false);
         else if (!isNaN(parts.get("hour")) || !isNaN(parts.get("minute")))
@@ -487,7 +492,7 @@ CalendarDateSelect.prototype = {
     setUseTime : function(turn_on) {
         this.use_time = this.options.get("time") && (this.options.get("time") == "mixed" ? turn_on : true); // force use_time to true if time==true && time!="mixed"
         if (this.use_time && this.selected_date) { // only set hour/minute if a date is already selected
-            var minute = Utilities.floorToInterval(this.selected_date.getMinutes(), this.options.get("minute_interval"));
+            var minute = Utilities.floorToInterval(this.selected_date.getMinutes(), this.options.get('minuteInterval'));
             var hour = this.selected_date.getHours();
 
             this.hour_select.setValue(hour);
