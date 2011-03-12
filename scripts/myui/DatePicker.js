@@ -101,11 +101,13 @@ CalendarDateSelect.prototype = {
         }
         this._calendarDiv = $(parent).build('div', {className: "calendar_date_select"}, style);
 
-        var that = this;
         // create the divs
-        $w("top header body buttons footer bottom").each(function(name) {
-            eval("var " + name + "_div = that." + name + "_div = that._calendarDiv.build('div', { className: 'cds_" + name + "' }, { clear: 'left'} ); ");
-        });
+        this.top_div = this._calendarDiv.build('div', {className: 'cds_top'}, {clear:'left'});
+        this.header_div = this._calendarDiv.build('div', {className: 'cds_header'}, {clear:'left'});
+        this.body_div = this._calendarDiv.build('div', {className: 'cds_body'}, {clear:'left'});
+        this.buttons_div = this._calendarDiv.build('div', {className: 'cds_buttons'}, {clear:'left'});
+        this.footer_div = this._calendarDiv.build('div', {className: 'cds_footer'}, {clear:'left'});
+        this.bottom_div = this._calendarDiv.build('div', {className: 'cds_bottom'}, {clear:'left'});
 
         this._initHeaderDiv();
         this._initButtonsDiv();
@@ -166,7 +168,10 @@ CalendarDateSelect.prototype = {
         for (var cell_index = 0; cell_index < 42; cell_index++) {
             weekday = (cell_index + Date.FIRST_DAY_OF_WEEK) % 7;
             //var days_row = null;
-            if (cell_index % 7 == 0) days_row = days_tbody.build("tr", {className: 'row_' + row_number++});
+            var days_row = null;
+            if (cell_index % 7 == 0)
+                days_row = days_tbody.build("tr", {className: 'row_' + row_number++});
+
             (this.calendar_day_grid[cell_index] = days_row.build("td", {
                 calendar_date_select: this,
                 onmouseover: function () {
@@ -178,10 +183,10 @@ CalendarDateSelect.prototype = {
                 onclick: function() {
                     this.calendar_date_select._updateSelectedDate(this, true);
                 },
-                className: (weekday == 0) || (weekday == 6) ? " weekend" : "" //clear the class
+                className: (weekday == 0) || (weekday == 6) ? ' weekend' : '' //clear the class
             },
             {
-                cursor: "pointer" }
+                cursor: 'pointer' }
             )).build("div");
         }
     },
@@ -189,7 +194,7 @@ CalendarDateSelect.prototype = {
     _initButtonsDiv : function() {
         var buttons_div = this.buttons_div;
         if (this.options.get('time')) {
-            var blank_time = $A(this.options.get("time") == "mixed" ? [[" - ", ""]] : []);
+            var blank_time = $A(this.options.get('time') == 'mixed' ? [[' - ', '']] : []);
             buttons_div.build("span", {innerHTML:"@", className: "at_sign"});
 
             var t = new Date();
