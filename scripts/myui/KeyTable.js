@@ -3,12 +3,19 @@ var KeyTable = Class.create();
 KeyTable.prototype = {
 	initialize : function(tableGrid, options) {
 		options = options || {};
-		this._numberOfRows = tableGrid.rows.length;
-		this._numberOfColumns = tableGrid.columnModel.length;
-		this._tableGrid = tableGrid;
-		this._mtgId = tableGrid._mtgId;
-		this.bodyDiv = tableGrid.bodyDiv;
-		this.table = tableGrid.bodyTable;
+        if (tableGrid instanceof MyTableGrid) {
+            this._numberOfRows = tableGrid.rows.length;
+            this._numberOfColumns = tableGrid.columnModel.length;
+            this._tableGrid = tableGrid;
+            this._mtgId = tableGrid._mtgId;
+            this.bodyDiv = tableGrid.bodyDiv;
+            this.table = tableGrid.bodyTable;
+        } else {
+            this.table = tableGrid; // a normal table
+            this._numberOfRows = this.table.rows.length;
+            this._numberOfColumns = 7;
+        }
+
 		this.nBody = this.table.down('tbody'); // Cache the tbody node of interest
 		this._xCurrentPos = null;
 		this._yCurrentPos = null;
@@ -42,7 +49,6 @@ KeyTable.prototype = {
 		 */
 		this._oaoEvents = {"action": [], "esc": [], "focus": [], "blur": []};
 
-
 		var self = this;
 
 		// Use the template functions to add the event API functions
@@ -63,7 +69,7 @@ KeyTable.prototype = {
 			if (element.descendantOf(ancestor)) blurFlg = false;
 			if (blurFlg) {
 				while (element = element.parentNode) {
-					if (element.className == 'autocomplete' || element.className == 'calendar_date_select') {
+					if (element.className == 'autocomplete' || element.className == 'myDatePicker') {
 						blurFlg = false;
 						break;
 					}
@@ -76,7 +82,7 @@ KeyTable.prototype = {
 			}
 		});
 
-		this.addMouseBehavior();
+        if (tableGrid instanceof MyTableGrid) this.addMouseBehavior();
 
 		if (Prototype.Browser.Gecko || Prototype.Browser.Opera ) {
 			Event.observe(document, 'keypress', function(event) {
@@ -241,15 +247,16 @@ KeyTable.prototype = {
 	 * @param event key event
 	 */
 	 onKeyPress : function(event) {
+        console.log('step 1 blockFlg: ' + this.blockFlg + ' blockKeyCaptureFlg: ' + this.blockKeyCaptureFlg);
 		if (this.blockFlg || !this.blockKeyCaptureFlg) return true;
-
+        console.log('step 2');
 		// If a modifier key is pressed (except shift), ignore the event
 		if (event.metaKey || event.altKey || event.ctrlKey) return true;
-
+        console.log('step 3');
 		var x = this._xCurrentPos;
 		var y = this._yCurrentPos;
         var topLimit = this._topLimit;
-
+        console.log('step 4 ' + x + ',' + y);
 		// Capture shift+tab to match the left arrow key
 		var keyCode = (event.keyCode == 9 && event.shiftKey) ? -1 : event.keyCode;
 		var cell = null;
@@ -266,12 +273,15 @@ KeyTable.prototype = {
 					break;
 				case -1:
 				case Event.KEY_LEFT: // left arrow
+                    console.log('left');
 					if (this._bInputFocused) return true;
 					if (this._xCurrentPos > 0) {
-						x = this._xCurrentPos - 1;
+						console.log('step left 1');
+                        x = this._xCurrentPos - 1;
 						y = this._yCurrentPos;
 					} else if (this._yCurrentPos > topLimit) {
-						x = this._numberOfColumns - 1;
+						console.log('step left 2');
+                        x = this._numberOfColumns - 1;
 						y = this._yCurrentPos - 1;
 					} else {
 						// at start of table
@@ -292,6 +302,7 @@ KeyTable.prototype = {
 					}
 					break;
 				case Event.KEY_UP: /* up arrow */
+                    console.log('up');
 					if (this._bInputFocused) return true;
 					if (this._yCurrentPos > topLimit) {
 						x = this._xCurrentPos;
@@ -302,14 +313,18 @@ KeyTable.prototype = {
 					break;
 				case Event.KEY_TAB: // tab
 				case Event.KEY_RIGHT: // right arrow
+                    console.log('right numberOfColumns:' + this._numberOfColumns + ' numberOfRows:' + this._numberOfRows);
 					if (this._bInputFocused) return true;
 					if (this._xCurrentPos < this._numberOfColumns - 1) {
+					    console.log('right step 1');
 						x = this._xCurrentPos + 1;
 						y = this._yCurrentPos;
 					} else if (this._yCurrentPos < this._numberOfRows - 1) {
+                        console.log('right step 2');
 						x = 0;
 						y = this._yCurrentPos + 1;
 					} else {
+                        console.log('right step 3');
 						// at end of table
 						if (keyCode == 9 && this._bForm ) {
 							// If we are in a form, return focus to the 'input' element such that tabbing will
@@ -328,6 +343,7 @@ KeyTable.prototype = {
 					}
 					break;
 				case Event.KEY_DOWN: // down arrow
+                    console.log('down');
 					if (this._bInputFocused) return true;
 					if (this._yCurrentPos < this._numberOfRows - 1) {
 						x = this._xCurrentPos;
@@ -347,6 +363,7 @@ KeyTable.prototype = {
 				this._yCurrentPos = y;
 			}
 		}
+        console.log(x+','+y);
 		this.setFocus(cell);
         this.eventFire("focus", cell);
 		return false;
@@ -415,7 +432,7 @@ KeyTable.prototype = {
 	 * @param iPos scroll top position
 	 */
 	setScrollTop : function(iPos)	{
-		this.bodyDiv.scrollTop = iPos;
+		if (this.bodyDiv) this.bodyDiv.scrollTop = iPos;
 	},
 
 	/**
@@ -424,7 +441,7 @@ KeyTable.prototype = {
 	 * @param iPos scroll left position
 	 */
 	setScrollLeft : function(iPos) {
-		this.bodyDiv.scrollLeft = iPos;
+		if (this.bodyDiv) this.bodyDiv.scrollLeft = iPos;
 	},
 
 	/**

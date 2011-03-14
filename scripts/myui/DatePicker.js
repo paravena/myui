@@ -9,6 +9,7 @@ var CalendarDateSelect = Class.create();
 
 CalendarDateSelect.prototype = {
     initialize: function(targetElement, options) {
+        this._mdpId = $$('.myDatePicker').length + 1;
         this.targetElement = $(targetElement); // make sure it's an element, not a string
         if (!this.targetElement) {
             alert("Target element " + targetElement + " not found!");
@@ -48,6 +49,10 @@ CalendarDateSelect.prototype = {
             Event.observe(document, "keypress", this._keyPress_handler = this._keyPress.bindAsEventListener(this));
         }
         this._callback("after_show")
+    },
+
+    getId : function() {
+        return this._mdpId;
     },
 
     _positionCalendarDiv : function() {
@@ -99,14 +104,14 @@ CalendarDateSelect.prototype = {
             parent = document.body;
             style = { position:"absolute", visibility: "hidden", left:0, top:0 };
         }
-        this._calendarDiv = new Element('div', {className: 'calendar_date_select'}).setStyle(style);
+        this._calendarDiv = new Element('div', {className: 'myDatePicker'}).setStyle(style);
         // create the divs
-        this._topDiv = new Element('div', {className: 'mdp_top'}).setStyle({clear:'left'});
-        this._headerDiv = new Element('div', {className: 'mdp_header'}).setStyle({clear:'left'});
-        this._bodyDiv = new Element('div', {className: 'mdp_body'}).setStyle({clear:'left'});
-        this._buttonsDiv = new Element('div', {className: 'mdp_buttons'}).setStyle({clear:'left'});
-        this._footerDiv = new Element('div', {className: 'mdp_footer'}).setStyle({clear:'left'});
-        this._bottomDiv = new Element('div', {className: 'mdp_bottom'}).setStyle({clear:'left'});
+        this._topDiv = new Element('div', {className: 'mdpTop'}).setStyle({clear:'left'});
+        this._headerDiv = new Element('div', {className: 'mdpHeader'}).setStyle({clear:'left'});
+        this._bodyDiv = new Element('div', {className: 'mdpBody'}).setStyle({clear:'left'});
+        this._buttonsDiv = new Element('div', {className: 'mdpButtons'}).setStyle({clear:'left'});
+        this._footerDiv = new Element('div', {className: 'mdpFooter'}).setStyle({clear:'left'});
+        this._bottomDiv = new Element('div', {className: 'mdpBottom'}).setStyle({clear:'left'});
 
         this._calendarDiv.insert(this._topDiv);
         this._calendarDiv.insert(this._headerDiv);
@@ -124,61 +129,64 @@ CalendarDateSelect.prototype = {
 
         this._refresh();
         this.setUseTime(this.use_time);
+        this._applyKeyboardBehavior();
     },
 
     _initHeaderDiv : function() {
-        var header_div = this._headerDiv;
-        this.close_button = header_div.build('a', { innerHTML: 'x', href: '#', onclick: function () {
-            this._close();
-            return false;
-        }.bindAsEventListener(this), className: 'close'});
-
-        this.next_month_button = header_div.build('a', { innerHTML: '<div class="next">&nbsp;</div>', href:'#', onclick: function () {
+        var headerDiv = this._headerDiv;
+        this.next_month_button = headerDiv.build('a', {innerHTML: '<div class="next">&nbsp;</div>', href:'#', onclick: function () {
             this.navMonth(this.date.getMonth() + 1);
             return false;
-        }.bindAsEventListener(this), className: 'next' });
+        }.bindAsEventListener(this), className: 'next'});
 
-        this.prev_month_button = header_div.build('a', { innerHTML: '<div class="prev">&nbsp;</div>', href: '#', onclick: function () {
+        this.prev_month_button = headerDiv.build('a', {innerHTML: '<div class="prev">&nbsp;</div>', href: '#', onclick: function () {
             this.navMonth(this.date.getMonth() - 1);
             return false;
-        }.bindAsEventListener(this), className: 'prev' });
+        }.bindAsEventListener(this), className: 'prev'});
 
         if (this.options.get('monthYear') == 'dropdowns') {
-            this.month_select = new SelectBox(header_div, $R(0, 11).map(function(m) {
+            this.monthSelect = new SelectBox(headerDiv, $R(0, 11).map(function(m) {
                 return [Date.MONTH_NAMES[m], m]
-            }), {className: 'month', onchange: function () {
-                this.navMonth(this.month_select.getValue())
-            }.bindAsEventListener(this)});
+            }),
+            {
+                className: 'month',
+                onchange: function () {
+                    this.navMonth(this.monthSelect.getValue())
+                }.bindAsEventListener(this)
+            });
 
-            this.year_select = new SelectBox(header_div, [], {className: 'year', onchange: function () {
-                this.navYear(this.year_select.getValue())
-            }.bindAsEventListener(this)});
-
+            this.yearSelect = new SelectBox(headerDiv, [], {
+                className: 'year',
+                onchange: function () {
+                    this.navYear(this.yearSelect.getValue())
+                }.bindAsEventListener(this)
+            });
             this._populateYearRange();
         } else {
-            this.month_year_label = header_div.build('span');
+            this.monthYearLabel = headerDiv.build('span');
         }
     },
 
     _initCalendarGrid : function() {
-        var body_div = this._bodyDiv;
-        this.calendar_day_grid = [];
-        var days_table = body_div.build('table', { cellPadding: '0px', cellSpacing: '0px', width: '100%'});
+        var bodyDiv = this._bodyDiv;
+        this._calendarDayGrid = [];
+        this.daysTable = bodyDiv.build('table', {cellPadding: '0px', cellSpacing: '0px', width: '100%'});
         // make the weekdays!
-        var weekdays_row = days_table.build('thead').build('tr');
+        var weekdays_row = this.daysTable.build('thead').build('tr');
         Date.WEEK_DAYS.each(function(weekday) {
             weekdays_row.build("th", {innerHTML: weekday});
         });
 
-        var days_tbody = days_table.build("tbody");
+        var daysTbody = this.daysTable.build("tbody");
         // Make the days!
-        var row_number = 0, weekday;
-        for (var cell_index = 0; cell_index < 42; cell_index++) {
-            weekday = (cell_index + Date.FIRST_DAY_OF_WEEK) % 7;
+        var rowNumber = 0, weekday;
+        for (var cellIndex = 0; cellIndex < 42; cellIndex++) {
+            weekday = (cellIndex + Date.FIRST_DAY_OF_WEEK) % 7;
             //var days_row = null;
-            if (cell_index % 7 == 0) days_row = days_tbody.build("tr", {className: 'row_' + row_number++});
-            (this.calendar_day_grid[cell_index] = days_row.build("td", {
+            if (cellIndex % 7 == 0) days_row = daysTbody.build("tr", {className: 'row_' + rowNumber++});
+            (this._calendarDayGrid[cellIndex] = days_row.build("td", {
                 calendar_date_select: this,
+                /*
                 onmouseover: function () {
                     this.calendar_date_select._dayHover(this);
                 },
@@ -188,7 +196,8 @@ CalendarDateSelect.prototype = {
                 onclick: function() {
                     this.calendar_date_select._updateSelectedDate(this, true);
                 },
-                className: (weekday == 0) || (weekday == 6) ? ' weekend' : '' //clear the class
+                */
+                className: (weekday == 0) || (weekday == 6) ? 'day weekend' : 'day' //clear the class
             },
             {
                 cursor: 'pointer' }
@@ -296,10 +305,10 @@ CalendarDateSelect.prototype = {
         var this_month = this.date.getMonth();
         var vdc = this.options.get("valid_date_check");
 
-        for (var cell_index = 0; cell_index < 42; cell_index++) {
+        for (var cellIndex = 0; cellIndex < 42; cellIndex++) {
             var day = iterator.getDate();
             var month = iterator.getMonth();
-            var cell = this.calendar_day_grid[cell_index];
+            var cell = this._calendarDayGrid[cellIndex];
             Element.remove(cell.childNodes[0]);
             var div = cell.build("div", {innerHTML:day});
             if (month != this_month) div.className = "other";
@@ -316,9 +325,9 @@ CalendarDateSelect.prototype = {
         }
 
         if (this.today_cell) this.today_cell.removeClassName("today");
-        var days_until = this.beginning_date.stripTime().daysDistance(today);
-        if ($R(0, 41).include(days_until)) {
-            this.today_cell = this.calendar_day_grid[days_until];
+        var daysUntil = this.beginning_date.stripTime().daysDistance(today);
+        if ($R(0, 41).include(daysUntil)) {
+            this.today_cell = this._calendarDayGrid[daysUntil];
             this.today_cell.addClassName("today");
         }
     },
@@ -328,19 +337,19 @@ CalendarDateSelect.prototype = {
         var y = this.date.getFullYear();
         // set the month
         if (this.options.get("monthYear") == "dropdowns") {
-            this.month_select.setValue(m, false);
+            this.monthSelect.setValue(m, false);
 
-            var e = this.year_select.element;
-            if (this.flexibleYearRange() && (!(this.year_select.setValue(y, false)) || e.selectedIndex <= 1 || e.selectedIndex >= e.options.length - 2 )) this._populateYearRange();
+            var e = this.yearSelect.element;
+            if (this.flexibleYearRange() && (!(this.yearSelect.setValue(y, false)) || e.selectedIndex <= 1 || e.selectedIndex >= e.options.length - 2 )) this._populateYearRange();
 
-            this.year_select.setValue(y);
+            this.yearSelect.setValue(y);
         } else {
-            this.month_year_label.update(Date.MONTH_NAMES[m] + " " + y.toString());
+            this.monthYearLabel.update(Date.MONTH_NAMES[m] + " " + y.toString());
         }
     },
 
     _populateYearRange : function() {
-        this.year_select.populate(this.yearRange().toArray());
+        this.yearSelect.populate(this.yearRange().toArray());
     },
 
     yearRange : function() {
@@ -384,7 +393,7 @@ CalendarDateSelect.prototype = {
         this._clearSelectedClass();
         var days_until = this.beginning_date.stripTime().daysDistance(this.selected_date.stripTime());
         if ($R(0, 42).include(days_until)) {
-            this.selected_cell = this.calendar_day_grid[days_until];
+            this.selected_cell = this._calendarDayGrid[days_until];
             this.selected_cell.addClassName("selected");
         }
     },
@@ -542,6 +551,43 @@ CalendarDateSelect.prototype = {
     _callback : function(name, param) {
         if (this.options.get(name)) {
             this.options.get(name).bind(this.targetElement)(param);
+        }
+    },
+
+    _applyKeyboardBehavior : function() {
+        var self = this;
+        var keys = new KeyTable(this.daysTable);
+        for (var i = 0; i < this._calendarDayGrid.length; i++) {
+            var element = this._calendarDayGrid[i];
+            element.on('mouseover', function () {
+                self._dayHover(this);
+            });
+
+            element.on('mouseout', function () {
+                self._dayHoverOut(this)
+            });
+
+            element.on('click', function() {
+                keys.captureKeys();
+                keys.eventFire('focus', element);
+                self._updateSelectedDate(this, true);
+            });
+
+            keys.event.remove.action(element);
+            var f_action = (function(element) {
+                return function() {
+                    console.log('action ' + element.innerHTML);
+                };
+            })(element);
+            keys.event.action(element, f_action);
+            keys.event.remove.focus(element);
+            var f_focus = (function(element) {
+                return function() {
+                    self._dayHover(element);
+                    console.log('focus ' + element.innerHTML);
+                };
+            })(element);
+            keys.event.focus(element, f_focus);
         }
     }
 };

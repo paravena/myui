@@ -86,7 +86,6 @@ SelectBox.prototype = {
                 e.selectedIndex = i;
                 matched = true;
             }
-
         });
         return matched;
     },

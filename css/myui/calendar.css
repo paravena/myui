@@ -1,4 +1,4 @@
-.calendar_date_select {
+.myDatePicker {
     font-family: Arial, Helvetica, sans-serif;
     color: white;
     border: #609 1px solid;
@@ -6,13 +6,13 @@
     width: 180px;
     z-index: 1000;
 }
-/* this is a fun ie6 hack to get drop downs to stay behind the popup window.  This should always be just underneath .calendar_date_select */
+/* this is a fun ie6 hack to get drop downs to stay behind the popup window.  This should always be just underneath .myDatePicker */
 iframe.ie6_blocker {
     position: absolute;
     z-index: 999;
 }
 
-.calendar_date_select thead th {
+.myDatePicker thead th {
     /* dow headings */
     background: url(images/hrow.gif) repeat-x;
     font-weight: normal;
@@ -21,14 +21,14 @@ iframe.ie6_blocker {
     color: black;
 }
 
-.calendar_date_select .mdp_buttons {
+.myDatePicker .mdpButtons {
     text-align: center;
     padding: 2px 0;
     vertical-align: middle;
     background: url(images/hrow.gif) repeat-x;
 }
 
-.calendar_date_select .mdp_footer {
+.myDatePicker .mdpFooter {
     /* bottom line */
     background-color: #ddd;
     padding: 3px;
@@ -37,31 +37,31 @@ iframe.ie6_blocker {
     color: black;
 }
 
-.calendar_date_select table {
+.myDatePicker table {
     margin: 0;
     padding: 0;
 }
 
-.calendar_date_select .mdp_header {
+.myDatePicker .mdpHeader {
     padding: 3px 0;
     background-color: #ddd;
     text-align: center;
 }
 
-.calendar_date_select .mdp_header span {
+.myDatePicker .mdpHeader span {
     font-size: 11px;
     color: black;
     font-weight: bold;
 }
 
-.calendar_date_select select { 
+.myDatePicker select { 
     font-size: 11px;
 }
 
-.calendar_date_select .mdp_header a:hover {
+.myDatePicker .mdpHeader a:hover {
     color: white;
 }
-.calendar_date_select .mdp_header a {
+.myDatePicker .mdpHeader a {
     width: 18px;
     height: 17px;
     text-decoration: none;
@@ -69,31 +69,31 @@ iframe.ie6_blocker {
     color: black !important;
 }
 
-.calendar_date_select .mdp_header a.prev {
+.myDatePicker .mdpHeader a.prev {
     float: left;
 }
-.calendar_date_select .mdp_header a.next {
+.myDatePicker .mdpHeader a.next {
     float: right;
 }
-.calendar_date_select .mdp_header a.close {
+.myDatePicker .mdpHeader a.close {
     float: right;
     display: none;
 }
 
-.calendar_date_select .mdp_header select.month {
+.myDatePicker .mdpHeader select.month {
     width: 80px;
 }
 
-.calendar_date_select .mdp_header select.year {
+.myDatePicker .mdpHeader select.year {
     width: 50px;
 }
 
-.calendar_date_select .mdp_buttons a {
+.myDatePicker .mdpButtons a {
     color: black;
     vertical-align: middle;
     font-size: 9px;
 }
-.calendar_date_select td {
+.myDatePicker td {
     /* weekday */
     font-size: 11px;
     width: 18px;
@@ -103,57 +103,57 @@ iframe.ie6_blocker {
     vertical-align: middle;
 }
 
-.calendar_date_select td.weekend {
+.myDatePicker td.weekend {
     /* weekend */
     background-color: white;
 }
 
-.calendar_date_select td div {
+.myDatePicker td div {
     /* days */
     color: black;
 }
-.calendar_date_select td div.other {
+.myDatePicker td div.other {
     color: #aaa;
 }
-.calendar_date_select td.selected div {
+.myDatePicker td.selected div {
     /* selected date */
     color: red;
 }
 
-.calendar_date_select td.selected {
+.myDatePicker td.selected {
     background-color: white;
 }
 
-.calendar_date_select td:hover {
+.myDatePicker td:hover {
     /* day under cursor */
     background-color: #90c;
 }
 
-.calendar_date_select td:hover div {
+.myDatePicker td:hover div {
     /* day under cursor */
     color: white;
 }
 
-.calendar_date_select td.today {
+.myDatePicker td.today {
     /* current date */
     border: 1px dashed red;
 }
 
-.calendar_date_select td.disabled div {
+.myDatePicker td.disabled div {
     color: #454545;
 }
 
-.fieldWithErrors .calendar_date_select {
+.fieldWithErrors .myDatePicker {
     border: 2px solid red;
 }
 
-div.next {
+.myDatePicker div.next {
     background: url(images/next.gif) center no-repeat transparent;
     width: 16px;
     height: 16px;
 }
 
-div.prev {
+.myDatePicker div.prev {
     background: url(images/prev.gif) center no-repeat transparent;
     width: 16px;
     height: 16px;
