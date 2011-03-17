@@ -568,6 +568,7 @@ CalendarDateSelect.prototype = {
             });
 
             element.on('click', function() {
+                keys.setFocus(element, false);
                 keys.captureKeys();
                 keys.eventFire('focus', element);
                 self._updateSelectedDate(this, true);

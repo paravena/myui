@@ -247,16 +247,15 @@ KeyTable.prototype = {
 	 * @param event key event
 	 */
 	 onKeyPress : function(event) {
-        console.log('step 1 blockFlg: ' + this.blockFlg + ' blockKeyCaptureFlg: ' + this.blockKeyCaptureFlg);
+        console.log('onKeyPress called');
+        console.log('onKeyPress blockFlg: ' + this.blockFlg + ' blockKeyCaptureFlg: ' + this.blockKeyCaptureFlg);
+        console.log('onKeyPress {x: ' + this._xCurrentPos + ', y: ' + this._yCurrentPos+'}');
 		if (this.blockFlg || !this.blockKeyCaptureFlg) return true;
-        console.log('step 2');
 		// If a modifier key is pressed (except shift), ignore the event
 		if (event.metaKey || event.altKey || event.ctrlKey) return true;
-        console.log('step 3');
 		var x = this._xCurrentPos;
 		var y = this._yCurrentPos;
         var topLimit = this._topLimit;
-        console.log('step 4 ' + x + ',' + y);
 		// Capture shift+tab to match the left arrow key
 		var keyCode = (event.keyCode == 9 && event.shiftKey) ? -1 : event.keyCode;
 		var cell = null;
@@ -276,11 +275,9 @@ KeyTable.prototype = {
                     console.log('left');
 					if (this._bInputFocused) return true;
 					if (this._xCurrentPos > 0) {
-						console.log('step left 1');
                         x = this._xCurrentPos - 1;
 						y = this._yCurrentPos;
 					} else if (this._yCurrentPos > topLimit) {
-						console.log('step left 2');
                         x = this._numberOfColumns - 1;
 						y = this._yCurrentPos - 1;
 					} else {
@@ -313,18 +310,15 @@ KeyTable.prototype = {
 					break;
 				case Event.KEY_TAB: // tab
 				case Event.KEY_RIGHT: // right arrow
-                    console.log('right numberOfColumns:' + this._numberOfColumns + ' numberOfRows:' + this._numberOfRows);
+                    console.log('right');
 					if (this._bInputFocused) return true;
 					if (this._xCurrentPos < this._numberOfColumns - 1) {
-					    console.log('right step 1');
 						x = this._xCurrentPos + 1;
 						y = this._yCurrentPos;
 					} else if (this._yCurrentPos < this._numberOfRows - 1) {
-                        console.log('right step 2');
 						x = 0;
 						y = this._yCurrentPos + 1;
 					} else {
-                        console.log('right step 3');
 						// at end of table
 						if (keyCode == 9 && this._bForm ) {
 							// If we are in a form, return focus to the 'input' element such that tabbing will
@@ -363,7 +357,6 @@ KeyTable.prototype = {
 				this._yCurrentPos = y;
 			}
 		}
-        console.log(x+','+y);
 		this.setFocus(cell);
         this.eventFire("focus", cell);
 		return false;
@@ -393,6 +386,7 @@ KeyTable.prototype = {
 		this._xCurrentPos = aNewPos[0];
 		this._yCurrentPos = aNewPos[1];
 
+        console.log('setFocus {x: ' + this._xCurrentPos + ', y: ' + this._yCurrentPos+'}');
 		if (bAutoScroll) {
 			// Scroll the viewport such that the new cell is fully visible in the
 			// rendered window
