@@ -172,27 +172,27 @@ KeyTable.prototype = {
 		/*
 		 * API function for removing event from cache
 		 * Returns: number of events removed
-		 * Notes: This function is (interally) overloaded (in as much as javascript allows for that)
-		 *        the target cell can be given by either node or coords and the function
+		 * Notes: This function is (internally) overloaded (in as much as javascript allows for that)
+		 *        the target cell can be given by either node or coordinates and the function
 		 *        to remove is optional
 		 *
 		 * Parameters: 1. x - target node to remove event from
 		 *             2. y - callback function to apply
 		 * or
-		 *             1. x - x coord. of target cell
-		 *             2. y - y coord. of target cell
+		 *             1. x - x coordinate. of target cell
+		 *             2. y - y coordinate. of target cell
 		 *             3. z - callback function to remove - optional
 		 */
 		var self = this;
 		return function (x, y, z) {
-			if (typeof arguments[0] == "number" && typeof arguments[1] == "number") {
-				if ( typeof arguments[2] == "function" ) {
+			if (typeof arguments[0] == 'number' && typeof arguments[1] == 'number') {
+				if ( typeof arguments[2] == 'function' ) {
 					self.removeEvent(sKey, self.getCellFromCoords(x,y), z);
 				} else {
 					self.removeEvent(sKey, self.getCellFromCoords(x,y));
 				}
-			} else if (typeof arguments[0] == "object" ) {
-				if ( typeof arguments[1] == "function" ) {
+			} else if (typeof arguments[0] == 'object' ) {
+				if ( typeof arguments[1] == 'function' ) {
 					self.removeEvent(sKey, x, y);
 				} else {
 					self.removeEvent(sKey, x);
@@ -263,10 +263,10 @@ KeyTable.prototype = {
 		while(true) {
 			switch(keyCode) {
 				case Event.KEY_RETURN: // return
-					this.eventFire("action", this._nCurrentFocus);
+					this.eventFire('action', this._nCurrentFocus);
 					return false;
 				case Event.KEY_ESC: // esc
-					if (!this.eventFire("esc", this._nCurrentFocus)) {
+					if (!this.eventFire('esc', this._nCurrentFocus)) {
 						// Only lose focus if there isn't an escape handler on the cell
 						this.blur();
 					}

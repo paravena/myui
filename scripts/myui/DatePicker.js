@@ -580,6 +580,7 @@ CalendarDateSelect.prototype = {
                 };
             })(element);
             keys.event.action(element, f_action);
+            /*
             keys.event.remove.focus(element);
             var f_focus = (function(element) {
                 return function() {
@@ -588,6 +589,7 @@ CalendarDateSelect.prototype = {
                 };
             })(element);
             keys.event.focus(element, f_focus);
+            */
         }
     }
 };
