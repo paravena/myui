@@ -183,20 +183,10 @@ CalendarDateSelect.prototype = {
         for (var cellIndex = 0; cellIndex < 42; cellIndex++) {
             weekday = (cellIndex + Date.FIRST_DAY_OF_WEEK) % 7;
             //var days_row = null;
-            if (cellIndex % 7 == 0) days_row = daysTbody.build("tr", {className: 'row_' + rowNumber++});
-            (this._calendarDayGrid[cellIndex] = days_row.build("td", {
+            if (cellIndex % 7 == 0) days_row = daysTbody.build('tr', {className: 'row_' + rowNumber++});
+            (this._calendarDayGrid[cellIndex] = days_row.build('td', {
+                id: 'mtgC'+this._mdpId+'_'+weekday+','+rowNumber,
                 calendar_date_select: this,
-                /*
-                onmouseover: function () {
-                    this.calendar_date_select._dayHover(this);
-                },
-                onmouseout: function () {
-                    this.calendar_date_select._dayHoverOut(this)
-                },
-                onclick: function() {
-                    this.calendar_date_select._updateSelectedDate(this, true);
-                },
-                */
                 className: (weekday == 0) || (weekday == 6) ? 'day weekend' : 'day' //clear the class
             },
             {
@@ -559,38 +549,30 @@ CalendarDateSelect.prototype = {
         var keys = new KeyTable(this.daysTable);
         for (var i = 0; i < this._calendarDayGrid.length; i++) {
             var element = this._calendarDayGrid[i];
-            element.on('mouseover', function () {
-                self._dayHover(this);
-            });
+            (function(element) {
+                element.on('mouseover', function () {
+                    self._dayHover(this);
+                });
 
-            element.on('mouseout', function () {
-                self._dayHoverOut(this)
-            });
+                element.on('mouseout', function () {
+                    self._dayHoverOut(this)
+                });
 
-            element.on('click', function() {
-                keys.setFocus(element, false);
-                keys.captureKeys();
-                keys.eventFire('focus', element);
-                self._updateSelectedDate(this, true);
-            });
+                element.on('click', function() {
+                    keys.setFocus(element, false);
+                    keys.captureKeys();
+                    keys.eventFire('focus', element);
+                    self._updateSelectedDate(this, true);
+                });
 
-            keys.event.remove.action(element);
-            var f_action = (function(element) {
-                return function() {
-                    console.log('action ' + element.innerHTML);
-                };
+                keys.event.remove.action(element);
+                var f_action = (function(element) {
+                    return function() {
+                        console.log('action ' + element.innerHTML);
+                    };
+                })(element);
+                keys.event.action(element, f_action);
             })(element);
-            keys.event.action(element, f_action);
-            /*
-            keys.event.remove.focus(element);
-            var f_focus = (function(element) {
-                return function() {
-                    self._dayHover(element);
-                    console.log('focus ' + element.innerHTML);
-                };
-            })(element);
-            keys.event.focus(element, f_focus);
-            */
         }
     }
 };

@@ -14,6 +14,7 @@ KeyTable.prototype = {
             this.table = tableGrid; // a normal table
             this._numberOfRows = this.table.rows.length;
             this._numberOfColumns = 7;
+            this._mtgId = 1;
         }
 
 		this.nBody = this.table.down('tbody'); // Cache the tbody node of interest
@@ -312,13 +313,19 @@ KeyTable.prototype = {
 				case Event.KEY_RIGHT: // right arrow
                     console.log('right');
 					if (this._bInputFocused) return true;
+                    console.log('right step 1 ');
+                    console.log('right numberOfColumns: ' + this._numberOfColumns);
+                    console.log('right numberOfRows: ' + this._numberOfRows);
 					if (this._xCurrentPos < this._numberOfColumns - 1) {
+					    console.log('right step 2');
 						x = this._xCurrentPos + 1;
 						y = this._yCurrentPos;
 					} else if (this._yCurrentPos < this._numberOfRows - 1) {
+                        console.log('right step 3');
 						x = 0;
 						y = this._yCurrentPos + 1;
 					} else {
+                        console.log('right step 4');
 						// at end of table
 						if (keyCode == 9 && this._bForm ) {
 							// If we are in a form, return focus to the 'input' element such that tabbing will
@@ -379,6 +386,7 @@ KeyTable.prototype = {
 		$(nTarget).addClassName(this._sFocusClass);
     	$(nTarget).up('tr').addClassName(this._sFocusClass);
 		/* Cache the information that we are interested in */
+        console.log('setFocus ' + nTarget.innerHTML);
 		var aNewPos = this.getCoordsFromCell(nTarget);
 
 		this._nOldFocus = this._nCurrentFocus;
@@ -387,7 +395,8 @@ KeyTable.prototype = {
 		this._yCurrentPos = aNewPos[1];
 
         console.log('setFocus {x: ' + this._xCurrentPos + ', y: ' + this._yCurrentPos+'}');
-		if (bAutoScroll) {
+		bAutoScroll=false;
+        if (bAutoScroll) {
 			// Scroll the viewport such that the new cell is fully visible in the
 			// rendered window
 			var iViewportHeight = this.bodyDiv.clientHeight;
