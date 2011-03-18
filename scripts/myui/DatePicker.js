@@ -185,7 +185,7 @@ CalendarDateSelect.prototype = {
             //var days_row = null;
             if (cellIndex % 7 == 0) days_row = daysTbody.build('tr', {className: 'row_' + rowNumber++});
             (this._calendarDayGrid[cellIndex] = days_row.build('td', {
-                id: 'mtgC'+this._mdpId+'_'+weekday+','+rowNumber,
+                id: 'mdpC'+this._mdpId+'_'+weekday+','+(rowNumber-1),
                 calendar_date_select: this,
                 className: (weekday == 0) || (weekday == 6) ? 'day weekend' : 'day' //clear the class
             },
@@ -363,16 +363,17 @@ CalendarDateSelect.prototype = {
     },
 
     _dayHover : function(element) {
-        element.addClassName('hover');
+        element.addClassName('focus');
         var hoverDate = new Date(this.selectedDate);
         hoverDate.setYear(element.year);
         hoverDate.setMonth(element.month);
         hoverDate.setDate(element.day);
         this._updateFooter(hoverDate.format(this.format));
+        this.keys.setFocus(element, false);
     },
 
     _dayHoverOut : function(element) {
-        element.removeClassName('hover');
+        element.removeClassName('focus');
         this._updateFooter();
     },
 
@@ -548,7 +549,7 @@ CalendarDateSelect.prototype = {
 
     _applyKeyboardBehavior : function() {
         var self = this;
-        var keys = new KeyTable(this.daysTable);
+        this.keys = new KeyTable(this.daysTable);
         for (var i = 0; i < this._calendarDayGrid.length; i++) {
             var element = this._calendarDayGrid[i];
             (function(element) {
@@ -561,13 +562,13 @@ CalendarDateSelect.prototype = {
                 });
 
                 element.on('click', function() {
-                    keys.setFocus(element, false);
-                    keys.captureKeys();
-                    keys.eventFire('focus', element);
+                    self.keys.setFocus(element, false);
+                    self.keys.captureKeys();
+                    self.keys.eventFire('focus', element);
                     self._updateSelectedDate(this, true);
                 });
 
-                keys.event.remove.focus(element);
+                self.keys.event.remove.focus(element);
                 var f_focus = (function(element) {
                     return function() {
                         self._calendarDayGrid.each(function(td) {
@@ -576,16 +577,21 @@ CalendarDateSelect.prototype = {
                         self._dayHover(element);
                     };
                 })(element);
-                keys.event.focus(element, f_focus);
+                self.keys.event.focus(element, f_focus);
 
-                keys.event.remove.action(element);
+                self.keys.event.remove.action(element);
                 var f_action = (function(element) {
                     return function() {
                         self._updateSelectedDate(element, true);
                     };
                 })(element);
-                keys.event.action(element, f_action);
+                self.keys.event.action(element, f_action);
             })(element);
         }
+
+        var t = $('mdpC1_0,0');
+        this.keys.setFocus(t, false);
+        this.keys.captureKeys();
+        this.keys.eventFire('focus', t);
     }
 };

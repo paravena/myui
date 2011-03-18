@@ -1,23 +1,24 @@
 var KeyTable = Class.create();
 
 KeyTable.prototype = {
-	initialize : function(tableGrid, options) {
+	initialize : function(targetTable, options) {
 		options = options || {};
-        if (tableGrid instanceof MyTableGrid) {
-            this._numberOfRows = tableGrid.rows.length;
-            this._numberOfColumns = tableGrid.columnModel.length;
-            this._tableGrid = tableGrid;
-            this._mtgId = tableGrid._mtgId;
-            this.bodyDiv = tableGrid.bodyDiv;
-            this.table = tableGrid.bodyTable;
+        if (targetTable instanceof MyTableGrid) {
+            this._numberOfRows = targetTable.rows.length;
+            this._numberOfColumns = targetTable.columnModel.length;
+            this._tableGrid = targetTable;
+            this._bodyDiv = targetTable.bodyDiv;
+            this._targetTable = targetTable.bodyTable;
         } else {
-            this.table = tableGrid; // a normal table
-            this._numberOfRows = this.table.rows.length;
-            this._numberOfColumns = 7;
-            this._mtgId = 1;
+            this._targetTable = targetTable; // a normal table
+            this._numberOfRows = this._targetTable.rows.length;
+            this._numberOfColumns = this._targetTable.rows[0].cells.length;
         }
 
-		this.nBody = this.table.down('tbody'); // Cache the tbody node of interest
+//        this.idPrefix = options.idPrefix || '';
+//        if (this._tableGrid) this.idPrefix = 'mtgC'+ this._tableGrid._mtgId + '_';
+
+        this.nBody = this._targetTable.down('tbody'); // Cache the tbody node of interest
 		this._xCurrentPos = null;
 		this._yCurrentPos = null;
 		this._nCurrentFocus = null;
@@ -30,7 +31,7 @@ KeyTable.prototype = {
 		this._nInput = null;
 		this._bForm = options.form || false;
 		this._bInputFocused = false;
-		this._sFocusClass = "focus";
+		this._sFocusClass = 'focus';
 		this._xCurrentPos = 0;
 		this._yCurrentPos = 0;
 
@@ -64,7 +65,7 @@ KeyTable.prototype = {
 		Event.observe(document, 'click', function(event) {
 			if (!self._nCurrentFocus) return;
 			var nTarget = Event.element(event);
-			var ancestor = self.table;
+			var ancestor = self._targetTable;
 			var blurFlg = true;
 			var element = nTarget;
 			if (element.descendantOf(ancestor)) blurFlg = false;
@@ -83,7 +84,7 @@ KeyTable.prototype = {
 			}
 		});
 
-        if (tableGrid instanceof MyTableGrid) this.addMouseBehavior();
+        if (targetTable instanceof MyTableGrid) this.addMouseBehavior();
 
 		if (Prototype.Browser.Gecko || Prototype.Browser.Opera ) {
 			Event.observe(document, 'keypress', function(event) {
@@ -110,19 +111,13 @@ KeyTable.prototype = {
 	},
 
     addMouseBehaviorToRow : function(y) {
-        var tableGrid = this._tableGrid;
-        var id = tableGrid._mtgId;
-        var cm = tableGrid.columnModel;
         var self = this;
-
-        for (var i = 0; i < cm.length; i++) {
-            var element = $('mtgC'+id+'_'+i+','+y);
+        for (var i = 0; i < this._numberOfColumns; i++) {
+            var element = this.getCellFromCoords(i, y);
             var f_click = (function(element){
                 return function(event) {
-                    //if(element != self._nOldFocus) {
-                        self.onClick(event);
-                        self.eventFire('focus', element);
-                    //}
+                    self.onClick(event);
+                    self.eventFire('focus', element);
                 };
             })(element);
 
@@ -380,14 +375,14 @@ KeyTable.prototype = {
 		this._xCurrentPos = aNewPos[0];
 		this._yCurrentPos = aNewPos[1];
 
-        if (bAutoScroll && this.bodyDiv) {
+        if (bAutoScroll && this._bodyDiv) {
 			// Scroll the viewport such that the new cell is fully visible in the
 			// rendered window
-			var iViewportHeight = this.bodyDiv.clientHeight;
-			var iViewportWidth = this.bodyDiv.clientWidth;
+			var iViewportHeight = this._bodyDiv.clientHeight;
+			var iViewportWidth = this._bodyDiv.clientWidth;
 
-			var iScrollTop = this.bodyDiv.scrollTop;
-			var iScrollLeft = this.bodyDiv.scrollLeft;
+			var iScrollTop = this._bodyDiv.scrollTop;
+			var iScrollLeft = this._bodyDiv.scrollLeft;
 
 			var iHeight = nTarget.offsetHeight;
 			var iWidth = nTarget.offsetWidth;
@@ -419,7 +414,7 @@ KeyTable.prototype = {
 	 * @param iPos scroll top position
 	 */
 	setScrollTop : function(iPos)	{
-		if (this.bodyDiv) this.bodyDiv.scrollTop = iPos;
+		this._bodyDiv.scrollTop = iPos;
 	},
 
 	/**
@@ -428,7 +423,7 @@ KeyTable.prototype = {
 	 * @param iPos scroll left position
 	 */
 	setScrollLeft : function(iPos) {
-		if (this.bodyDiv) this.bodyDiv.scrollLeft = iPos;
+		this._bodyDiv.scrollLeft = iPos;
 	},
 
 	/**
@@ -509,14 +504,15 @@ KeyTable.prototype = {
 	},
 
 	/**
-	 * Calulates the target TD cell from x and y coordinates
+	 * Calculates the target TD cell from x and y coordinates
 	 *
 	 * @param x coordinate
 	 * @param y coordinate
 	 * @return TD target
 	 */
 	getCellFromCoords : function(x, y) {
-		return $('mtgC'+ this._mtgId + '_' + x + ',' + y);
+		return $('mdpC1_' + x + ',' + y);
+        //return this._targetTable.rows[y].cells[x];
 	},
 
 	/**
