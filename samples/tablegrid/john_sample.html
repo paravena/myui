@@ -296,7 +296,7 @@
 	};
     var myCalendar = null;
     function showCalendar() {
-        new CalendarDateSelect('arrivalDt');
+        new CalendarDateSelect('arrivalDt', {embedded: true});
     }
 	</script>
 	<body style="margin:20px">
@@ -304,6 +304,5 @@
         <div id="mytable1" style="position:relative; width: 70%; height: 350px;"></div>
         <br>
         <input type="text" name="arrivalDt" id="arrivalDt"><a href="" onclick="showCalendar()">[Select date]</a>
-
 	</body>
 </html>

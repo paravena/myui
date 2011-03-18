@@ -124,12 +124,12 @@ iframe.ie6_blocker {
     background-color: white;
 }
 
-.myDatePicker td:hover {
+.myDatePicker td.hover {
     /* day under cursor */
     background-color: #90c;
 }
 
-.myDatePicker td:hover div {
+.myDatePicker td.hover div {
     /* day under cursor */
     color: white;
 }

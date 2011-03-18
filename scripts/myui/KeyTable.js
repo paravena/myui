@@ -248,10 +248,7 @@ KeyTable.prototype = {
 	 * @param event key event
 	 */
 	 onKeyPress : function(event) {
-        console.log('onKeyPress called');
-        console.log('onKeyPress blockFlg: ' + this.blockFlg + ' blockKeyCaptureFlg: ' + this.blockKeyCaptureFlg);
-        console.log('onKeyPress {x: ' + this._xCurrentPos + ', y: ' + this._yCurrentPos+'}');
-		if (this.blockFlg || !this.blockKeyCaptureFlg) return true;
+        if (this.blockFlg || !this.blockKeyCaptureFlg) return true;
 		// If a modifier key is pressed (except shift), ignore the event
 		if (event.metaKey || event.altKey || event.ctrlKey) return true;
 		var x = this._xCurrentPos;
@@ -273,7 +270,6 @@ KeyTable.prototype = {
 					break;
 				case -1:
 				case Event.KEY_LEFT: // left arrow
-                    console.log('left');
 					if (this._bInputFocused) return true;
 					if (this._xCurrentPos > 0) {
                         x = this._xCurrentPos - 1;
@@ -300,8 +296,7 @@ KeyTable.prototype = {
 					}
 					break;
 				case Event.KEY_UP: /* up arrow */
-                    console.log('up');
-					if (this._bInputFocused) return true;
+                    if (this._bInputFocused) return true;
 					if (this._yCurrentPos > topLimit) {
 						x = this._xCurrentPos;
 						y = this._yCurrentPos - 1;
@@ -311,21 +306,14 @@ KeyTable.prototype = {
 					break;
 				case Event.KEY_TAB: // tab
 				case Event.KEY_RIGHT: // right arrow
-                    console.log('right');
 					if (this._bInputFocused) return true;
-                    console.log('right step 1 ');
-                    console.log('right numberOfColumns: ' + this._numberOfColumns);
-                    console.log('right numberOfRows: ' + this._numberOfRows);
 					if (this._xCurrentPos < this._numberOfColumns - 1) {
-					    console.log('right step 2');
 						x = this._xCurrentPos + 1;
 						y = this._yCurrentPos;
 					} else if (this._yCurrentPos < this._numberOfRows - 1) {
-                        console.log('right step 3');
 						x = 0;
 						y = this._yCurrentPos + 1;
 					} else {
-                        console.log('right step 4');
 						// at end of table
 						if (keyCode == 9 && this._bForm ) {
 							// If we are in a form, return focus to the 'input' element such that tabbing will
@@ -344,7 +332,6 @@ KeyTable.prototype = {
 					}
 					break;
 				case Event.KEY_DOWN: // down arrow
-                    console.log('down');
 					if (this._bInputFocused) return true;
 					if (this._yCurrentPos < this._numberOfRows - 1) {
 						x = this._xCurrentPos;
@@ -386,7 +373,6 @@ KeyTable.prototype = {
 		$(nTarget).addClassName(this._sFocusClass);
     	$(nTarget).up('tr').addClassName(this._sFocusClass);
 		/* Cache the information that we are interested in */
-        console.log('setFocus ' + nTarget.innerHTML);
 		var aNewPos = this.getCoordsFromCell(nTarget);
 
 		this._nOldFocus = this._nCurrentFocus;
@@ -394,9 +380,7 @@ KeyTable.prototype = {
 		this._xCurrentPos = aNewPos[0];
 		this._yCurrentPos = aNewPos[1];
 
-        console.log('setFocus {x: ' + this._xCurrentPos + ', y: ' + this._yCurrentPos+'}');
-		bAutoScroll=false;
-        if (bAutoScroll) {
+        if (bAutoScroll && this.bodyDiv) {
 			// Scroll the viewport such that the new cell is fully visible in the
 			// rendered window
 			var iViewportHeight = this.bodyDiv.clientHeight;
