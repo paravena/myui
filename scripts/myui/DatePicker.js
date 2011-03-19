@@ -39,8 +39,10 @@ CalendarDateSelect.prototype = {
 
         this.use_time = this.options.get('time');
         this.format = this.options.get('format');
-        Event.observe(targetElement, 'keypress', this._keyPressTargetElement.bindAsEventListener(this));
-        Event.observe(targetElement, 'keydown', this._keyPressTargetElement.bindAsEventListener(this));
+        if (!this.options.get('embedded')) {
+            Event.observe(targetElement, 'keypress', this._keyPress.bindAsEventListener(this));
+            Event.observe(targetElement, 'keydown', this._keyPress.bindAsEventListener(this));
+        }
     },
 
     show : function() {
@@ -50,8 +52,7 @@ CalendarDateSelect.prototype = {
         if (!this.options.get('embedded')) {
             this._positionCalendarDiv();
             // set the click handler to check if a user has clicked away from the document
-            Event.observe(document, 'mousedown', this._closeIfClickedOut_handler = this._closeIfClickedOut.bindAsEventListener(this));
-            Event.observe(document, 'keypress', this._keyPress_handler = this._keyPress.bindAsEventListener(this));
+            Event.observe(document, 'click', this._closeIfClickedOut_handler = this._closeIfClickedOut.bindAsEventListener(this));
         }
         this._callback('afterShow');
         this.visibleFlg = true;
@@ -544,14 +545,10 @@ CalendarDateSelect.prototype = {
         if (!$(Event.element(e)).descendantOf(this._calendarDiv)) this._close();
     },
 
-    _keyPress : function(e) {
-        if (e.keyCode == Event.KEY_ESC) this._close();
-    },
-
-    _keyPressTargetElement : function(e) {
-        if (e.keyCode == Event.KEY_DOWN && !this.visibleFlg)
+    _keyPress : function(event) {
+        if (event.keyCode == Event.KEY_DOWN && !this.visibleFlg)
             this.show();
-        //else if (e.keyCode == Event.KEY_ESC)
+        //else if (event.keyCode == Event.KEY_ESC && this.visibleFlg)
         //    this._close();
     },
 
