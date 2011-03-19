@@ -15,8 +15,8 @@ KeyTable.prototype = {
             this._numberOfColumns = this._targetTable.rows[0].cells.length;
         }
 
-//        this.idPrefix = options.idPrefix || '';
-//        if (this._tableGrid) this.idPrefix = 'mtgC'+ this._tableGrid._mtgId + '_';
+        this.idPrefix = options.idPrefix || '';
+        if (this._tableGrid) this.idPrefix = 'mtgC'+ this._tableGrid._mtgId + '_';
 
         this.nBody = this._targetTable.down('tbody'); // Cache the tbody node of interest
 		this._xCurrentPos = null;
@@ -511,8 +511,8 @@ KeyTable.prototype = {
 	 * @return TD target
 	 */
 	getCellFromCoords : function(x, y) {
-		return $('mdpC1_' + x + ',' + y);
-        //return this._targetTable.rows[y].cells[x];
+		return $(this.idPrefix + x + ',' + y);
+        //return this._targetTable.rows[y].cells[x]; <-- this sadly doesn't work
 	},
 
 	/**

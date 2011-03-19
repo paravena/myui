@@ -289,20 +289,18 @@
 			[200,'claire@theshadestore.com', '2500685           To: Jay     Re: Here are the sizes ', '11/02/09', 'test of how long an edit box can be...i hope really long.','']
 		]
 	};	
-	var tableGrid = null;
+	var myTableGrid = null;
+    var myDatePicker = null;
 	window.onload = function() {
-		//tableGrid = new MyTableGrid(tableModel);
-		//tableGrid.render('mytable1');
+		myTableGrid = new MyTableGrid(tableModel);
+		myTableGrid.render('mytable');
+        myDatePicker = new CalendarDateSelect('arrivalDt')
 	};
-    var myCalendar = null;
-    function showCalendar() {
-        new CalendarDateSelect('arrivalDt', {embedded: true});
-    }
 	</script>
 	<body style="margin:20px">
         <h1>TableGrid Last Version</h1>
-        <div id="mytable1" style="position:relative; width: 70%; height: 350px;"></div>
+        <div id="mytable" style="position:relative; width: 70%; height: 350px;"></div>
         <br>
-        <input type="text" name="arrivalDt" id="arrivalDt"><a href="" onclick="showCalendar()">[Select date]</a>
+        <input type="text" name="arrivalDt" id="arrivalDt">
 	</body>
 </html>

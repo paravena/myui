@@ -17,8 +17,9 @@ CalendarDateSelect.prototype = {
         }
         if (this.targetElement.tagName != 'INPUT') this.targetElement = this.targetElement.down('INPUT');
 
-        this.targetElement.calendar_date_select = this;
-        this.last_click_at = 0;
+        this.targetElement.datePicker = this;
+        this.lastClickAt = 0;
+        this.visibleFlg = false;
         // initialize the date control
         this.options = $H({
             embedded: false,
@@ -33,14 +34,18 @@ CalendarDateSelect.prototype = {
             popupBy: this.targetElement,
             monthYear: 'dropdowns',
             onchange: this.targetElement.onchange,
-            valid_date_check: null
+            validate: null
         }).merge(options || {});
 
         this.use_time = this.options.get('time');
         this.format = this.options.get('format');
+        Event.observe(targetElement, 'keypress', this._keyPressTargetElement.bindAsEventListener(this));
+        Event.observe(targetElement, 'keydown', this._keyPressTargetElement.bindAsEventListener(this));
+    },
 
+    show : function() {
         this._parseDate();
-        this._callback('before_show');
+        this._callback('beforeShow');
         this._initCalendarDiv();
         if (!this.options.get('embedded')) {
             this._positionCalendarDiv();
@@ -48,7 +53,8 @@ CalendarDateSelect.prototype = {
             Event.observe(document, 'mousedown', this._closeIfClickedOut_handler = this._closeIfClickedOut.bindAsEventListener(this));
             Event.observe(document, 'keypress', this._keyPress_handler = this._keyPress.bindAsEventListener(this));
         }
-        this._callback('after_show')
+        this._callback('afterShow');
+        this.visibleFlg = true;
     },
 
     getId : function() {
@@ -186,7 +192,7 @@ CalendarDateSelect.prototype = {
             if (cellIndex % 7 == 0) days_row = daysTbody.build('tr', {className: 'row_' + rowNumber++});
             (this._calendarDayGrid[cellIndex] = days_row.build('td', {
                 id: 'mdpC'+this._mdpId+'_'+weekday+','+(rowNumber-1),
-                calendar_date_select: this,
+                datePicker: this,
                 className: (weekday == 0) || (weekday == 6) ? 'day weekend' : 'day' //clear the class
             },
             {
@@ -208,9 +214,9 @@ CalendarDateSelect.prototype = {
                         return $A([t.getAMPMHour() + ' ' + t.getAMPM(),x])
                     })),
                     {
-                        calendar_date_select: this,
+                        datePicker: this,
                         onchange: function() {
-                            this.calendar_date_select._updateSelectedDate({ hour: this.value });
+                            this.datePicker._updateSelectedDate({ hour: this.value });
                         },
                         className: 'hour'
                     }
@@ -225,9 +231,9 @@ CalendarDateSelect.prototype = {
                         return $A([x.toPaddedString(2), x]);
                     })),
                     {
-                        calendar_date_select: this,
+                        datePicker: this,
                         onchange: function() {
-                            this.calendar_date_select._updateSelectedDate({minute: this.value })
+                            this.datePicker._updateSelectedDate({minute: this.value })
                         },
                         className: 'minute'
                     }
@@ -293,7 +299,7 @@ CalendarDateSelect.prototype = {
         var iterator = new Date(this.beginningDate);
         var today = new Date().stripTime();
         var this_month = this.date.getMonth();
-        var vdc = this.options.get('valid_date_check');
+        var vdc = this.options.get('validate');
 
         for (var cellIndex = 0; cellIndex < 42; cellIndex++) {
             var day = iterator.getDate();
@@ -430,7 +436,7 @@ CalendarDateSelect.prototype = {
         var parts = $H(partsOrElement);
         if ((this.targetElement.disabled || this.targetElement.readOnly) && this.options.get('popup') != 'force') return false;
         if (parts.get('day')) {
-            var selectedDate = this.selectedDate, vdc = this.options.get('valid_date_check');
+            var selectedDate = this.selectedDate, vdc = this.options.get('validate');
             for (var x = 0; x <= 3; x++) selectedDate.setDate(parts.get('day'));
             selectedDate.setYear(parts.get('year'));
             selectedDate.setMonth(parts.get('month'));
@@ -457,8 +463,8 @@ CalendarDateSelect.prototype = {
             this._close();
         }
         if (via_click && !this.options.get('embedded')) {
-            if ((new Date() - this.last_click_at) < 333) this._close();
-            this.last_click_at = new Date();
+            if ((new Date() - this.lastClickAt) < 333) this._close();
+            this.lastClickAt = new Date();
         }
     },
 
@@ -491,8 +497,8 @@ CalendarDateSelect.prototype = {
         return true;
     },
 
-    setUseTime : function(turn_on) {
-        this.use_time = this.options.get('time') && (this.options.get('time') == 'mixed' ? turn_on : true); // force use_time to true if time==true && time!='mixed'
+    setUseTime : function(turnOnFlg) {
+        this.use_time = this.options.get('time') && (this.options.get('time') == 'mixed' ? turnOnFlg : true); // force use_time to true if time==true && time!='mixed'
         if (this.use_time && this.selectedDate) { // only set hour/minute if a date is already selected
             var minute = Utilities.floorToInterval(this.selectedDate.getMinutes(), this.options.get('minuteInterval'));
             var hour = this.selectedDate.getHours();
@@ -521,16 +527,17 @@ CalendarDateSelect.prototype = {
     },
 
     _close : function() {
-        if (this.closed) return false;
-        this._callback('before_close');
-        this.targetElement.calendar_date_select = null;
-        Event.stopObserving(document, 'mousedown', this._closeIfClickedOut_handler);
-        Event.stopObserving(document, 'keypress', this._keyPress_handler);
+        if (!this.visibleFlg) return false;
+        this._callback('beforeClose');
+        //this.targetElement.datePicker = null;
+        //Event.stopObserving(document, 'mousedown', this._closeIfClickedOut_handler);
+        //Event.stopObserving(document, 'keypress', this._keyPress_handler);
         this._calendarDiv.remove();
-        this.closed = true;
+        this.keys = null;
+        this.visibleFlg = false;
         if (this.iframe) this.iframe.remove();
         if (this.targetElement.type != 'hidden' && ! this.targetElement.disabled) this.targetElement.focus();
-        this._callback('after_close');
+        this._callback('afterClose');
     },
 
     _closeIfClickedOut : function(e) {
@@ -541,6 +548,13 @@ CalendarDateSelect.prototype = {
         if (e.keyCode == Event.KEY_ESC) this._close();
     },
 
+    _keyPressTargetElement : function(e) {
+        if (e.keyCode == Event.KEY_DOWN && !this.visibleFlg)
+            this.show();
+        //else if (e.keyCode == Event.KEY_ESC)
+        //    this._close();
+    },
+
     _callback : function(name, param) {
         if (this.options.get(name)) {
             this.options.get(name).bind(this.targetElement)(param);
@@ -549,19 +563,19 @@ CalendarDateSelect.prototype = {
 
     _applyKeyboardBehavior : function() {
         var self = this;
-        this.keys = new KeyTable(this.daysTable);
+        this.keys = new KeyTable(this.daysTable, {idPrefix : 'mdpC'+this._mdpId+'_'});
         for (var i = 0; i < this._calendarDayGrid.length; i++) {
             var element = this._calendarDayGrid[i];
             (function(element) {
-                element.on('mouseover', function () {
+                element.observe('mouseover', function () {
                     self._dayHover(this);
                 });
 
-                element.on('mouseout', function () {
+                element.observe('mouseout', function () {
                     self._dayHoverOut(this)
                 });
 
-                element.on('click', function() {
+                element.observe('click', function() {
                     self.keys.setFocus(element, false);
                     self.keys.captureKeys();
                     self.keys.eventFire('focus', element);
@@ -572,7 +586,7 @@ CalendarDateSelect.prototype = {
                 var f_focus = (function(element) {
                     return function() {
                         self._calendarDayGrid.each(function(td) {
-                           td.removeClassName('hover');
+                            td.removeClassName('hover');
                         });
                         self._dayHover(element);
                     };
