@@ -40,7 +40,10 @@ CalendarDateSelect.prototype = {
         this.use_time = this.options.get('time');
         this.format = this.options.get('format');
         if (!this.options.get('embedded')) {
-            Event.observe(targetElement, 'keypress', this._keyPress.bindAsEventListener(this));
+            if (Prototype.Browser.Gecko || Prototype.Browser.Opera )
+                Event.observe(targetElement, 'keypress', this._keyPress.bindAsEventListener(this));
+            else
+                Event.observe(targetElement, 'keydown', this._keyPress.bindAsEventListener(this));
         }
     },
 
@@ -51,7 +54,7 @@ CalendarDateSelect.prototype = {
         if (!this.options.get('embedded')) {
             this._positionCalendarDiv();
             // set the click handler to check if a user has clicked away from the document
-            Event.observe(document, 'click', this._closeIfClickedOut_handler = this._closeIfClickedOut.bindAsEventListener(this));
+            Event.observe(document, 'click', this._closeIfClickedOutHandler = this._closeIfClickedOut.bindAsEventListener(this));
         }
         this._callback('afterShow');
         this.visibleFlg = true;
@@ -414,7 +417,7 @@ CalendarDateSelect.prototype = {
         if (!this.validYear(this.date.getFullYear())) this.date.setYear((this.date.getFullYear() < this.yearRange().start) ? this.yearRange().start : this.yearRange().end);
         this.selectedDate = this.date;
         this.use_time = /[0-9]:[0-9]{2}/.exec(value) ? true : false;
-        this.date.setDate(1);
+        //this.date.setDate(1);
     },
 
     _updateFooter : function(text) {
@@ -529,10 +532,9 @@ CalendarDateSelect.prototype = {
     _close : function() {
         if (!this.visibleFlg) return false;
         this._callback('beforeClose');
-        //this.targetElement.datePicker = null;
-        //Event.stopObserving(document, 'mousedown', this._closeIfClickedOut_handler);
-        //Event.stopObserving(document, 'keypress', this._keyPress_handler);
+        Event.stopObserving(document, 'click', this._closeIfClickedOutHandler);
         this._calendarDiv.remove();
+        this.keys.stop();
         this.keys = null;
         this.visibleFlg = false;
         if (this.iframe) this.iframe.remove();
@@ -545,10 +547,13 @@ CalendarDateSelect.prototype = {
     },
 
     _keyPress : function(event) {
-        if (event.keyCode == Event.KEY_DOWN && !this.visibleFlg)
+        if (event.keyCode == Event.KEY_DOWN && !this.visibleFlg) {
             this.show();
-        //else if (event.keyCode == Event.KEY_ESC && this.visibleFlg)
-        //    this._close();
+            event.stop();
+        } else if (event.keyCode == Event.KEY_ESC && this.visibleFlg) {
+            this._close();
+            event.stop();
+        }
     },
 
     _callback : function(name, param) {
@@ -582,7 +587,7 @@ CalendarDateSelect.prototype = {
                 var f_focus = (function(element) {
                     return function() {
                         self._calendarDayGrid.each(function(td) {
-                            td.removeClassName('hover');
+                            td.removeClassName('focus');
                         });
                         self._dayHover(element);
                     };

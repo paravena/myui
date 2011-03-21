@@ -62,8 +62,8 @@ KeyTable.prototype = {
 		}
 
 		// Loose table focus when click outside the table
-		Event.observe(document, 'click', function(event) {
-			if (!self._nCurrentFocus) return;
+        this._onClickHandler = function(event) {
+			if (!this._nCurrentFocus) return;
 			var nTarget = Event.element(event);
 			var ancestor = self._targetTable;
 			var blurFlg = true;
@@ -78,24 +78,25 @@ KeyTable.prototype = {
 				}
 			}
 			if (blurFlg) {
-				self.removeFocus(self._nCurrentFocus, true);
-				self.releaseKeys();
-				self._nOldFocus = null;
+				this.removeFocus(self._nCurrentFocus, true);
+				this.releaseKeys();
+				this._nOldFocus = null;
 			}
-		});
+		};
+
+		Event.observe(document, 'click', this._onClickHandler.bindAsEventListener(this));
 
         if (targetTable instanceof MyTableGrid) this.addMouseBehavior();
 
+        this._onKeyPressHandler = function(event) {
+            var result = this.onKeyPress(event);
+            if (!result) event.stop();
+        };
+
 		if (Prototype.Browser.Gecko || Prototype.Browser.Opera ) {
-			Event.observe(document, 'keypress', function(event) {
-				var result = self.onKeyPress(event);
-				if (!result) event.preventDefault();
-			});
+			Event.observe(document, 'keypress', this._onKeyPressHandler.bindAsEventListener(this));
 		} else {
-			Event.observe(document, 'keydown', function(event) {
-				var result = self.onKeyPress(event);
-				if (!result) event.preventDefault();
-			});
+			Event.observe(document, 'keydown', this._onKeyPressHandler.bindAsEventListener(this));
 		}
 	},
 
@@ -262,7 +263,7 @@ KeyTable.prototype = {
 						// Only lose focus if there isn't an escape handler on the cell
 						this.blur();
 					}
-					break;
+					return false;
 				case -1:
 				case Event.KEY_LEFT: // left arrow
 					if (this._bInputFocused) return true;
@@ -565,5 +566,14 @@ KeyTable.prototype = {
      */
     setNumberOfRows : function(numberOfRows) {
         this._numberOfRows = numberOfRows;
+    },
+
+    stop : function() {
+        if (Prototype.Browser.Gecko || Prototype.Browser.Opera ) {
+            Event.stopObserving(document, 'keypress', this._onKeyPressHandler);
+        } else {
+            Event.stopObserving(document, 'keydown', this._onKeyPressHandler);
+        }
+        if (this._onClickHandler) Event.stopObserving(document, 'click', this._onClickHandler);
     }
 };
