@@ -29,7 +29,7 @@ CalendarDateSelect.prototype = {
             buttons: true,
             clearButton: true,
             yearRange: 10,
-            close_on_click: null,
+            closeOnClick: null,
             minuteInterval: 5,
             popupBy: this.targetElement,
             monthYear: 'dropdowns',
@@ -41,7 +41,6 @@ CalendarDateSelect.prototype = {
         this.format = this.options.get('format');
         if (!this.options.get('embedded')) {
             Event.observe(targetElement, 'keypress', this._keyPress.bindAsEventListener(this));
-            Event.observe(targetElement, 'keydown', this._keyPress.bindAsEventListener(this));
         }
     },
 
@@ -471,10 +470,10 @@ CalendarDateSelect.prototype = {
 
     _closeOnClick : function() {
         if (this.options.get('embedded')) return false;
-        if (this.options.get('close_on_click') === null)
+        if (this.options.get('closeOnClick') === null)
             return (this.options.get('time')) ? false : true;
         else
-            return (this.options.get('close_on_click'))
+            return (this.options.get('closeOnClick'))
     },
 
     navMonth : function(month) {
@@ -600,9 +599,9 @@ CalendarDateSelect.prototype = {
             })(element);
         }
 
-        var t = $('mdpC1_0,0');
-        this.keys.setFocus(t, false);
+        var selectedCell = this.selectedCell || $('mdpC'+this._mdpId+'_0,0');
+        this.keys.setFocus(selectedCell, false);
         this.keys.captureKeys();
-        this.keys.eventFire('focus', t);
+        this.keys.eventFire('focus', selectedCell);
     }
 };
