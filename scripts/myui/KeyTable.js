@@ -62,7 +62,7 @@ KeyTable.prototype = {
 		}
 
 		// Loose table focus when click outside the table
-        this._onClickHandler = function(event) {
+        var f_onClick = function(event) {
 			if (!this._nCurrentFocus) return;
 			var nTarget = Event.element(event);
 			var ancestor = self._targetTable;
@@ -84,19 +84,19 @@ KeyTable.prototype = {
 			}
 		};
 
-		Event.observe(document, 'click', this._onClickHandler.bindAsEventListener(this));
+		this._onClickHandler = $(document).on('click', f_onClick.bindAsEventListener(this));
 
         if (targetTable instanceof MyTableGrid) this.addMouseBehavior();
 
-        this._onKeyPressHandler = function(event) {
+        var f_onKeyPress = function(event) {
             var result = this.onKeyPress(event);
             if (!result) event.stop();
         };
 
 		if (Prototype.Browser.Gecko || Prototype.Browser.Opera ) {
-			Event.observe(document, 'keypress', this._onKeyPressHandler.bindAsEventListener(this));
+			this._onKeyPressHandler = $(document).on('keypress', f_onKeyPress.bindAsEventListener(this));
 		} else {
-			Event.observe(document, 'keydown', this._onKeyPressHandler.bindAsEventListener(this));
+			this._onKeyPressHandler = $(document).on('keydown', f_onKeyPress.bindAsEventListener(this));
 		}
 	},
 
@@ -122,14 +122,14 @@ KeyTable.prototype = {
                 };
             })(element);
 
-            Event.observe(element, 'click', f_click.bindAsEventListener(this));
+            element.on('click', f_click.bindAsEventListener(this));
 
             var f_dblclick = (function(element){
                 return function() {
                     self.eventFire('action', element);
                 };
             })(element);
-            Event.observe(element, 'dblclick', f_dblclick);
+            element.on('dblclick', f_dblclick);
         }
     },
 	/**
@@ -570,10 +570,10 @@ KeyTable.prototype = {
 
     stop : function() {
         if (Prototype.Browser.Gecko || Prototype.Browser.Opera ) {
-            Event.stopObserving(document, 'keypress', this._onKeyPressHandler);
+            this._onKeyPressHandler.stop();
         } else {
-            Event.stopObserving(document, 'keydown', this._onKeyPressHandler);
+            this._onKeyPressHandler.stop();
         }
-        if (this._onClickHandler) Event.stopObserving(document, 'click', this._onClickHandler);
+        if (this._onClickHandler) this._onClickHandler.stop();
     }
 };

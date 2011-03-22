@@ -5,9 +5,7 @@ var _translations = {
     'Clear' : 'Clear'
 };
 
-var CalendarDateSelect = Class.create();
-
-CalendarDateSelect.prototype = {
+MY.DatePicker = Class.create({
     initialize: function(targetElement, options) {
         this._mdpId = $$('.myDatePicker').length + 1;
         this.targetElement = $(targetElement); // make sure it's an element, not a string
@@ -41,9 +39,9 @@ CalendarDateSelect.prototype = {
         this.format = this.options.get('format');
         if (!this.options.get('embedded')) {
             if (Prototype.Browser.Gecko || Prototype.Browser.Opera )
-                Event.observe(targetElement, 'keypress', this._keyPress.bindAsEventListener(this));
+                this.targetElement.on('keypress', this._keyPress.bindAsEventListener(this));
             else
-                Event.observe(targetElement, 'keydown', this._keyPress.bindAsEventListener(this));
+                this.targetElement.on('keydown', this._keyPress.bindAsEventListener(this));
         }
     },
 
@@ -54,7 +52,7 @@ CalendarDateSelect.prototype = {
         if (!this.options.get('embedded')) {
             this._positionCalendarDiv();
             // set the click handler to check if a user has clicked away from the document
-            Event.observe(document, 'click', this._closeIfClickedOutHandler = this._closeIfClickedOut.bindAsEventListener(this));
+            this._closeIfClickedOutHandler = $(document).on('click', this._closeIfClickedOut.bindAsEventListener(this));
         }
         this._callback('afterShow');
         this.visibleFlg = true;
@@ -532,7 +530,7 @@ CalendarDateSelect.prototype = {
     _close : function() {
         if (!this.visibleFlg) return false;
         this._callback('beforeClose');
-        Event.stopObserving(document, 'click', this._closeIfClickedOutHandler);
+        this._closeIfClickedOutHandler.stop();
         this._calendarDiv.remove();
         this.keys.stop();
         this.keys = null;
@@ -568,15 +566,15 @@ CalendarDateSelect.prototype = {
         for (var i = 0; i < this._calendarDayGrid.length; i++) {
             var element = this._calendarDayGrid[i];
             (function(element) {
-                element.observe('mouseover', function () {
+                element.on('mouseover', function () {
                     self._dayHover(this);
                 });
 
-                element.observe('mouseout', function () {
+                element.on('mouseout', function () {
                     self._dayHoverOut(this)
                 });
 
-                element.observe('click', function() {
+                element.on('click', function() {
                     self.keys.setFocus(element, false);
                     self.keys.captureKeys();
                     self.keys.eventFire('focus', element);
@@ -609,4 +607,4 @@ CalendarDateSelect.prototype = {
         this.keys.captureKeys();
         this.keys.eventFire('focus', selectedCell);
     }
-};
+});

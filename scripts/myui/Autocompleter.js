@@ -1,5 +1,3 @@
-var MY = {};
-
 /**
  * Autocompleter control
  */

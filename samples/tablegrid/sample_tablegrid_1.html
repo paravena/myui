@@ -2,10 +2,10 @@
 		"http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title>Sample Jon Karlen</title>
+		<title>TableGrid Sample</title>
 		<link type="text/css" href="../../css/main.css" rel="stylesheet">
-		<link type="text/css" href="../../css/myui/tablegrid.css" rel="stylesheet">
-		<link type="text/css" href="../../css/myui/calendar.css" rel="stylesheet">
+		<link type="text/css" href="../../css/myui/TableGrid.css" rel="stylesheet">
+		<link type="text/css" href="../../css/myui/DatePicker.css" rel="stylesheet">
 		<script type="text/javascript" src="../../scripts/prototype/prototype.js"></script>
 		<script type="text/javascript" src="../../scripts/scriptaculous/scriptaculous.js"></script>
 		<script type="text/javascript" src="../../scripts/myui/myui.js"></script>
@@ -290,17 +290,13 @@
 		]
 	};	
 	var myTableGrid = null;
-    var myDatePicker = null;
 	window.onload = function() {
 		myTableGrid = new MyTableGrid(tableModel);
-		myTableGrid.render('mytable');
-        myDatePicker = new CalendarDateSelect('arrivalDt')
+		myTableGrid.show('mytable');
 	};
 	</script>
 	<body style="margin:20px">
-        <h1>TableGrid Last Version</h1>
+        <h1>TableGrid Sample</h1>
         <div id="mytable" style="position:relative; width: 70%; height: 350px;"></div>
-        <br>
-        <input type="text" name="arrivalDt" id="arrivalDt">
 	</body>
 </html>

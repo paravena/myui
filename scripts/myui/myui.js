@@ -43,3 +43,4 @@ var MyUI = {
     }
 };
 MyUI.load();
+var MY = {};
