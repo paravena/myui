@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+		"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>Autocompleter Sample</title>
+		<link type="text/css" href="../../css/main.css" rel="stylesheet">
+		<link type="text/css" href="../../css/myui/Autocompleter.css" rel="stylesheet">
+		<script type="text/javascript" src="../../scripts/prototype/prototype.js"></script>
+		<script type="text/javascript" src="../../scripts/scriptaculous/scriptaculous.js"></script>
+		<script type="text/javascript" src="../../scripts/myui/myui.js"></script>
+	</head>
+	<script type="text/javascript">
+        var countryList = [
+            'Chile',
+            'Argentina',
+            'Brazil',
+            'United States',
+            'United Kingdom',
+            'France',
+            'Italy',
+            'Spain',
+            'Paraguay',
+            'Peru',
+            'Uruguay',
+            'Russia',
+            'China',
+            'Japan'
+        ];
+        window.onload = function() {
+            new MY.ComboBox('countryDesc', {items : countryList});
+        };
+	</script>
+	<body style="margin:20px">
+        <h1>Autocompleter Sample</h1>
+        <label for="countryDesc">Choose a country:</label>&nbsp;<input type="text" id="countryDesc">
+	</body>
+</html>

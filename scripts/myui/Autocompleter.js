@@ -3,6 +3,10 @@
  */
 MY.Autocompleter = Class.create({
     initialize : function(element, options) {
+        this.baseInitialize(element, options);
+    },
+
+    baseInitialize : function(element, options) {
         element = $(element);
         var self = this;
         this.element = element;
@@ -22,7 +26,9 @@ MY.Autocompleter = Class.create({
         this.options.paramName = this.options.paramName || this.element.name;
         this.options.tokens = this.options.tokens || [];
         this.options.frequency = this.options.frequency || 0.4;
-        this.options.minChars = this.options.minChars || 0;
+        this.options.minChars = this.options.minChars || 2;
+        this.options.url = this.options.url || null;
+        this.options.parameters = this.options.parameters || {};
         this.options.listTextPropertyName = this.options.listTextPropertyName || 'text';
         this.options.listValuePropertyName = this.options.listValuePropertyName || 'value';
         this.options.height = this.options.height || null;
@@ -109,7 +115,20 @@ MY.Autocompleter = Class.create({
     },
 
     getUpdatedChoices : function() {
-        this.updateChoices(this.options.selector(this));
+        if (this.options.url) {
+            var self = this;
+            this.startIndicator();
+            new Ajax.Request(this.options.url, {
+                onComplete: function(response) {
+                    self.options.items = response.responseText.evalJSON();
+                    self.stopIndicator();
+                    self.updateChoices(self.options.selector(self));
+                },
+                parameters: this.options.parameters
+            });
+        } else {
+            this.updateChoices(this.options.selector(this));
+        }
     },
 
     onBlur : function(event) {
