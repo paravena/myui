@@ -5,6 +5,27 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
     initialize : function(element, options) {
         this.baseInitialize(element, options)
         this.options.minChars = this.options.minChars || 0;
+        this.options.all = function(instance) {
+            var currentValue = instance.element.value.strip();
+            var result = [];
+            var text = '';
+            var value = '';
+            var items = instance.options.items;
+            var listTextPropertyName = instance.options.listTextPropertyName;
+            var listValuePropertyName = instance.options.listValuePropertyName;
+            for (var i = 0; i < items.length; i++) {
+                if (typeof(items[i]) == 'object') {
+                    text = items[i][listTextPropertyName];
+                    value = items[i][listValuePropertyName];
+                } else {
+                    text = items[i];
+                    value = items[i];
+                }
+                if (currentValue == text) instance.index = i;
+                result.push('<li id="' + value + '">' + text + '</li>');
+            }
+            return '<ul>' + result.join('') + '</ul>';
+        };
     },
 
     showAll : function() {
@@ -76,78 +97,6 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
         this.hasFocus = true;
         if (this.observer) clearTimeout(this.observer);
         this.observer = setTimeout(this.onObserverEvent.bind(this), this.options.frequency * 1000);
-    },
-
-    setOptions : function(options) {
-        this.options = Object.extend({
-            choices : 10,
-            partialSearch : true,
-            partialChars : 1,
-            ignoreCase : true,
-            fullSearch : false,
-            selector : function(instance) {
-                var result = []; // Beginning matches
-                var partial = []; // Inside matches
-                var entry = instance.getToken();
-                var items = instance.options.items;
-                var listTextPropertyName = instance.options.listTextPropertyName;
-                var listValuePropertyName = instance.options.listValuePropertyName;
-                var text = '';
-                var value = '';
-                for (var i = 0; i < items.length && result.length < instance.options.choices; i++) {
-                    if (typeof(items[i]) == 'object') {
-                        text = items[i][listTextPropertyName];
-                        value = items[i][listValuePropertyName];
-                    } else {
-                        text = items[i];
-                        value = items[i];
-                    }
-                    var foundPos = instance.options.ignoreCase ? text.toLowerCase().indexOf(entry.toLowerCase()) : text.indexOf(entry);
-
-                    while (foundPos != -1) {
-                        if (foundPos == 0 && text.length != entry.length) {
-                            result.push("<li id=\"" + value + "\"><strong>" + text.substr(0, entry.length) + "</strong>" + text.substr(entry.length) + "</li>");
-                            break;
-                        } else if (entry.length >= instance.options.partialChars && instance.options.partialSearch && foundPos != -1) {
-                            if (instance.options.fullSearch || /\s/.test(text.substr(foundPos - 1, 1))) {
-                                partial.push("<li>" + text.substr(0, foundPos) + "<strong>" +
-                                        text.substr(foundPos, entry.length) + "</strong>" + text.substr(
-                                        foundPos + entry.length) + "</li>");
-                                break;
-                            }
-                        }
-                        foundPos = instance.options.ignoreCase ?
-                                text.toLowerCase().indexOf(entry.toLowerCase(), foundPos + 1) :
-                                text.indexOf(entry, foundPos + 1);
-                    }
-                }
-                if (partial.length)
-                    result = result.concat(partial.slice(0, instance.options.choices - result.length));
-                return "<ul>" + result.join('') + "</ul>";
-            },
-
-            all : function(instance) {
-                var currentValue = instance.element.value.strip();
-                var result = [];
-                var text = '';
-                var value = '';
-                var items = instance.options.items;
-                var listTextPropertyName = instance.options.listTextPropertyName;
-                var listValuePropertyName = instance.options.listValuePropertyName;
-                for (var i = 0; i < items.length; i++) {
-                    if (typeof(items[i]) == 'object') {
-                        text = items[i][listTextPropertyName];
-                        value = items[i][listValuePropertyName];
-                    } else {
-                        text = items[i];
-                        value = items[i];
-                    }
-                    if (currentValue == text) instance.index = i;
-                    result.push('<li id="' + value + '">' + text + '</li>');
-                }
-                return '<ul>' + result.join('') + '</ul>';
-            }
-        }, options || {});
     }
 });
 
