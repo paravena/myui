@@ -1,15 +1,14 @@
 span.acContainer {
     position: relative;
-    border : solid 1px #609;
     display: inline;
     padding: 0;
     margin: 0;
 }
 
 span.acContainer input {
-    border: none;
-    outline: none;
-    padding: 0 3px;
+    /*border: none;*/
+    /*outline: none;*/
+    /*padding: 0 3px;*/
 }
 
 span.cbBtn {
@@ -20,9 +19,8 @@ span.cbBtn {
 }
 
 span.acBtn {
-    background: url(images/magb.png) no-repeat center;
-    border-left: 1px solid #609;
-    padding: 0 7px;
+    background: url(images/search-indicator.gif) no-repeat center;
+    padding: 0 12px;
     margin: 0;
 }
 

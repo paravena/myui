@@ -154,7 +154,7 @@ MY.Autocompleter = Class.create({
         var width = element.getDimensions().width;
         var height = element.getDimensions().height;
         Element.wrap(element, 'span', {width : width + 'px'}); // auto complete container
-        element.setStyle({width : (width - 24)+'px', height: (height - 5)+'px'});
+        element.setStyle({width : (width - 24) + 'px'});
         var container = element.up();
         container.addClassName("acContainer");
         container.id = this.id + '_container';
