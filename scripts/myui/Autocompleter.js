@@ -29,6 +29,7 @@ MY.Autocompleter = Class.create({
         this.options.minChars = this.options.minChars || 2;
         this.options.url = this.options.url || null;
         this.options.parameters = this.options.parameters || {};
+        this.options.finderParamName = this.options.finderParamName || 'find';
         this.options.listTextPropertyName = this.options.listTextPropertyName || 'text';
         this.options.listValuePropertyName = this.options.listValuePropertyName || 'value';
         this.options.height = this.options.height || null;
@@ -119,6 +120,8 @@ MY.Autocompleter = Class.create({
     getUpdatedChoices : function() {
         if (this.options.url) {
             var self = this;
+            var parameters = this.options.parameters;
+            parameters[this.options.finderParamName] = this.getToken();
             this.startIndicator();
             new Ajax.Request(this.options.url, {
                 onComplete: function(response) {
@@ -126,7 +129,7 @@ MY.Autocompleter = Class.create({
                     self.stopIndicator();
                     self.updateChoices(self.options.selector(self));
                 },
-                parameters: this.options.parameters
+                parameters: parameters
             });
         } else {
             this.updateChoices(this.options.selector(this));
