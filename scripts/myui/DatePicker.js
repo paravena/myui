@@ -411,7 +411,7 @@ MY.DatePicker = Class.create({
         var value = $F(this.targetElement).strip();
         this.selectionMade = (value != '');
         this.date = value == '' ? NaN : Date.parseString(this.options.get('date') || value, this.format);
-        if (isNaN(this.date)) this.date = new Date();
+        if (isNaN(this.date) || this.date == null) this.date = new Date();
         if (!this.validYear(this.date.getFullYear())) this.date.setYear((this.date.getFullYear() < this.yearRange().start) ? this.yearRange().start : this.yearRange().end);
         this.selectedDate = this.date;
         this.use_time = /[0-9]:[0-9]{2}/.exec(value) ? true : false;

@@ -132,11 +132,12 @@ KeyTable.prototype = {
             element.on('dblclick', f_dblclick);
         }
     },
+
 	/**
 	 * Purpose:  Create a function (with closure for sKey) event addition API
 	 * Returns:  function: - template function
 	 * Inputs:   string:sKey - type of event to detect
-	 */
+	 **/
 	insertAddEventTemplate : function(sKey) {
 		/*
 		 * API function for adding event to cache
@@ -206,10 +207,10 @@ KeyTable.prototype = {
 	 * @param fn callback function for when triggered
 	 */
 	addEvent : function(sType, nTarget, fn) {
-		this._oaoEvents[sType].push( {
+		this._oaoEvents[sType].push({
 			"nCell": nTarget,
 			"fn": fn
-		} );
+		});
 	},
 
 	/**
@@ -251,7 +252,7 @@ KeyTable.prototype = {
 		var y = this._yCurrentPos;
         var topLimit = this._topLimit;
 		// Capture shift+tab to match the left arrow key
-		var keyCode = (event.keyCode == 9 && event.shiftKey) ? -1 : event.keyCode;
+		var keyCode = (event.keyCode == Event.KEY_TAB && event.shiftKey) ? -1 : event.keyCode;
 		var cell = null;
 		while(true) {
 			switch(keyCode) {
@@ -311,7 +312,7 @@ KeyTable.prototype = {
 						y = this._yCurrentPos + 1;
 					} else {
 						// at end of table
-						if (keyCode == 9 && this._bForm ) {
+						if (keyCode == Event.KEY_TAB && this._bForm ) {
 							// If we are in a form, return focus to the 'input' element such that tabbing will
 							// follow correctly in the browser
 							this._bInputFocused = true;

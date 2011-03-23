@@ -97,9 +97,9 @@ MY.Autocompleter = Class.create({
         this.container = $(this.id + '_container');
         this.update.hide();
 
-        Event.observe(document, 'click', this.onBlur.bindAsEventListener(this));
-        Event.observe(this.element, 'keydown', this.onKeyPress.bindAsEventListener(this));
-        Event.observe(this.element, 'click', this.onClickInput.bindAsEventListener(this));
+        $(document).on('click', this.onBlur.bindAsEventListener(this));
+        this.element.on('keydown', this.onKeyPress.bindAsEventListener(this));
+        this.element.on('click', this.onClickInput.bindAsEventListener(this));
     },
 
     show: function() {
@@ -384,8 +384,8 @@ MY.Autocompleter = Class.create({
     },
 
     addObservers: function(element) {
-        Event.observe(element, "mouseover", this.onHover.bindAsEventListener(this));
-        Event.observe(element, "click", this.onClick.bindAsEventListener(this));
+        element.on('mouseover', this.onHover.bindAsEventListener(this));
+        element.on('click', this.onClick.bindAsEventListener(this));
     },
 
     onObserverEvent: function() {

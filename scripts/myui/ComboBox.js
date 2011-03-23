@@ -3,8 +3,10 @@
  */
 MY.ComboBox = Class.create(MY.Autocompleter, {
     initialize : function(element, options) {
-        this.baseInitialize(element, options)
+        this.baseInitialize(element, options);
         this.options.minChars = this.options.minChars || 0;
+        var self = this;
+        this.element.on('keydown', this._keyPress.bindAsEventListener(this));
         this.options.all = function(instance) {
             var currentValue = instance.element.value.strip();
             var result = [];
@@ -26,6 +28,13 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
             }
             return '<ul>' + result.join('') + '</ul>';
         };
+    },
+
+    _keyPress : function(event) {
+        if (event.keyCode == Event.KEY_DOWN) {
+            this.showAll();
+            event.stop();
+        }
     },
 
     showAll : function() {
@@ -59,8 +68,8 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
         Event.observe(cbBtn, 'click', this.showAll.bindAsEventListener(this));
         container.insert('<div id="'+this.id+'_update" class="autocomplete shadow"></div>');
         element.value = this.options.initialText;
-    },
-
+    }
+    /*
     onKeyPress: function(event) {
         if (this.active) {
             switch (event.keyCode) {
@@ -98,5 +107,6 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
         if (this.observer) clearTimeout(this.observer);
         this.observer = setTimeout(this.onObserverEvent.bind(this), this.options.frequency * 1000);
     }
+    */
 });
 
