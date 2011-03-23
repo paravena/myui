@@ -99,13 +99,14 @@ MY.Autocompleter = Class.create({
 
         $(document).on('click', this.onBlur.bindAsEventListener(this));
         this.element.on('keydown', this.onKeyPress.bindAsEventListener(this));
-        this.element.on('click', this.onClickInput.bindAsEventListener(this));
+        //this.element.on('click', this.onClickInput.bindAsEventListener(this));
     },
 
     show: function() {
         this.options.onShow(this.element, this.update);
     },
 
+    /*
     onClickInput : function() {
         if (this.options.initialText == this.element.value) {
             this.element.value = '';
@@ -113,6 +114,7 @@ MY.Autocompleter = Class.create({
             this.element.select();
         }
     },
+    */
 
     getUpdatedChoices : function() {
         if (this.options.url) {
@@ -197,7 +199,7 @@ MY.Autocompleter = Class.create({
                     event.stop();
                     return;
             }
-        } else if (event.keyCode == Event.KEY_TAB || event.keyCode == Event.KEY_RETURN || (Prototype.Browser.WebKit > 0 && event.keyCode == 0)) {
+        } else if (event.keyCode == Event.KEY_TAB || event.keyCode == Event.KEY_RETURN || event.keyCode == Event.KEY_DOWN || (Prototype.Browser.WebKit > 0 && event.keyCode == 0)) {
             return;
         }
         this.changed = true;

@@ -5,7 +5,6 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
     initialize : function(element, options) {
         this.baseInitialize(element, options);
         this.options.minChars = this.options.minChars || 0;
-        var self = this;
         this.element.on('keydown', this._keyPress.bindAsEventListener(this));
         this.options.all = function(instance) {
             var currentValue = instance.element.value.strip();
@@ -31,7 +30,8 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
     },
 
     _keyPress : function(event) {
-        if (event.keyCode == Event.KEY_DOWN) {
+        if (event.keyCode == Event.KEY_DOWN && !this.active) {
+            this.changed = false;
             this.showAll();
             event.stop();
         }
@@ -69,44 +69,5 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
         container.insert('<div id="'+this.id+'_update" class="autocomplete shadow"></div>');
         element.value = this.options.initialText;
     }
-    /*
-    onKeyPress: function(event) {
-        if (this.active) {
-            switch (event.keyCode) {
-                case Event.KEY_TAB:
-                case Event.KEY_RETURN:
-                    this.selectEntry();
-                    event.stop();
-                case Event.KEY_ESC:
-                    this.hide();
-                    this.active = false;
-                    event.stop();
-                    return;
-                case Event.KEY_LEFT:
-                case Event.KEY_RIGHT:
-                    return;
-                case Event.KEY_UP:
-                    this.markPrevious();
-                    this.render();
-                    event.stop();
-                    return;
-                case Event.KEY_DOWN:
-                    this.markNext();
-                    this.render();
-                    event.stop();
-                    return;
-            }
-        } else if (event.keyCode == Event.KEY_DOWN) {
-            this.showAll();
-            return;
-        } else if (event.keyCode == Event.KEY_TAB || event.keyCode == Event.KEY_RETURN || (Prototype.Browser.WebKit > 0 && event.keyCode == 0)) {
-            return;
-        }
-        this.changed = true;
-        this.hasFocus = true;
-        if (this.observer) clearTimeout(this.observer);
-        this.observer = setTimeout(this.onObserverEvent.bind(this), this.options.frequency * 1000);
-    }
-    */
 });
 
