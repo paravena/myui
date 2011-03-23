@@ -34,6 +34,8 @@ MY.Autocompleter = Class.create({
         this.options.listValuePropertyName = this.options.listValuePropertyName || 'value';
         this.options.height = this.options.height || null;
         this.options.initialText = this.options.initialText || '';
+        this.options.indicator = this.options.indicator || null;
+        this.options.autoSelect = this.options.autoSelect || false;
 
         this.options.decorate = this.options.decorate ||  function() {
             self.decorate(element);
@@ -202,7 +204,10 @@ MY.Autocompleter = Class.create({
                     event.stop();
                     return;
             }
-        } else if (event.keyCode == Event.KEY_TAB || event.keyCode == Event.KEY_RETURN || event.keyCode == Event.KEY_DOWN || (Prototype.Browser.WebKit > 0 && event.keyCode == 0)) {
+        } else if (event.keyCode == Event.KEY_TAB ||
+                   event.keyCode == Event.KEY_RETURN ||
+                   event.keyCode == Event.KEY_DOWN ||
+                   (Prototype.Browser.WebKit > 0 && event.keyCode == 0)) {
             return;
         }
         this.changed = true;
