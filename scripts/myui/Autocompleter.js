@@ -100,7 +100,7 @@ MY.Autocompleter = Class.create({
         this.container = $(this.id + '_container');
         this.update.hide();
 
-        this.element.on('blur', this.onBlur.bindAsEventListener(this));
+        $(document).on('click', this.onBlur.bindAsEventListener(this));
         this.element.on('keydown', this.onKeyPress.bindAsEventListener(this));
     },
 
@@ -128,9 +128,15 @@ MY.Autocompleter = Class.create({
     },
 
     onBlur : function(event) {
-        this.hide();
-        this.hasFocus = false;
-        this.active = false;
+        var target = Event.findElement(event);
+        var ancestor = this.container;
+        var blurFlg = true;
+        if (target.descendantOf(ancestor)) blurFlg = false;
+        if (blurFlg) {
+            this.hide();
+            this.hasFocus = false;
+            this.active = false;
+        }
     },
 
     decorate : function(element) {
