@@ -100,24 +100,13 @@ MY.Autocompleter = Class.create({
         this.container = $(this.id + '_container');
         this.update.hide();
 
-        $(document).on('click', this.onBlur.bindAsEventListener(this));
+        this.element.on('blur', this.onBlur.bindAsEventListener(this));
         this.element.on('keydown', this.onKeyPress.bindAsEventListener(this));
-        //this.element.on('click', this.onClickInput.bindAsEventListener(this));
     },
 
     show: function() {
         this.options.onShow(this.element, this.update);
     },
-
-    /*
-    onClickInput : function() {
-        if (this.options.initialText == this.element.value) {
-            this.element.value = '';
-        } else {
-            this.element.select();
-        }
-    },
-    */
 
     getUpdatedChoices : function() {
         if (this.options.url) {
@@ -139,15 +128,9 @@ MY.Autocompleter = Class.create({
     },
 
     onBlur : function(event) {
-        var target = Event.findElement(event);
-        var ancestor = this.container;
-        var blurFlg = true;
-        if (target.descendantOf(ancestor)) blurFlg = false;
-        if (blurFlg) {
-            this.hide();
-            this.hasFocus = false;
-            this.active = false;
-        }
+        this.hide();
+        this.hasFocus = false;
+        this.active = false;
     },
 
     decorate : function(element) {

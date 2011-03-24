@@ -39,10 +39,11 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
 
     showAll : function() {
         if (!this.active) {
-            this.hasFocus = true;
-            this.getAllChoices();
             this.element.focus();
             this.element.select();
+            this.hasFocus = true;
+            this.active = true;
+            this.getAllChoices();
             if (this.index >= 0)
                 this.getEntry(this.index).scrollIntoView(true);
         } else {
@@ -65,7 +66,7 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
         var cbBtn = new Element('span');
         cbBtn.addClassName('cbBtn');
         container.insert(cbBtn);
-        Event.observe(cbBtn, 'click', this.showAll.bindAsEventListener(this));
+        cbBtn.on('click', this.showAll.bindAsEventListener(this));
         container.insert('<div id="'+this.id+'_update" class="autocomplete shadow"></div>');
         element.value = this.options.initialText;
     }
