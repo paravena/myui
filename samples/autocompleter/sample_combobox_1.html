@@ -27,7 +27,10 @@
             'Japan'
         ];
         window.onload = function() {
-            new MY.ComboBox('countryDesc', {items : countryList});
+            new MY.ComboBox('countryDesc', {
+                items : countryList,
+                initialText : 'Select a country'
+            });
         };
 	</script>
 	<body style="margin:20px">
