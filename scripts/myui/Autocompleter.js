@@ -19,7 +19,7 @@ MY.Autocompleter = Class.create({
         this.oldElementValue = this.element.value;
         this.options = options || {};
         this.elementWidth = element.getDimensions().width;
-        alert(this.elementWidth);
+
         if (this.setOptions)
             this.setOptions(this.options);
 
@@ -58,7 +58,7 @@ MY.Autocompleter = Class.create({
                         update.setStyle({
                             top : topPos + 'px',
                             left : '0px',
-                            width : this.elementWidth + 'px',
+                            width : self.elementWidth + 'px',
                             height: uh + 'px'
                         });
                     } else { // up
@@ -71,7 +71,7 @@ MY.Autocompleter = Class.create({
                         update.setStyle({
                             top : topPos + 'px',
                             left : '0px',
-                            width : this.elementWidth + 'px',
+                            width : self.elementWidth + 'px',
                             height: uh + 'px'
                         });
                     }

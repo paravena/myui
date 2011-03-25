@@ -11,11 +11,11 @@
 	</head>
 	<script type="text/javascript">
         window.onload = function() {
-            new MY.Autocompleter('manufDesc', {url : 'get_manufacturers_list.php'});
+            new MY.Autocompleter('manufDesc', {url : 'get_manufacturers_list.php', indicator : 'ai'});
         };
 	</script>
 	<body style="margin:20px">
         <h1>Autocompleter Sample</h1>
-        <label for="manufDesc">Choose a manufacturer:</label>&nbsp;<input type="text" id="manufDesc">
+        <label for="manufDesc">Choose a manufacturer:</label>&nbsp;<input type="text" id="manufDesc"><span id="ai" class="indicator" style="display:none">&nbsp;</span>
 	</body>
 </html>

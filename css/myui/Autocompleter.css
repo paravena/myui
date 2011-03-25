@@ -76,3 +76,9 @@ div.autocomplete ul li.selected {
 	/* For IE 5.5 - 7 */
 	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#dddddd');
 }
+
+span.indicator {
+    background: url(images/search-indicator.gif) no-repeat center;
+    padding: 0 12px;
+    margin: 0;
+}
