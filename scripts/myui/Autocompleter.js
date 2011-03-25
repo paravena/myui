@@ -18,7 +18,8 @@ MY.Autocompleter = Class.create({
         this.entryCount = 0;
         this.oldElementValue = this.element.value;
         this.options = options || {};
-
+        this.elementWidth = element.getDimensions().width;
+        alert(this.elementWidth);
         if (this.setOptions)
             this.setOptions(this.options);
 
@@ -51,26 +52,26 @@ MY.Autocompleter = Class.create({
                     var vst = document.viewport.getScrollOffsets().top; // view port scrolling top
                     var rh = vh + vst - p.top - d.height; // remaining height
                     var uh = (self.entryCount * 22) + 6;
-                    if (rh > (p.top - vst)) {
+                    var topPos = d.height;
+                    if (rh > (p.top - vst)) { // down
                         if (uh > rh) uh = rh - 10;
                         update.setStyle({
-                            top : (d.height + 3) + 'px',
-                            left : '-1px',
-                            width : (d.width + 18) + 'px',
+                            top : topPos + 'px',
+                            left : '0px',
+                            width : this.elementWidth + 'px',
                             height: uh + 'px'
                         });
-                    } else {
-                        var topPos = d.height + 3;
+                    } else { // up
                         if (uh > (p.top - vst)) {
                             uh = p.top - vst - 10;
-                            topPos = -(uh + 4);
+                            topPos = -(uh + 8);
                         } else if (uh > rh) {
-                            topPos = -(uh + 4);
+                            topPos = -(uh + 8);
                         }
                         update.setStyle({
                             top : topPos + 'px',
-                            left : '-1px',
-                            width : (d.width + 18) + 'px',
+                            left : '0px',
+                            width : this.elementWidth + 'px',
                             height: uh + 'px'
                         });
                     }
@@ -141,15 +142,10 @@ MY.Autocompleter = Class.create({
 
     decorate : function(element) {
         var width = element.getDimensions().width;
-        var height = element.getDimensions().height;
         Element.wrap(element, 'span', {width : width + 'px'}); // auto complete container
-        element.setStyle({width : (width - 24) + 'px'});
         var container = element.up();
         container.addClassName("acContainer");
         container.id = this.id + '_container';
-        var cbBtn = new Element('span');
-        cbBtn.addClassName('acBtn');
-        container.insert(cbBtn);
         container.insert('<div id="'+this.id+'_update" class="autocomplete shadow"></div>');
         element.value = this.options.initialText;
     },
