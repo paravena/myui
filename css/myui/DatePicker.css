@@ -5,7 +5,21 @@
     display: block;
     width: 180px;
     z-index: 1000;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
 }
+
+.shadow {
+	-moz-box-shadow: 3px 3px 4px #ddd;
+	-webkit-box-shadow: 3px 3px 4px #ddd;
+	box-shadow: 3px 3px 4px #ddd;
+    /* For IE 8 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#dddddd')";
+	/* For IE 5.5 - 7 */
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#dddddd');
+}
+
 /* this is a fun ie6 hack to get drop downs to stay behind the popup window.  This should always be just underneath .myDatePicker */
 iframe.ie6_blocker {
     position: absolute;
@@ -15,7 +29,7 @@ iframe.ie6_blocker {
 .myDatePicker thead th {
     /* dow headings */
     background: url(images/hrow.gif) repeat-x;
-    font-weight: normal;
+    font-weight: bold;
     height: 20px;
     font-size: 11px;
     color: black;
@@ -82,10 +96,12 @@ iframe.ie6_blocker {
 
 .myDatePicker .mdpHeader select.month {
     width: 80px;
+    margin: 0 1px;
 }
 
 .myDatePicker .mdpHeader select.year {
     width: 50px;
+    margin: 0 2px;
 }
 
 .myDatePicker .mdpButtons a {
@@ -93,6 +109,7 @@ iframe.ie6_blocker {
     vertical-align: middle;
     font-size: 9px;
 }
+
 .myDatePicker td {
     /* weekday */
     font-size: 11px;

@@ -38,10 +38,7 @@ MY.DatePicker = Class.create({
         this.use_time = this.options.get('time');
         this.format = this.options.get('format');
         if (!this.options.get('embedded')) {
-            if (Prototype.Browser.Gecko || Prototype.Browser.Opera )
-                this.targetElement.on('keypress', this._keyPress.bindAsEventListener(this));
-            else
-                this.targetElement.on('keydown', this._keyPress.bindAsEventListener(this));
+            this.targetElement.on('keydown', this._keyPress.bindAsEventListener(this));
         }
     },
 
@@ -77,7 +74,7 @@ MY.DatePicker = Class.create({
 
         if ((( e_bottom + c_height ) > (w_top + w_height)) && ( e_bottom - c_height > w_top )) above = true;
         var left_px = e_left.toString() + 'px';
-        var top_px = (above ? (e_top - c_height ) : ( e_top + e_height )).toString() + 'px';
+        var top_px = (above ? (e_top - c_height - 2) : ( e_top + e_height + 2)).toString() + 'px';
 
         this._calendarDiv.style.left = left_px;
         this._calendarDiv.style.top = top_px;
@@ -111,7 +108,7 @@ MY.DatePicker = Class.create({
             parent = document.body;
             style = { position:'absolute', visibility: 'hidden', left:0, top:0 };
         }
-        this._calendarDiv = new Element('div', {className: 'myDatePicker'}).setStyle(style);
+        this._calendarDiv = new Element('div', {className: 'myDatePicker shadow'}).setStyle(style);
         // create the divs
         this._topDiv = new Element('div', {className: 'mdpTop'}).setStyle({clear:'left'});
         this._headerDiv = new Element('div', {className: 'mdpHeader'}).setStyle({clear:'left'});
