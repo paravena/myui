@@ -103,6 +103,9 @@ MY.Autocompleter = Class.create({
 
         $(document).on('click', this.onBlur.bindAsEventListener(this));
         this.element.on('keydown', this.onKeyPress.bindAsEventListener(this));
+        this.element.on('focus', function() {
+            if (this.element.value == this.options.initialText) this.element.value = '';
+        }.bind(this));
     },
 
     show: function() {
