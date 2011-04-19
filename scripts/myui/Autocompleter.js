@@ -147,9 +147,9 @@ MY.Autocompleter = Class.create({
         var width = element.getDimensions().width;
         Element.wrap(element, 'span', {width : width + 'px'}); // auto complete container
         var container = element.up();
-        container.addClassName("acContainer");
+        container.addClassName('my-autocompleter');
         container.id = this.id + '_container';
-        container.insert('<div id="'+this.id+'_update" class="autocomplete shadow"></div>');
+        container.insert('<div id="'+this.id+'_update" class="my-autocompleter-list shadow"></div>');
         element.value = this.options.initialText;
     },
 

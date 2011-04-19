@@ -1,4 +1,4 @@
-.myDatePicker {
+.my-datepicker {
     font-family: Arial, Helvetica, sans-serif;
     color: white;
     border: #609 1px solid;
@@ -10,23 +10,13 @@
     border-radius: 3px;
 }
 
-.shadow {
-	-moz-box-shadow: 3px 3px 4px #ddd;
-	-webkit-box-shadow: 3px 3px 4px #ddd;
-	box-shadow: 3px 3px 4px #ddd;
-    /* For IE 8 */
-	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#dddddd')";
-	/* For IE 5.5 - 7 */
-	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#dddddd');
-}
-
 /* this is a fun ie6 hack to get drop downs to stay behind the popup window.  This should always be just underneath .myDatePicker */
 iframe.ie6_blocker {
     position: absolute;
     z-index: 999;
 }
 
-.myDatePicker thead th {
+.my-datepicker thead th {
     /* dow headings */
     background: url(images/hrow.gif) repeat-x;
     font-weight: bold;
@@ -35,14 +25,14 @@ iframe.ie6_blocker {
     color: black;
 }
 
-.myDatePicker .mdpButtons {
+.my-datepicker .my-datepicker-buttons {
     text-align: center;
     padding: 2px 0;
     vertical-align: middle;
     background: url(images/hrow.gif) repeat-x;
 }
 
-.myDatePicker .mdpFooter {
+.my-datepicker .my-datepicker-footer {
     /* bottom line */
     background-color: #ddd;
     padding: 3px;
@@ -51,31 +41,32 @@ iframe.ie6_blocker {
     color: black;
 }
 
-.myDatePicker table {
+.my-datepicker table {
     margin: 0;
     padding: 0;
 }
 
-.myDatePicker .mdpHeader {
+.my-datepicker-header {
     padding: 3px 0;
     background-color: #ddd;
     text-align: center;
 }
 
-.myDatePicker .mdpHeader span {
+.my-datepicker-header span {
     font-size: 11px;
     color: black;
     font-weight: bold;
 }
 
-.myDatePicker select { 
+.my-datepicker-header select {
     font-size: 11px;
 }
 
-.myDatePicker .mdpHeader a:hover {
+.my-datepicker-header a:hover {
     color: white;
 }
-.myDatePicker .mdpHeader a {
+
+.my-datepicker-header a {
     width: 18px;
     height: 17px;
     text-decoration: none;
@@ -83,34 +74,34 @@ iframe.ie6_blocker {
     color: black !important;
 }
 
-.myDatePicker .mdpHeader a.prev {
-    float: left;
-}
-.myDatePicker .mdpHeader a.next {
-    float: right;
-}
-.myDatePicker .mdpHeader a.close {
+.my-datepicker-header a.close {
     float: right;
     display: none;
 }
 
-.myDatePicker .mdpHeader select.month {
+.my-datepicker-header select.month {
     width: 80px;
     margin: 0 1px;
 }
 
-.myDatePicker .mdpHeader select.year {
+.my-datepicker-header select.year {
     width: 50px;
     margin: 0 2px;
 }
 
-.myDatePicker .mdpButtons a {
-    color: black;
-    vertical-align: middle;
-    font-size: 9px;
+.my-datepicker-header a.prev {
+    float: left;
+    background: url(images/prev.gif) center no-repeat transparent;
+    margin-left: 3px;
 }
 
-.myDatePicker td {
+.my-datepicker-header a.next {
+    float: right;
+    background: url(images/next.gif) center no-repeat transparent;
+    margin-right: 3px;
+}
+
+.my-datepicker-body td {
     /* weekday */
     font-size: 11px;
     width: 18px;
@@ -120,58 +111,50 @@ iframe.ie6_blocker {
     vertical-align: middle;
 }
 
-.myDatePicker td.weekend {
+.my-datepicker-body td.weekend {
     /* weekend */
     background-color: white;
 }
 
-.myDatePicker td div {
+.my-datepicker-body td div {
     /* days */
     color: black;
 }
-.myDatePicker td div.other {
+
+.my-datepicker-body td div.other {
     color: #aaa;
 }
-.myDatePicker td.selected div {
+
+.my-datepicker-body td.selected div {
     /* selected date */
     color: red;
 }
 
-.myDatePicker td.selected {
+.my-datepicker-body td.selected {
     background-color: white;
 }
 
-.myDatePicker td.focus {
+.my-datepicker-body td.focus {
     /* day under cursor */
     background-color: #90c;
 }
 
-.myDatePicker td.focus div {
+.my-datepicker-body td.focus div {
     /* day under cursor */
     color: white;
 }
 
-.myDatePicker td.today {
+.my-datepicker-body td.today {
     /* current date */
     border: 1px dashed red;
 }
 
-.myDatePicker td.disabled div {
+.my-datepicker-body td.disabled div {
     color: #454545;
 }
 
-.fieldWithErrors .myDatePicker {
-    border: 2px solid red;
-}
-
-.myDatePicker div.next {
-    background: url(images/next.gif) center no-repeat transparent;
-    width: 16px;
-    height: 16px;
-}
-
-.myDatePicker div.prev {
-    background: url(images/prev.gif) center no-repeat transparent;
-    width: 16px;
-    height: 16px;
+.my-datepicker-buttons a {
+    color: black;
+    vertical-align: middle;
+    font-size: 9px;
 }

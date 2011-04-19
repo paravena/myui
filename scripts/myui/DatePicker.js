@@ -7,7 +7,7 @@ var _translations = {
 
 MY.DatePicker = Class.create({
     initialize: function(targetElement, options) {
-        this._mdpId = $$('.myDatePicker').length + 1;
+        this._mdpId = $$('.my-datepicker').length + 1;
         this.targetElement = $(targetElement); // make sure it's an element, not a string
         if (!this.targetElement) {
             alert('Target element ' + targetElement + ' not found!');
@@ -108,14 +108,14 @@ MY.DatePicker = Class.create({
             parent = document.body;
             style = { position:'absolute', visibility: 'hidden', left:0, top:0 };
         }
-        this._calendarDiv = new Element('div', {className: 'myDatePicker shadow'}).setStyle(style);
+        this._calendarDiv = new Element('div', {className: 'my-datepicker shadow'}).setStyle(style);
         // create the divs
-        this._topDiv = new Element('div', {className: 'mdpTop'}).setStyle({clear:'left'});
-        this._headerDiv = new Element('div', {className: 'mdpHeader'}).setStyle({clear:'left'});
-        this._bodyDiv = new Element('div', {className: 'mdpBody'}).setStyle({clear:'left'});
-        this._buttonsDiv = new Element('div', {className: 'mdpButtons'}).setStyle({clear:'left'});
-        this._footerDiv = new Element('div', {className: 'mdpFooter'}).setStyle({clear:'left'});
-        this._bottomDiv = new Element('div', {className: 'mdpBottom'}).setStyle({clear:'left'});
+        this._topDiv = new Element('div', {className: 'my-datepicker-top'}).setStyle({clear:'left'});
+        this._headerDiv = new Element('div', {className: 'my-datepicker-header'}).setStyle({clear:'left'});
+        this._bodyDiv = new Element('div', {className: 'my-datepicker-body'}).setStyle({clear:'left'});
+        this._buttonsDiv = new Element('div', {className: 'my-datepicker-buttons'}).setStyle({clear:'left'});
+        this._footerDiv = new Element('div', {className: 'my-datepicker-footer'}).setStyle({clear:'left'});
+        this._bottomDiv = new Element('div', {className: 'my-datepicker-bottom'}).setStyle({clear:'left'});
 
         this._calendarDiv.insert(this._topDiv);
         this._calendarDiv.insert(this._headerDiv);
@@ -138,12 +138,12 @@ MY.DatePicker = Class.create({
 
     _initHeaderDiv : function() {
         var headerDiv = this._headerDiv;
-        this.next_month_button = headerDiv.build('a', {innerHTML: '<div class="next">&nbsp;</div>', href:'#', onclick: function () {
+        this.next_month_button = headerDiv.build('a', {innerHTML: '&nbsp;', href:'#', onclick: function () {
             this.navMonth(this.date.getMonth() + 1);
             return false;
         }.bindAsEventListener(this), className: 'next'});
 
-        this.prev_month_button = headerDiv.build('a', {innerHTML: '<div class="prev">&nbsp;</div>', href: '#', onclick: function () {
+        this.prev_month_button = headerDiv.build('a', {innerHTML: '&nbsp;', href: '#', onclick: function () {
             this.navMonth(this.date.getMonth() - 1);
             return false;
         }.bindAsEventListener(this), className: 'prev'});

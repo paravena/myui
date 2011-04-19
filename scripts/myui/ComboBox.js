@@ -61,13 +61,13 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
         Element.wrap(element, 'span', {width : width + 'px'}); // auto complete container
         element.setStyle({width : (width - 20)+'px'});
         var container = element.up();
-        container.addClassName("acContainer");
+        container.addClassName('my-autocompleter');
         container.id = this.id + '_container';
         var cbBtn = new Element('span');
-        cbBtn.addClassName('cbBtn');
+        cbBtn.addClassName('my-combobox-button');
         container.insert(cbBtn);
         cbBtn.on('click', this.showAll.bindAsEventListener(this));
-        container.insert('<div id="'+this.id+'_update" class="autocomplete shadow"></div>');
+        container.insert('<div id="'+this.id+'_update" class="my-autocompleter-list shadow"></div>');
         element.value = this.options.initialText;
     }
 });
