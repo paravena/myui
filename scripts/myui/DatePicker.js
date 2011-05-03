@@ -35,14 +35,30 @@ MY.DatePicker = Class.create({
             validate: null
         }).merge(options || {});
 
-        this.use_time = this.options.get('time');
+        this.useTimeFlg = this.options.get('time');
         this.format = this.options.get('format');
         if (!this.options.get('embedded')) {
             this.targetElement.on('keydown', this._keyPress.bindAsEventListener(this));
         }
+        this.decorate(this.targetElement);
+    },
+
+    decorate : function(element) {
+        var width = element.getDimensions().width;
+        var height = element.getDimensions().height;
+        Element.wrap(element, 'span', {width : width + 'px'}); // auto complete container
+        element.setStyle({width : (width - 22)+'px'});
+        this.container = element.up();
+        this.container.addClassName('my-datepicker-container');
+        this.container.id = this.id + '_container';
+        var datePickerSelectBtn = new Element('span');
+        datePickerSelectBtn.addClassName('my-datepicker-select-button');
+        this.container.insert(datePickerSelectBtn);
+        datePickerSelectBtn.on('click', this.show.bindAsEventListener(this));
     },
 
     show : function() {
+        if (this.visibleFlg) return;
         this._parseDate();
         this._callback('beforeShow');
         this._initCalendarDiv();
@@ -132,7 +148,7 @@ MY.DatePicker = Class.create({
         this._updateFooter('&#160;');
 
         this._refresh();
-        this.setUseTime(this.use_time);
+        this.setUseTime(this.useTimeFlg);
         this._applyKeyboardBehavior();
     },
 
@@ -411,7 +427,7 @@ MY.DatePicker = Class.create({
         if (isNaN(this.date) || this.date == null) this.date = new Date();
         if (!this.validYear(this.date.getFullYear())) this.date.setYear((this.date.getFullYear() < this.yearRange().start) ? this.yearRange().start : this.yearRange().end);
         this.selectedDate = this.date;
-        this.use_time = /[0-9]:[0-9]{2}/.exec(value) ? true : false;
+        this.useTimeFlg = /[0-9]:[0-9]{2}/.exec(value) ? true : false;
         //this.date.setDate(1);
     },
 
@@ -496,8 +512,8 @@ MY.DatePicker = Class.create({
     },
 
     setUseTime : function(turnOnFlg) {
-        this.use_time = this.options.get('time') && (this.options.get('time') == 'mixed' ? turnOnFlg : true); // force use_time to true if time==true && time!='mixed'
-        if (this.use_time && this.selectedDate) { // only set hour/minute if a date is already selected
+        this.useTimeFlg = this.options.get('time') && (this.options.get('time') == 'mixed' ? turnOnFlg : true); // force use_time to true if time==true && time!='mixed'
+        if (this.useTimeFlg && this.selectedDate) { // only set hour/minute if a date is already selected
             var minute = Utilities.floorToInterval(this.selectedDate.getMinutes(), this.options.get('minuteInterval'));
             var hour = this.selectedDate.getHours();
 
@@ -538,7 +554,8 @@ MY.DatePicker = Class.create({
     },
 
     _closeIfClickedOut : function(e) {
-        if (!$(Event.element(e)).descendantOf(this._calendarDiv)) this._close();
+        var target = $(Event.element(e));
+        if (!target.descendantOf(this._calendarDiv) && !target.descendantOf(this.container)) this._close();
     },
 
     _keyPress : function(event) {

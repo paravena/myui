@@ -260,10 +260,10 @@ table.contactTable td {
 }
 
 table.contactTable a {
-	text-decorarion: none;
+	text-decoration: none;
 	color: white
 }
 
 table.contactTable a:hover {
-	text-decorarion: underline;
+	text-decoration: underline;
 }

@@ -2,13 +2,13 @@
  * General purpose CSS definitions
  */
 
-
 .shadow {
 	-moz-box-shadow: 3px 3px 4px #ddd;
 	-webkit-box-shadow: 3px 3px 4px #ddd;
 	box-shadow: 3px 3px 4px #ddd;
-    /* For IE 8 */
-	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#dddddd')";
-	/* For IE 5.5 - 7 */
-	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#dddddd');
+}
+
+.gradient {
+    background: -moz-linear-gradient(top,  #ccc,  #999);
+    background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#999));
 }

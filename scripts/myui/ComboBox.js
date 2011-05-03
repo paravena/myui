@@ -59,14 +59,14 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
         var width = element.getDimensions().width;
         var height = element.getDimensions().height;
         Element.wrap(element, 'span', {width : width + 'px'}); // auto complete container
-        element.setStyle({width : (width - 20)+'px'});
+        element.setStyle({width : (width - 22)+'px'});
         var container = element.up();
         container.addClassName('my-autocompleter');
         container.id = this.id + '_container';
-        var cbBtn = new Element('span');
-        cbBtn.addClassName('my-combobox-button');
-        container.insert(cbBtn);
-        cbBtn.on('click', this.showAll.bindAsEventListener(this));
+        var comboBoxBtn = new Element('span');
+        comboBoxBtn.addClassName('my-combobox-button gradient');
+        container.insert(comboBoxBtn);
+        comboBoxBtn.on('click', this.showAll.bindAsEventListener(this));
         container.insert('<div id="'+this.id+'_update" class="my-autocompleter-list shadow"></div>');
         element.value = this.options.initialText;
     }

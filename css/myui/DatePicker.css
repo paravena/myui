@@ -10,6 +10,12 @@
     border-radius: 3px;
 }
 
+.my-datepicker-container input {
+    border: 1px solid #609;
+    outline: none;
+    padding: 2px 0;
+}
+
 /* this is a fun ie6 hack to get drop downs to stay behind the popup window.  This should always be just underneath .myDatePicker */
 iframe.ie6_blocker {
     position: absolute;
@@ -157,4 +163,12 @@ iframe.ie6_blocker {
     color: black;
     vertical-align: middle;
     font-size: 9px;
+}
+
+.my-datepicker-select-button {
+    background-image: url(images/calb.png);
+    padding: 1px 8px 1px 9px;
+    margin: 0;
+    border: solid #609 1px;
+    border-left-style: none;
 }

@@ -58,7 +58,7 @@ MY.Autocompleter = Class.create({
                         update.setStyle({
                             top : topPos + 'px',
                             left : '0px',
-                            width : self.elementWidth + 'px',
+                            width : (self.elementWidth - 4) + 'px',
                             height: uh + 'px'
                         });
                     } else { // up
@@ -71,7 +71,7 @@ MY.Autocompleter = Class.create({
                         update.setStyle({
                             top : topPos + 'px',
                             left : '0px',
-                            width : self.elementWidth + 'px',
+                            width : (self.elementWidth - 4) + 'px',
                             height: uh + 'px'
                         });
                     }

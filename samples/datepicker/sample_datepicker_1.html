@@ -4,15 +4,16 @@
 	<head>
 		<title>Date Picker Sample</title>
 		<link type="text/css" href="../../css/main.css" rel="stylesheet">
+        <link type="text/css" href="../../css/myui/myui.css" rel="stylesheet">
 		<link type="text/css" href="../../css/myui/DatePicker.css" rel="stylesheet">
 		<script type="text/javascript" src="../../scripts/prototype/prototype.js"></script>
 		<script type="text/javascript" src="../../scripts/scriptaculous/scriptaculous.js"></script>
 		<script type="text/javascript" src="../../scripts/myui/myui.js"></script>
 	</head>
 	<script type="text/javascript">
-        window.onload = function() {
+        Event.observe(document, 'dom:loaded', function() {
             new MY.DatePicker('arrivalDt', {format: 'dd-MM-yyyy'});
-        };
+        });
 	</script>
 	<body style="margin:20px">
         <h1>Date Picker Sample</h1>
