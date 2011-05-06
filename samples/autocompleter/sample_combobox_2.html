@@ -2,9 +2,9 @@
 		"http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title>Autocompleter Sample</title>
+		<title>ComboBox Sample</title>
 		<link type="text/css" href="../../css/main.css" rel="stylesheet">
-        <link type="text/css" href="../../css/myui/myui.css" rel="stylesheet">
+		<link type="text/css" href="../../css/myui/myui.css" rel="stylesheet">
 		<link type="text/css" href="../../css/myui/Autocompleter.css" rel="stylesheet">
 		<script type="text/javascript" src="../../scripts/prototype/prototype.js"></script>
 		<script type="text/javascript" src="../../scripts/scriptaculous/scriptaculous.js"></script>
@@ -12,13 +12,14 @@
 	</head>
 	<script type="text/javascript">
         Event.observe(document, 'dom:loaded', function() {
-            new MY.Autocompleter('manufDesc', {
+            new MY.ComboBox('manufacturerDesc', {
                 url : 'get_manufacturers_list.php',
-                indicator : 'ai'});
+                initialText : 'Select a manufacturer'
+            });
         });
 	</script>
 	<body style="margin:20px">
-        <h1>Autocompleter Sample</h1>
-        <label for="manufDesc">Choose a manufacturer:</label>&nbsp;<input type="text" id="manufDesc"><span id="ai" class="my-autocompleter-indicator" style="display:none">&nbsp;</span>
+        <h1>ComboBox Sample</h1>
+        <label for="manufacturerDesc">Choose a manufacturer:</label>&nbsp;<input type="text" id="manufacturerDesc" size="40">
 	</body>
 </html>

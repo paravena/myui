@@ -1205,10 +1205,25 @@ MyTableGrid.prototype = {
             if (editor instanceof MyTableGrid.ComboBox) { // when is a list
                 value = cm[x].renderer(value, editor.list, this.getRow(y));
             }
-            input = editor.render(this,{width: width, height: height, value: value, align: alignment});
+            // Creating a normal input
+            var inputId = 'mtgInput' + this._mtgId + '_' + x + ',' + y;
+            var div = new Element('div').setStyle({border: 0, margin: 0, padding: 0});
+            input = new Element('input', {id: inputId, type: 'text', value: value});
+            input.addClassName('mtgInputText');
+            var marginTop = '2px';
+            if (Prototype.Browser.IE) {
+                var ieVersion = parseInt(navigator.userAgent.substring(navigator.userAgent.indexOf("MSIE")+5));
+                if (ieVersion <= 7) marginTop = '1px';
+            }
+            input.setStyle({
+                width: (width - 10) + 'px',
+                marginTop: marginTop
+            });
+            div.insert(input);
+            //input = editor.render(this,{width: width, height: height, value: value, align: alignment});
             innerElement.appendChild(input);
-            input.down('input').focus();
-            input.down('input').select();
+            input.focus();
+            input.select();
         } else if (editor == 'checkbox' || editor instanceof MyTableGrid.CellCheckbox) {
             input = $('mtgInput' + this._mtgId + '_' + x + ',' + y);
             input.checked = (!input.checked);
@@ -1269,7 +1284,7 @@ MyTableGrid.prototype = {
         var isInputFlg = (editor == 'input' || editor instanceof MyTableGrid.CellInput || editor instanceof MyTableGrid.ComboBox || editor instanceof MyTableGrid.BrowseInput || editor instanceof MyTableGrid.CellCalendar);
 
         if (isInputFlg) {
-            if (editor.hide) editor.hide(); // this only happen when editor is a Combobox
+           // if (editor.hide) editor.hide(); // this only happen when editor is a Combobox
             if (editor.validate) { // this only happen when there is a validate method
                 var isValidFlg = editor.validate(value, input);
                 if (editor instanceof MyTableGrid.ComboBox && !isValidFlg) {
@@ -1295,7 +1310,7 @@ MyTableGrid.prototype = {
                 textAlign: alignment
             }).update(value);
         }
-
+        /*
         if (editor instanceof MyTableGrid.ComboBox) { // I hope I can find a better solution
             value = editor.getSelectedValue(value);
         }
@@ -1311,7 +1326,7 @@ MyTableGrid.prototype = {
         if ((editor instanceof MyTableGrid.BrowseInput || editor instanceof MyTableGrid.CellInput || editor instanceof MyTableGrid.CellCalendar) && editor.afterUpdateCallback) {
             editor.afterUpdateCallback(element, value);
         }
-
+        */
         keys._bInputFocused = false;
     },
 

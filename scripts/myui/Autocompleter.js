@@ -23,7 +23,7 @@ MY.Autocompleter = Class.create({
         if (this.setOptions)
             this.setOptions(this.options);
 
-        this.options.items = this.options.items || [];
+        this.options.items = this.options.items || null;
         this.options.paramName = this.options.paramName || this.element.name;
         this.options.tokens = this.options.tokens || [];
         this.options.frequency = this.options.frequency || 0.4;
@@ -53,12 +53,13 @@ MY.Autocompleter = Class.create({
                     var rh = vh + vst - p.top - d.height; // remaining height
                     var uh = (self.entryCount * 22) + 6;
                     var topPos = d.height;
+                    var leftPos = Prototype.Browser.WebKit ? 2 : 0;
                     if (rh > (p.top - vst)) { // down
                         if (uh > rh) uh = rh - 10;
                         update.setStyle({
                             top : topPos + 'px',
-                            left : '0px',
-                            width : (self.elementWidth - 4) + 'px',
+                            left : leftPos + 'px',
+                            width : self.elementWidth + 'px',
                             height: uh + 'px'
                         });
                     } else { // up
@@ -70,8 +71,8 @@ MY.Autocompleter = Class.create({
                         }
                         update.setStyle({
                             top : topPos + 'px',
-                            left : '0px',
-                            width : (self.elementWidth - 4) + 'px',
+                            left : leftPos + 'px',
+                            width : self.elementWidth + 'px',
                             height: uh + 'px'
                         });
                     }

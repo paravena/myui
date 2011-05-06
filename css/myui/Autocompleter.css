@@ -12,7 +12,7 @@
 .my-autocompleter input {
     border: 1px solid #609;
     outline: none;
-    padding: 2px 0;
+    padding: 2px;
 }
 
 .my-autocompleter-list {

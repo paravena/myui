@@ -199,6 +199,10 @@ MyTableGrid.ComboBox = Class.create({
 		});
 
 		div.insert(input);
+
+        //new MY.ComboBox(input);
+
+        /*
 		var cbBtn = new Element('div');
         cbBtn.addClassName('mtgComboBoxBtn');
 
@@ -243,6 +247,7 @@ MyTableGrid.ComboBox = Class.create({
 		} else {
 			this.autocompleter = new Autocompleter.InputElement(input, divList, this.list, opt, this);
 		}
+        */
 		return div;
 	},
 

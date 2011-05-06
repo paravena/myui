@@ -11,7 +11,17 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
             var result = [];
             var text = '';
             var value = '';
-            var items = instance.options.items;
+            var items = [];
+            if (instance.options.items) {
+                items = instance.options.items;
+            } else if (instance.options.url) {
+                new Ajax.Request(instance.options.url, {
+                    onSuccess: function(transport) {
+                        items = transport.responseText.evalJSON();
+                    },
+                    asynchronous: false
+                })
+            }
             var listTextPropertyName = instance.options.listTextPropertyName;
             var listValuePropertyName = instance.options.listValuePropertyName;
             for (var i = 0; i < items.length; i++) {
