@@ -24,6 +24,7 @@ MY.Autocompleter = Class.create({
             this.setOptions(this.options);
 
         this.options.items = this.options.items || null;
+        this.options.listId = this.options.listId || null;
         this.options.paramName = this.options.paramName || this.element.name;
         this.options.tokens = this.options.tokens || [];
         this.options.frequency = this.options.frequency || 0.4;
@@ -53,7 +54,9 @@ MY.Autocompleter = Class.create({
                     var rh = vh + vst - p.top - d.height; // remaining height
                     var uh = (self.entryCount * 22) + 6;
                     var topPos = d.height;
-                    var leftPos = Prototype.Browser.WebKit ? 2 : 0;
+                    topPos += element.offsetParent.cumulativeOffset().top;
+                    var leftPos = 0;
+                    leftPos += element.offsetParent.cumulativeOffset().left;
                     if (rh > (p.top - vst)) { // down
                         if (uh > rh) uh = rh - 10;
                         update.setStyle({
@@ -97,8 +100,10 @@ MY.Autocompleter = Class.create({
 
         this.element.setAttribute('autocomplete', 'off');
         this.options.decorate();
-
-        this.update = $(this.id + '_update');
+        if (this.options.listId != null)
+            this.update = $(this.options.listId);
+        else
+            this.update = $(this.id + '_update');
         this.container = $(this.id + '_container');
         this.update.hide();
 
@@ -111,6 +116,10 @@ MY.Autocompleter = Class.create({
 
     show: function() {
         this.options.onShow(this.element, this.update);
+    },
+
+    getItems : function() {
+        return this.options.items;
     },
 
     getUpdatedChoices : function() {
@@ -150,7 +159,8 @@ MY.Autocompleter = Class.create({
         var container = element.up();
         container.addClassName('my-autocompleter');
         container.id = this.id + '_container';
-        container.insert('<div id="'+this.id+'_update" class="my-autocompleter-list shadow"></div>');
+        if (this.options.listId == null)
+            container.insert({after: '<div id="'+this.id+'_update" class="my-autocompleter-list shadow"></div>'});
         element.value = this.options.initialText;
     },
 

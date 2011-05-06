@@ -150,7 +150,7 @@ MyTableGrid.prototype = {
         this.scrollTop = 0;
         this.targetColumnId = null;
 
-        $(target).insert({after:'<div class="autocomplete" id="list" style="display:none;z-index:1000"></div>'});
+        $(target).insert({after:'<div class="my-autocompleter-list shadow" id="list" style="display:none;z-index:1000"></div>'});
 
         var self = this;
 
@@ -1220,8 +1220,8 @@ MyTableGrid.prototype = {
                 marginTop: marginTop
             });
             div.insert(input);
-            //input = editor.render(this,{width: width, height: height, value: value, align: alignment});
             innerElement.appendChild(input);
+            editor.render(input, this);
             input.focus();
             input.select();
         } else if (editor == 'checkbox' || editor instanceof MyTableGrid.CellCheckbox) {
@@ -1288,7 +1288,7 @@ MyTableGrid.prototype = {
             if (editor.validate) { // this only happen when there is a validate method
                 var isValidFlg = editor.validate(value, input);
                 if (editor instanceof MyTableGrid.ComboBox && !isValidFlg) {
-                    value = editor.getList()[0][editor.listTextPropertyName];
+                    value = editor.getItems()[0][editor.listTextPropertyName];
                 } else {
                     if (!isValidFlg) {
                         if (y >= 0)

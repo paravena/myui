@@ -156,6 +156,7 @@ MyTableGrid.BrowseInput = Class.create({
 MyTableGrid.ComboBox = Class.create({
 	initialize : function(options) {
 		options = options || {};
+        this.options = options;
 		this.url = options.url || null;
 		this.divListId = options.divListId || 'list';
 		this.list = options.list || [];
@@ -169,38 +170,8 @@ MyTableGrid.ComboBox = Class.create({
 		this.showAllFlg = false;
 	},
 
-	render : function(tableGrid, options) {
-		tableGrid = tableGrid || null;
-		options = options || this.options;
-		var inputId = 'mtgInput';
-		var self = this;
-
-		if (tableGrid != null) {
-			var coords = tableGrid.getCurrentPosition();
-			inputId = 'mtgInput' + tableGrid._mtgId + '_' + coords[0] + ',' + coords[1];
-		}
-		var div = new Element('div').setStyle({border: 0, margin: 0, padding: 0});
-		var input = new Element('input', {id: inputId,
-			type: 'text',
-			value: options.value
-		});
-
-		input.addClassName('mtgInputText');
-
-        var marginTop = '2px';
-        if (Prototype.Browser.IE) {
-            var ieVersion = parseInt(navigator.userAgent.substring(navigator.userAgent.indexOf("MSIE")+5));
-            if (ieVersion <= 7) marginTop = '1px';
-        }
-
-		input.setStyle({
-			width: (options.width - 10) + 'px',
-            marginTop: marginTop
-		});
-
-		div.insert(input);
-
-        //new MY.ComboBox(input);
+	render : function(input, tableGrid) {
+        this.nested = new MY.ComboBox(input, this.options);
 
         /*
 		var cbBtn = new Element('div');
@@ -247,8 +218,8 @@ MyTableGrid.ComboBox = Class.create({
 		} else {
 			this.autocompleter = new Autocompleter.InputElement(input, divList, this.list, opt, this);
 		}
-        */
 		return div;
+        */
 	},
 
 	showAll : function() {
@@ -271,8 +242,8 @@ MyTableGrid.ComboBox = Class.create({
         return validFlg;
     },
 
-	getList : function() {
-		return this.list;
+	getItems : function() {
+		return this.nested.getItems();
 	},
 
     getSelectedValue : function(text) { // Truchada

@@ -77,7 +77,8 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
         comboBoxBtn.addClassName('my-combobox-button gradient');
         container.insert(comboBoxBtn);
         comboBoxBtn.on('click', this.showAll.bindAsEventListener(this));
-        container.insert('<div id="'+this.id+'_update" class="my-autocompleter-list shadow"></div>');
+        if (this.options.listId == null)
+            container.insert({after: '<div id="'+this.id+'_update" class="my-autocompleter-list shadow"></div>'});
         element.value = this.options.initialText;
     }
 });
