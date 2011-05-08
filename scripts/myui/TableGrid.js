@@ -435,7 +435,7 @@ MyTableGrid.prototype = {
             var cellWidth = parseInt(cm[j].width); // consider border at both sides
             var iCellWidth = cellWidth - 6 - gap; // consider padding at both sides
             var editor = cm[j].editor || null;
-            var normalEditorFlg = !(editor == 'checkbox' || editor instanceof MyTableGrid.CellCheckbox || editor == 'radio' || editor instanceof MyTableGrid.CellRadioButton || editor instanceof MyTableGrid.ComboBox);
+            var normalEditorFlg = !(editor == 'checkbox' || editor instanceof MyTableGrid.CellCheckbox || editor == 'radio' || editor instanceof MyTableGrid.CellRadioButton || editor instanceof MY.ComboBox);
             var alignment = 'left';
             var display = '\'\'';
             if (!cm[j].hasOwnProperty('renderer')) {
@@ -505,7 +505,7 @@ MyTableGrid.prototype = {
                 temp = temp.replace(/\{y\}/g, rowIdx);
                 temp = temp.replace(/\{value\}/, row[columnId]);
                 html[idx++] = temp;
-            } else if (editor instanceof MyTableGrid.ComboBox) {
+            } else if (editor instanceof MY.ComboBox) {
                 if (!cm[j].hasOwnProperty('renderer')) {
                     cm[j].renderer = function(value, list) {
                         var result = value;
@@ -515,7 +515,7 @@ MyTableGrid.prototype = {
                         return result;
                     };
                 }
-                html[idx++] = cm[j].renderer(row[columnId], editor.list, this.getRow(rowIdx));
+                html[idx++] = cm[j].renderer(row[columnId], editor.getItems(), this.getRow(rowIdx));
             }
             html[idx++] = '</div>';
             html[idx++] = '</td>';
@@ -805,8 +805,8 @@ MyTableGrid.prototype = {
             cell.setStyle({width: (newWidth - 6 - ((gap == 0) ? 2 : 0)) + 'px'});
             if (!checkboxOrRadioFlg) {
                 if (cm[index].renderer) {
-                    if (editor instanceof MyTableGrid.ComboBox)
-                        value = cm[index].renderer(value, editor.list, self.getRow(y));
+                    if (editor instanceof MY.ComboBox)
+                        value = cm[index].renderer(value, editor.getItems(), self.getRow(y));
                     else
                         value = cm[index].renderer(value, self.getRow(y));
                 }
@@ -1199,8 +1199,8 @@ MyTableGrid.prototype = {
                 margin: '0'
             });
             innerElement.innerHTML = '';
-            if (editor instanceof MyTableGrid.ComboBox) { // when is a list
-                value = cm[x].renderer(value, editor.list, this.getRow(y));
+            if (editor instanceof MY.ComboBox) { // when is a list
+                value = cm[x].renderer(value, editor.getItems(), this.getRow(y));
             }
             // Creating a normal input
             var inputId = 'mtgInput' + this._mtgId + '_' + x + ',' + y;
@@ -1215,7 +1215,7 @@ MyTableGrid.prototype = {
 
             div.insert(input);
             innerElement.appendChild(input);
-            editor.render(input, this);
+            editor.render(input);
             input.focus();
             input.select();
         } else if (editor == 'checkbox' || editor instanceof MyTableGrid.CellCheckbox) {
@@ -1275,13 +1275,13 @@ MyTableGrid.prototype = {
         var columnId = cm[x].id;
         var alignment = (type == 'number')? 'right' : 'left';
 
-        var isInputFlg = (editor == 'input' || editor instanceof MyTableGrid.CellInput || editor instanceof MyTableGrid.ComboBox || editor instanceof MyTableGrid.BrowseInput || editor instanceof MyTableGrid.CellCalendar);
+        var isInputFlg = (editor == 'input' || editor instanceof MyTableGrid.CellInput || editor instanceof MY.ComboBox || editor instanceof MyTableGrid.BrowseInput || editor instanceof MyTableGrid.CellCalendar);
 
         if (isInputFlg) {
            // if (editor.hide) editor.hide(); // this only happen when editor is a Combobox
             if (editor.validate) { // this only happen when there is a validate method
                 var isValidFlg = editor.validate(value, input);
-                if (editor instanceof MyTableGrid.ComboBox && !isValidFlg) {
+                if (editor instanceof MY.ComboBox && !isValidFlg) {
                     value = editor.getItems()[0][editor.listTextPropertyName];
                 } else {
                     if (!isValidFlg) {

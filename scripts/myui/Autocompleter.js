@@ -9,22 +9,19 @@ MY.Autocompleter = Class.create({
     baseInitialize : function(options) {
         var self = this;
         this.element = $(options.input);
-        this.id = this.element.id;
         this.hasFocus = false;
         this.changed = false;
         this.active = false;
         this.index = 0;
         this.entryCount = 0;
-        this.oldElementValue = this.element.value;
         this.options = options || {};
-        this.elementWidth = this.element.getDimensions().width;
 
         if (this.setOptions)
             this.setOptions(this.options);
 
         this.options.items = this.options.items || null;
         this.options.listId = this.options.listId || null;
-        this.options.paramName = this.options.paramName || this.element.name;
+
         this.options.tokens = this.options.tokens || [];
         this.options.frequency = this.options.frequency || 0.4;
         this.options.minChars = this.options.minChars || 2;
@@ -95,9 +92,18 @@ MY.Autocompleter = Class.create({
             this.options.tokens.push('\n');
 
         this.observer = null;
+        if (this.element) this.render(this.element);
+    },
 
+    render : function(input) {
+        this.element = $(input);
+        this.id = this.element.id;
+        this.oldElementValue = this.element.value;
+        this.elementWidth = this.element.getDimensions().width;
+        this.options.paramName = this.options.paramName || this.element.name;
         this.element.setAttribute('autocomplete', 'off');
         this.options.decorate();
+
         if (this.options.listId != null)
             this.update = $(this.options.listId);
         else
@@ -309,8 +315,7 @@ MY.Autocompleter = Class.create({
             this.index--;
         else
             this.index = this.entryCount - 1;
-        //this.getEntry(this.index).scrollIntoView(true);
-        this.update.scrollTop = this.getEntry(this.index).cumulativeScrollOffset().top;
+        this.getEntry(this.index).scrollIntoView(false);
     },
 
     markNext: function() {
@@ -318,8 +323,7 @@ MY.Autocompleter = Class.create({
             this.index++;
         else
             this.index = 0;
-        //this.getEntry(this.index).scrollIntoView(false);
-        this.update.scrollTop = this.getEntry(this.index).cumulativeScrollOffset().top;
+        this.getEntry(this.index).scrollIntoView(false);
     },
 
     getEntry: function(index) {

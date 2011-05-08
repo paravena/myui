@@ -5,7 +5,6 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
     initialize : function(options) {
         this.baseInitialize(options);
         this.options.minChars = this.options.minChars || 0;
-        this.element.on('keydown', this._keyPress.bindAsEventListener(this));
         this.options.all = function(instance) {
             var currentValue = instance.element.value.strip();
             var result = [];
@@ -20,7 +19,7 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
                         items = transport.responseText.evalJSON();
                     },
                     asynchronous: false
-                })
+                });
             }
             var listTextPropertyName = instance.options.listTextPropertyName;
             var listValuePropertyName = instance.options.listValuePropertyName;
@@ -47,6 +46,11 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
         }
     },
 
+    render : function($super, input) {
+        $super(input);
+        this.element.on('keydown', this._keyPress.bindAsEventListener(this));
+    },
+    
     showAll : function() {
         if (!this.active) {
             this.element.focus();
