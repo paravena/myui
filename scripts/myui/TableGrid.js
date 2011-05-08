@@ -1183,7 +1183,7 @@ MyTableGrid.prototype = {
         var editor = this.columnModel[x].editor || 'input';
         var type = this.columnModel[x].type || 'string';
         var input = null;
-        var isInputFlg = (editor == 'input' || editor instanceof MyTableGrid.CellInput || editor instanceof MyTableGrid.ComboBox || editor instanceof MyTableGrid.BrowseInput || editor instanceof MyTableGrid.CellCalendar);
+        var isInputFlg = !(editor == 'radio' || editor == 'checkbox' || editor instanceof MyTableGrid.CellCheckbox || editor instanceof MyTableGrid.CellRadioButton);
 
         if (isInputFlg) {
             element.setStyle({
@@ -1198,9 +1198,6 @@ MyTableGrid.prototype = {
                 border: '0',
                 margin: '0'
             });
-
-            var alignment = (type == 'number')? 'right' : 'left';
-            if (editor == 'input') editor = new MyTableGrid.CellInput();
             innerElement.innerHTML = '';
             if (editor instanceof MyTableGrid.ComboBox) { // when is a list
                 value = cm[x].renderer(value, editor.list, this.getRow(y));
@@ -1210,15 +1207,12 @@ MyTableGrid.prototype = {
             var div = new Element('div').setStyle({border: 0, margin: 0, padding: 0});
             input = new Element('input', {id: inputId, type: 'text', value: value});
             input.addClassName('mtgInputText');
-            var marginTop = '2px';
-            if (Prototype.Browser.IE) {
-                var ieVersion = parseInt(navigator.userAgent.substring(navigator.userAgent.indexOf("MSIE")+5));
-                if (ieVersion <= 7) marginTop = '1px';
-            }
+
             input.setStyle({
-                width: (width - 10) + 'px',
-                marginTop: marginTop
+                padding : '3px',
+                width: (width - 8) + 'px'
             });
+
             div.insert(input);
             innerElement.appendChild(input);
             editor.render(input, this);

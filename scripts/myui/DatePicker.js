@@ -46,12 +46,13 @@ MY.DatePicker = Class.create({
     decorate : function(element) {
         var width = element.getDimensions().width;
         var height = element.getDimensions().height;
-        Element.wrap(element, 'span', {width : width + 'px'}); // auto complete container
+        Element.wrap(element, 'div'); // auto complete container
         element.setStyle({width : (width - 22)+'px'});
         this.container = element.up();
         this.container.addClassName('my-datepicker-container');
         this.container.id = this.id + '_container';
-        var datePickerSelectBtn = new Element('span');
+        this.container.setStyle({width : width + 'px', height: height + 'px'});
+        var datePickerSelectBtn = new Element('div');
         datePickerSelectBtn.addClassName('my-datepicker-select-button');
         this.container.insert(datePickerSelectBtn);
         datePickerSelectBtn.on('click', this.show.bindAsEventListener(this));

@@ -3,8 +3,8 @@
  */
 
 .my-autocompleter {
+    display: inline-block;
     position: relative;
-    display: inline;
     padding: 0;
     margin: 0;
 }
@@ -12,7 +12,8 @@
 .my-autocompleter input {
     border: 1px solid #609;
     outline: none;
-    padding: 2px;
+    padding: 3px;
+    margin: 0;
 }
 
 .my-autocompleter-list {
@@ -58,14 +59,18 @@
 }
 
 .my-autocompleter-indicator {
-    background: url(images/search-indicator.gif) no-repeat center;
+    background: url(images/search-indicator.gif) no-repeat;
     padding: 0 12px;
     margin: 0;
 }
 
 .my-combobox-button {
-    background-image: url(images/cbb.png);
-    padding: 1px 8px 1px 9px;
+    position: absolute;
+    top: 0;
+    right : 0;
+    background: #bbb url(images/cbb.png) no-repeat 0 1px;
+    width: 16px;
+    height: 22px;
     margin: 0;
     border: solid #609 1px;
     border-left-style: none;

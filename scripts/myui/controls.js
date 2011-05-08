@@ -171,7 +171,8 @@ MyTableGrid.ComboBox = Class.create({
 	},
 
 	render : function(input, tableGrid) {
-        this.nested = new MY.ComboBox(input, this.options);
+        this.options.input = input;
+        this.nested = new MY.ComboBox(this.options);
 
         /*
 		var cbBtn = new Element('div');

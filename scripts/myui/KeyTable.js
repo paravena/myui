@@ -71,7 +71,7 @@ KeyTable.prototype = {
 			if (element.descendantOf(ancestor)) blurFlg = false;
 			if (blurFlg) {
 				while (element = element.parentNode) {
-					if (element.className == 'autocomplete' || element.className == 'myDatePicker') {
+					if (element.className == 'my-autocompleter' || element.className == 'my-datepicker-container') {
 						blurFlg = false;
 						break;
 					}

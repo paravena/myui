@@ -238,13 +238,12 @@ input.mtgInputRadio {
 }
 
 input.mtgInputText {
-    margin: 2px;
-    border: none;
     font-size: 11px;
     background-color: white;
     outline: none;
     padding: 2px 3px;
     height: 16px;
+    border: 1px solid #609;
 }
 
 div.mtgComboBoxBtn {

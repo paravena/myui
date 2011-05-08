@@ -2,15 +2,14 @@
  * Autocompleter control
  */
 MY.Autocompleter = Class.create({
-    initialize : function(element, options) {
-        this.baseInitialize(element, options);
+    initialize : function(options) {
+        this.baseInitialize(options);
     },
 
-    baseInitialize : function(element, options) {
-        element = $(element);
+    baseInitialize : function(options) {
         var self = this;
-        this.element = element;
-        this.id = element.id;
+        this.element = $(options.input);
+        this.id = this.element.id;
         this.hasFocus = false;
         this.changed = false;
         this.active = false;
@@ -18,7 +17,7 @@ MY.Autocompleter = Class.create({
         this.entryCount = 0;
         this.oldElementValue = this.element.value;
         this.options = options || {};
-        this.elementWidth = element.getDimensions().width;
+        this.elementWidth = this.element.getDimensions().width;
 
         if (this.setOptions)
             this.setOptions(this.options);
@@ -40,7 +39,7 @@ MY.Autocompleter = Class.create({
         this.options.autoSelect = this.options.autoSelect || false;
 
         this.options.decorate = this.options.decorate ||  function() {
-            self.decorate(element);
+            self.decorate(self.element);
         };
 
         this.options.onShow = this.options.onShow ||
@@ -53,16 +52,15 @@ MY.Autocompleter = Class.create({
                     var vst = document.viewport.getScrollOffsets().top; // view port scrolling top
                     var rh = vh + vst - p.top - d.height; // remaining height
                     var uh = (self.entryCount * 22) + 6;
-                    var topPos = d.height;
-                    topPos += element.offsetParent.cumulativeOffset().top;
-                    var leftPos = 0;
-                    leftPos += element.offsetParent.cumulativeOffset().left;
+                    var offsetTop = element.offsetParent.cumulativeOffset().top - element.offsetParent.cumulativeScrollOffset().top;
+                    var topPos = d.height + offsetTop + 2;
+                    var leftPos = element.offsetParent.cumulativeOffset().left;
                     if (rh > (p.top - vst)) { // down
                         if (uh > rh) uh = rh - 10;
                         update.setStyle({
                             top : topPos + 'px',
                             left : leftPos + 'px',
-                            width : self.elementWidth + 'px',
+                            width : (self.elementWidth - 2) + 'px',
                             height: uh + 'px'
                         });
                     } else { // up
@@ -75,7 +73,7 @@ MY.Autocompleter = Class.create({
                         update.setStyle({
                             top : topPos + 'px',
                             left : leftPos + 'px',
-                            width : self.elementWidth + 'px',
+                            width : (self.elementWidth - 2) + 'px',
                             height: uh + 'px'
                         });
                     }
@@ -155,10 +153,12 @@ MY.Autocompleter = Class.create({
 
     decorate : function(element) {
         var width = element.getDimensions().width;
-        Element.wrap(element, 'span', {width : width + 'px'}); // auto complete container
+        var height = element.getDimensions().height;
+        Element.wrap(element, 'div'); // auto complete container
         var container = element.up();
         container.addClassName('my-autocompleter');
         container.id = this.id + '_container';
+        container.setStyle({width : width + 'px', height: height + 'px'});
         if (this.options.listId == null)
             container.insert({after: '<div id="'+this.id+'_update" class="my-autocompleter-list shadow"></div>'});
         element.value = this.options.initialText;
@@ -194,12 +194,12 @@ MY.Autocompleter = Class.create({
                     return;
                 case Event.KEY_UP:
                     this.markPrevious();
-                    this.render();
+                    this.renderList();
                     event.stop();
                     return;
                 case Event.KEY_DOWN:
                     this.markNext();
-                    this.render();
+                    this.renderList();
                     event.stop();
                     return;
             }
@@ -275,7 +275,7 @@ MY.Autocompleter = Class.create({
         var element = Event.findElement(event, 'LI');
         if (this.index != element.autocompleteIndex) {
             this.index = element.autocompleteIndex;
-            this.render();
+            this.renderList();
         }
     },
 
@@ -286,7 +286,7 @@ MY.Autocompleter = Class.create({
         this.hide();
     },
 
-    render: function() {
+    renderList: function() {
         if (this.index == undefined) this.index = 0;
         if (this.entryCount > 0) {
             for (var i = 0; i < this.entryCount; i++)
@@ -309,7 +309,8 @@ MY.Autocompleter = Class.create({
             this.index--;
         else
             this.index = this.entryCount - 1;
-        this.getEntry(this.index).scrollIntoView(true);
+        //this.getEntry(this.index).scrollIntoView(true);
+        this.update.scrollTop = this.getEntry(this.index).cumulativeScrollOffset().top;
     },
 
     markNext: function() {
@@ -317,7 +318,8 @@ MY.Autocompleter = Class.create({
             this.index++;
         else
             this.index = 0;
-        this.getEntry(this.index).scrollIntoView(false);
+        //this.getEntry(this.index).scrollIntoView(false);
+        this.update.scrollTop = this.getEntry(this.index).cumulativeScrollOffset().top;
     },
 
     getEntry: function(index) {
@@ -387,7 +389,7 @@ MY.Autocompleter = Class.create({
                 this.selectEntry();
                 this.hide();
             } else {
-                this.render();
+                this.renderList();
             }
         }
     },

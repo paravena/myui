@@ -2,8 +2,8 @@
  * ComboBox control
  */
 MY.ComboBox = Class.create(MY.Autocompleter, {
-    initialize : function(element, options) {
-        this.baseInitialize(element, options);
+    initialize : function(options) {
+        this.baseInitialize(options);
         this.options.minChars = this.options.minChars || 0;
         this.element.on('keydown', this._keyPress.bindAsEventListener(this));
         this.options.all = function(instance) {
@@ -68,12 +68,13 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
     decorate : function(element) {
         var width = element.getDimensions().width;
         var height = element.getDimensions().height;
-        Element.wrap(element, 'span', {width : width + 'px'}); // auto complete container
-        element.setStyle({width : (width - 22)+'px'});
+        Element.wrap(element, 'div'); // auto complete container
+        element.setStyle({width : (width - 25)+'px'});
         var container = element.up();
         container.addClassName('my-autocompleter');
         container.id = this.id + '_container';
-        var comboBoxBtn = new Element('span');
+        container.setStyle({width : width + 'px', height: height + 'px'});
+        var comboBoxBtn = new Element('div');
         comboBoxBtn.addClassName('my-combobox-button gradient');
         container.insert(comboBoxBtn);
         comboBoxBtn.on('click', this.showAll.bindAsEventListener(this));
