@@ -6,16 +6,10 @@ var _translations = {
 };
 
 MY.DatePicker = Class.create({
-    initialize: function(targetElement, options) {
+    initialize: function(options) {
         this._mdpId = $$('.my-datepicker').length + 1;
-        this.targetElement = $(targetElement); // make sure it's an element, not a string
-        if (!this.targetElement) {
-            alert('Target element ' + targetElement + ' not found!');
-            return false;
-        }
-        if (this.targetElement.tagName != 'INPUT') this.targetElement = this.targetElement.down('INPUT');
+        this.targetElement = $(options.input); // make sure it's an element, not a string
 
-        this.targetElement.datePicker = this;
         this.lastClickAt = 0;
         this.visibleFlg = false;
         // initialize the date control
@@ -29,14 +23,20 @@ MY.DatePicker = Class.create({
             yearRange: 10,
             closeOnClick: null,
             minuteInterval: 5,
-            popupBy: this.targetElement,
             monthYear: 'dropdowns',
-            onchange: this.targetElement.onchange,
             validate: null
         }).merge(options || {});
-
         this.useTimeFlg = this.options.get('time');
         this.format = this.options.get('format');
+        if (this.targetElement) this.render(this.targetElement);
+    },
+
+    render : function(input) {
+        this.targetElement = $(input);
+        if (this.targetElement.tagName != 'INPUT') this.targetElement = this.targetElement.down('INPUT');
+        this.targetElement.datePicker = this;
+        this.options.set('popupBy', this.targetElement);
+        this.options.set('onchange', this.targetElement.onchange);
         if (!this.options.get('embedded')) {
             this.targetElement.on('keydown', this._keyPress.bindAsEventListener(this));
         }
@@ -44,6 +44,7 @@ MY.DatePicker = Class.create({
     },
 
     decorate : function(element) {
+        var self = this;
         var width = element.getDimensions().width;
         var height = element.getDimensions().height;
         Element.wrap(element, 'div'); // auto complete container
@@ -55,7 +56,10 @@ MY.DatePicker = Class.create({
         var datePickerSelectBtn = new Element('div');
         datePickerSelectBtn.addClassName('my-datepicker-select-button');
         this.container.insert(datePickerSelectBtn);
-        datePickerSelectBtn.on('click', this.show.bindAsEventListener(this));
+        datePickerSelectBtn.on('click', function(event) {
+            self.show();
+            event.stop();
+        });
     },
 
     show : function() {
@@ -84,8 +88,9 @@ MY.DatePicker = Class.create({
         var w_top = Utilities.getWindowScrollTop();
         var w_height = Utilities.getWindowHeight();
         var e_dim = $(this.options.get('popupBy')).cumulativeOffset();
-        var e_top = e_dim[1];
-        var e_left = e_dim[0];
+        var s_dim = $(this.options.get('popupBy')).cumulativeScrollOffset();
+        var e_top = e_dim.top - s_dim.top;
+        var e_left = e_dim.left - s_dim.left;
         var e_height = $(this.options.get('popupBy')).getDimensions().height;
         var e_bottom = e_top + e_height;
 
@@ -472,7 +477,6 @@ MY.DatePicker = Class.create({
 
         this._updateFooter();
         this._setSelectedClass();
-
         if (this.selectionMade) this.updateValue();
         if (this._closeOnClick()) {
             this._close();

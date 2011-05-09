@@ -51,7 +51,7 @@ MY.Autocompleter = Class.create({
                     var uh = (self.entryCount * 22) + 6;
                     var offsetTop = element.offsetParent.cumulativeOffset().top - element.offsetParent.cumulativeScrollOffset().top;
                     var topPos = d.height + offsetTop + 2;
-                    var leftPos = element.offsetParent.cumulativeOffset().left;
+                    var leftPos = element.offsetParent.cumulativeOffset().left - element.offsetParent.cumulativeScrollOffset().left;
                     if (rh > (p.top - vst)) { // down
                         if (uh > rh) uh = rh - 10;
                         update.setStyle({

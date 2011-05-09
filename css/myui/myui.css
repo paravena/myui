@@ -12,3 +12,29 @@
     background: -moz-linear-gradient(top,  #ccc,  #999);
     background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#999));
 }
+
+.loadingBox {
+    background: #609 url(images/ajax-loader.gif) no-repeat 6px 4px;
+    width: 80px;
+	height: 20px;
+	padding:4px 5px 2px 8px;
+    color: white;
+    text-align: right;
+    font-weight: bold;
+    font-size: 12px;
+    border: solid 1px dimgray;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    margin: auto;
+}
+
+.overlay {
+    position: absolute;
+    background-color: dimgray;
+    filter:alpha(opacity=60);
+    -moz-opacity: 0.6;
+    opacity: 0.6;
+    visibility: hidden;
+    z-index: 20;
+}

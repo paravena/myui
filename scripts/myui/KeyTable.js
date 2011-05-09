@@ -71,7 +71,9 @@ KeyTable.prototype = {
 			if (element.descendantOf(ancestor)) blurFlg = false;
 			if (blurFlg) {
 				while (element = element.parentNode) {
-					if (element.className == 'my-autocompleter' || element.className == 'my-datepicker-container') {
+					if (element.className == 'my-autocompleter' ||
+                        element.className == 'my-autocompleter-list' ||
+                        element.className == 'my-datepicker-container') {
 						blurFlg = false;
 						break;
 					}
@@ -230,6 +232,7 @@ KeyTable.prototype = {
 	 * @param event key event
 	 */
 	 onKeyPress : function(event) {
+        var self = this;
         if (this.blockFlg || !this.blockKeyCaptureFlg) return true;
 		// If a modifier key is pressed (except shift), ignore the event
 		if (event.metaKey || event.altKey || event.ctrlKey) return true;
@@ -242,7 +245,7 @@ KeyTable.prototype = {
 		while(true) {
 			switch(keyCode) {
 				case Event.KEY_RETURN: // return
-					this.eventFire('action', this._nCurrentFocus);
+                    this.eventFire('action', this._nCurrentFocus);
 					return false;
 				case Event.KEY_ESC: // esc
 					if (!this.eventFire('esc', this._nCurrentFocus)) {

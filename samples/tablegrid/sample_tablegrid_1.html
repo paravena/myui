@@ -64,10 +64,8 @@
 				title : 'Date',
 				width : 100,
                 editable: true,
-                editor: new MyTableGrid.CellCalendar({
-                    validate : function (value, input) {
-                        return false;
-                    }
+                editor: new MY.DatePicker({
+                    format : 'dd/MM/yy'
                 })
 			},
 			{

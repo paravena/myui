@@ -11,8 +11,9 @@
 		<script type="text/javascript" src="../../scripts/myui/myui.js"></script>
 	</head>
 	<script type="text/javascript">
+        var datePicker = null;
         Event.observe(document, 'dom:loaded', function() {
-            new MY.DatePicker('arrivalDt', {format: 'dd-MM-yyyy'});
+            datePicker = new MY.DatePicker({input: 'arrivalDt', format: 'dd-MM-yyyy'});
         });
 	</script>
 	<body style="margin:20px">

@@ -70,6 +70,7 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
     },
 
     decorate : function(element) {
+        var self = this;
         var width = element.getDimensions().width;
         var height = element.getDimensions().height;
         Element.wrap(element, 'div'); // auto complete container
@@ -81,7 +82,10 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
         var comboBoxBtn = new Element('div');
         comboBoxBtn.addClassName('my-combobox-button gradient');
         container.insert(comboBoxBtn);
-        comboBoxBtn.on('click', this.showAll.bindAsEventListener(this));
+        comboBoxBtn.on('click', function(event){
+            self.showAll();
+            event.stop();
+        });
         if (this.options.listId == null)
             container.insert({after: '<div id="'+this.id+'_update" class="my-autocompleter-list shadow"></div>'});
         element.value = this.options.initialText;

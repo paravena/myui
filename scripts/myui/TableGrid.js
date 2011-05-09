@@ -602,6 +602,7 @@ MyTableGrid.prototype = {
         if (hbm) hbm.setStyle({visibility: 'hidden'});
         if (sm) sm.setStyle({visibility: 'hidden'});
     },
+
     /**
      * Creates the Setting Menu
      */
@@ -1129,8 +1130,8 @@ MyTableGrid.prototype = {
                             self.editedCellId = element.id;
                             self._editCellElement(element);
                         } else {
-                            self._blurCellElement(element);
-                            self.editedCellId = null;
+                            if (self._blurCellElement(element))
+                                self.editedCellId = null;
                         }
                     };
                 })(element);
@@ -1138,16 +1139,16 @@ MyTableGrid.prototype = {
 
                 var f_esc = (function(element) {
                     return function() {
-                        self._blurCellElement(element);
-                        self.editedCellId = null;
+                        if (self._blurCellElement(element))
+                            self.editedCellId = null;
                     };
                 })(element);
                 keys.event.esc(element, f_esc);
 
                 var f_blur = (function(x, y, element) {
                     return function() {
-                        self._blurCellElement(element);
-                        self.editedCellId = null;
+                        if (self._blurCellElement(element))
+                            self.editedCellId = null;
                         if (self.onCellBlur) self.onCellBlur(element, row[x], x, y, self.columnModel[x].id);
                     };
                 })(i, j, element);
@@ -1275,10 +1276,11 @@ MyTableGrid.prototype = {
         var columnId = cm[x].id;
         var alignment = (type == 'number')? 'right' : 'left';
 
-        var isInputFlg = (editor == 'input' || editor instanceof MyTableGrid.CellInput || editor instanceof MY.ComboBox || editor instanceof MyTableGrid.BrowseInput || editor instanceof MyTableGrid.CellCalendar);
-
+        var isInputFlg = !(editor == 'radio' || editor == 'checkbox' || editor instanceof MyTableGrid.CellCheckbox || editor instanceof MyTableGrid.CellRadioButton);
         if (isInputFlg) {
-           // if (editor.hide) editor.hide(); // this only happen when editor is a Combobox
+            if (editor.hide) editor.hide(); // this only happen when editor is a Combobox
+            if (editor instanceof MY.DatePicker && editor.visibleFlg) return false;
+
             if (editor.validate) { // this only happen when there is a validate method
                 var isValidFlg = editor.validate(value, input);
                 if (editor instanceof MY.ComboBox && !isValidFlg) {
@@ -1304,10 +1306,12 @@ MyTableGrid.prototype = {
                 textAlign: alignment
             }).update(value);
         }
+
         /*
-        if (editor instanceof MyTableGrid.ComboBox) { // I hope I can find a better solution
+        if (editor instanceof MY.ComboBox) { // I hope I can find a better solution
             value = editor.getSelectedValue(value);
         }
+        */
 
         if (y >= 0 && this.rows[y][columnId] != value) {
             this.rows[y][columnId] = value;
@@ -1317,11 +1321,11 @@ MyTableGrid.prototype = {
             this.newRowsAdded[Math.abs(y)-1][columnId] = value;
         }
 
-        if ((editor instanceof MyTableGrid.BrowseInput || editor instanceof MyTableGrid.CellInput || editor instanceof MyTableGrid.CellCalendar) && editor.afterUpdateCallback) {
+        if ((editor instanceof MyTableGrid.BrowseInput || editor instanceof MyTableGrid.CellInput || editor instanceof MY.DatePicker) && editor.afterUpdateCallback) {
             editor.afterUpdateCallback(element, value);
         }
-        */
         keys._bInputFocused = false;
+        return true;
     },
 
     /**
