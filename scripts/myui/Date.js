@@ -156,7 +156,7 @@ Date.parseString = function(val, format) {
 		}
 		else if (token=="MMM" || token=="NNN"){
 			month=0;
-			var names = (token=="MMM"?(Date.MONT_NAMES.concat(Date.MONTH_ABBREVIATIONS)):Date.MONTH_ABBREVIATIONS);
+			var names = (token=="MMM"?(Date.MONTH_NAMES.concat(Date.MONTH_ABBREVIATIONS)):Date.MONTH_ABBREVIATIONS);
 			for (var i=0; i<names.length; i++) {
 				var month_name=names[i];
 				if (val.substring(i_val,i_val+month_name.length).toLowerCase()==month_name.toLowerCase()) {

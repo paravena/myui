@@ -43,7 +43,7 @@
 				id : 'id',
 				title : '#',
 				width : 30,
-                editor : new MyTableGrid.CellCheckbox({
+                editor : new MY.TableGrid.CellCheckbox({
                     selectable: true
                 })
 			},
@@ -65,7 +65,7 @@
 				width : 100,
                 editable: true,
                 editor: new MY.DatePicker({
-                    format : 'dd-MM-yyyy'
+                    format : 'dd-MMM-yyyy'
                 })
 			},
 			{
@@ -292,7 +292,7 @@
 	};	
 	var tableGrid = null;
 	Event.observe(document, 'dom:loaded', function() {
-		tableGrid = new MyTableGrid(tableModel);
+		tableGrid = new MY.TableGrid(tableModel);
 		tableGrid.show('mytable');
 	});
 	</script>

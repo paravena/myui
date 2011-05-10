@@ -25,7 +25,7 @@
  * THE SOFTWARE.
  */
 
-MyTableGrid.CellCheckbox = Class.create({
+MY.TableGrid.CellCheckbox = Class.create({
 	initialize : function(options) {
 		options = options || {};
 		this.onClickCallback = options.onClick || null;
@@ -35,7 +35,7 @@ MyTableGrid.CellCheckbox = Class.create({
 });
 
 
-MyTableGrid.CellRadioButton = Class.create({
+MY.TableGrid.CellRadioButton = Class.create({
 	initialize : function(options) {
 		options = options || {};
 		this.onClickCallback = options.onClick || null;
@@ -44,7 +44,7 @@ MyTableGrid.CellRadioButton = Class.create({
 	}
 });
 
-MyTableGrid.CellInput = Class.create({
+MY.TableGrid.CellInput = Class.create({
 	initialize : function(options) {
 		options = options || {};
 		this.afterUpdateCallback = options.afterUpdate || null;
@@ -56,7 +56,7 @@ MyTableGrid.CellInput = Class.create({
     }
 });
 
-MyTableGrid.BrowseInput = Class.create({
+MY.TableGrid.BrowseInput = Class.create({
 	initialize : function(options) {
 		options = options || {};
 		this.afterUpdate = options.afterUpdate || null;

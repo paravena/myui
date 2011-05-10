@@ -3,7 +3,7 @@ var KeyTable = Class.create();
 KeyTable.prototype = {
 	initialize : function(targetTable, options) {
 		options = options || {};
-        if (targetTable instanceof MyTableGrid) {
+        if (targetTable instanceof MY.TableGrid) {
             this._numberOfRows = targetTable.rows.length;
             this._numberOfColumns = targetTable.columnModel.length;
             this._tableGrid = targetTable;
@@ -88,7 +88,7 @@ KeyTable.prototype = {
 
 		this._onClickHandler = $(document).on('click', f_onClick.bindAsEventListener(this));
 
-        if (targetTable instanceof MyTableGrid) this.addMouseBehavior();
+        if (targetTable instanceof MY.TableGrid) this.addMouseBehavior();
 
         var f_onKeyPress = function(event) {
             var result = this.onKeyPress(event);

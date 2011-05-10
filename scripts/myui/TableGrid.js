@@ -24,15 +24,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-MyTableGrid = Class.create();
-
-MyTableGrid.ADD_BTN = 1;
-MyTableGrid.DEL_BTN = 4;
-MyTableGrid.SAVE_BTN = 8;
-
-MyTableGrid.prototype = {
+MY.TableGrid = Class.create({
     version: '1.1.0',
-
     _messages : {
         totalDisplayMsg: '<strong><span id="mtgTotal">{total}</span></strong> records found',
         rowsDisplayMsg: ', displaying <strong><span id="mtgFrom">{from}</span></strong>&nbsp;to&nbsp;<strong><span id="mtgTo">{to}</span></strong>',
@@ -46,7 +39,6 @@ MyTableGrid.prototype = {
         selectAll: 'Select all',
         loading: 'Loading ...'
     },
-
     /**
      * MyTableGrid constructor
      */
@@ -99,11 +91,11 @@ MyTableGrid.prototype = {
         this.headerHeight = this.hb.getTableHeaderHeight();
         this.columnModel = this.hb.getLeafElements();
         for (var i = 0; i < this.columnModel.length; i++) {
-            if (!this.columnModel[i].hasOwnProperty('editor')) this.columnModel[i].editor = new MyTableGrid.CellInput();
+            if (!this.columnModel[i].hasOwnProperty('editor')) this.columnModel[i].editor = new MY.TableGrid.CellInput();
             if (!this.columnModel[i].hasOwnProperty('editable')) {
                 this.columnModel[i].editable = false;
-                if (this.columnModel[i].editor == 'checkbox' || this.columnModel[i].editor instanceof MyTableGrid.CellCheckbox ||
-                    this.columnModel[i].editor == 'radio' || this.columnModel[i].editor instanceof MyTableGrid.CellRadioButton) {
+                if (this.columnModel[i].editor == 'checkbox' || this.columnModel[i].editor instanceof MY.TableGrid.CellCheckbox ||
+                    this.columnModel[i].editor == 'radio' || this.columnModel[i].editor instanceof MY.TableGrid.CellRadioButton) {
                     this.columnModel[i].editable = true;
                 }
             }
@@ -188,7 +180,7 @@ MyTableGrid.prototype = {
 
         if (this.options.toolbar) {
             var elements = this.options.toolbar.elements || [];
-            if (elements.indexOf(MyTableGrid.ADD_BTN) >= 0) {
+            if (elements.indexOf(MY.TableGrid.ADD_BTN) >= 0) {
                 Event.observe($('mtgAddBtn'+id), 'click', function() {
                     var addFlg = true;
                     if (self.options.toolbar.onAdd) {
@@ -199,7 +191,7 @@ MyTableGrid.prototype = {
                 });
             }
 
-            if (elements.indexOf(MyTableGrid.DEL_BTN) >= 0) {
+            if (elements.indexOf(MY.TableGrid.DEL_BTN) >= 0) {
                 Event.observe($('mtgDelBtn'+id), 'click', function() {
                     var deleteFlg = true;
                     if (self.options.toolbar.onDelete) {
@@ -210,7 +202,7 @@ MyTableGrid.prototype = {
                 });
             }
 
-            if (elements.indexOf(MyTableGrid.SAVE_BTN) >= 0) {
+            if (elements.indexOf(MY.TableGrid.SAVE_BTN) >= 0) {
                 Event.observe($('mtgSaveBtn'+id), 'click', function() {
                    self._blurCellElement(self.keys._nCurrentFocus);
                    if (self.options.toolbar.onSave) {
@@ -262,16 +254,16 @@ MyTableGrid.prototype = {
             var elements = this.options.toolbar.elements || [];
             html[idx++] = '<div id="mtgHeaderToolbar'+id+'" class="mtgToolbar" style="position:absolute;top:'+this.topPos+'px;left:'+this.leftPos+'px;width:'+(this.tableWidth - 4)+'px;height:'+(this.toolbarHeight - 4)+'px;padding:2px;z-index:10">';
             var beforeFlg = false;
-            if(elements.indexOf(MyTableGrid.SAVE_BTN) >= 0) {
+            if(elements.indexOf(MY.TableGrid.SAVE_BTN) >= 0) {
                 html[idx++] = '<a href="#" class="toolbarbtn"><span class="savebutton" id="mtgSaveBtn'+id+'">'+this._messages.save+'</span></a>';
                 beforeFlg = true;
             }
-            if(elements.indexOf(MyTableGrid.ADD_BTN) >= 0) {
+            if(elements.indexOf(MY.TableGrid.ADD_BTN) >= 0) {
                 if (beforeFlg) html[idx++] = '<div class="toolbarsep">&#160;</div>';
                 html[idx++] = '<a href="#" class="toolbarbtn"><span class="addbutton" id="mtgAddBtn'+id+'">'+this._messages.add+'</span></a>';
                 beforeFlg = true;
             }
-            if(elements.indexOf(MyTableGrid.DEL_BTN) >= 0) {
+            if(elements.indexOf(MY.TableGrid.DEL_BTN) >= 0) {
                 if (beforeFlg) html[idx++] = '<div class="toolbarsep">&#160;</div>';
                 html[idx++] = '<a href="#" class="toolbarbtn"><span class="delbutton" id="mtgDelBtn'+id+'">'+this._messages.remove+'</span></a>';
             }
@@ -435,7 +427,7 @@ MyTableGrid.prototype = {
             var cellWidth = parseInt(cm[j].width); // consider border at both sides
             var iCellWidth = cellWidth - 6 - gap; // consider padding at both sides
             var editor = cm[j].editor || null;
-            var normalEditorFlg = !(editor == 'checkbox' || editor instanceof MyTableGrid.CellCheckbox || editor == 'radio' || editor instanceof MyTableGrid.CellRadioButton || editor instanceof MY.ComboBox);
+            var normalEditorFlg = !(editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox || editor == 'radio' || editor instanceof MY.TableGrid.CellRadioButton || editor instanceof MY.ComboBox);
             var alignment = 'left';
             var display = '\'\'';
             if (!cm[j].hasOwnProperty('renderer')) {
@@ -471,7 +463,7 @@ MyTableGrid.prototype = {
                 } else {
                     html[idx++] = cm[j].renderer(row[columnId], this.getRow(rowIdx));
                 }
-            } else if (editor == 'checkbox' || editor instanceof MyTableGrid.CellCheckbox) {
+            } else if (editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox) {
                 temp = checkboxTmpl.replace(/\{id\}/g, id);
                 temp = temp.replace(/\{x\}/g, j);
                 temp = temp.replace(/\{y\}/g, rowIdx);
@@ -499,7 +491,7 @@ MyTableGrid.prototype = {
                         temp = temp.replace(/checked=.*?>/, '');
                 }
                 html[idx++] = temp;
-            } else if (editor == 'radio' || editor instanceof MyTableGrid.CellRadioButton) {
+            } else if (editor == 'radio' || editor instanceof MY.TableGrid.CellRadioButton) {
                 temp = radioTmpl.replace(/\{id\}/g, id);
                 temp = temp.replace(/\{x\}/g, j);
                 temp = temp.replace(/\{y\}/g, rowIdx);
@@ -553,8 +545,8 @@ MyTableGrid.prototype = {
         var self = this;
         for (var i = 0; i < cm.length; i++) {
             var editor = cm[i].editor;
-            if ((editor == 'radio' || editor instanceof MyTableGrid.CellRadioButton) ||
-                (editor == 'checkbox' || editor instanceof MyTableGrid.CellCheckbox)) {
+            if ((editor == 'radio' || editor instanceof MY.TableGrid.CellRadioButton) ||
+                (editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox)) {
                 var element = $('mtgInput'+id + '_' + i + ',' + y);
                 var innerElement = $('mtgIC'+id + '_' + i + ',' + y);
                 element.onclick = (function(editor, element, innerElement) {
@@ -787,7 +779,7 @@ MyTableGrid.prototype = {
 
         var oldWidth = parseInt($('mtgHC' + id + '_' + index).width);
         var editor = cm[index].editor;
-        var checkboxOrRadioFlg = (editor == 'checkbox' || editor instanceof MyTableGrid.CellCheckbox || editor == 'radio' || editor instanceof MyTableGrid.CellRadioButton);
+        var checkboxOrRadioFlg = (editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox || editor == 'radio' || editor instanceof MY.TableGrid.CellRadioButton);
 
         $('mtgHC' + id + '_' + index).width = newWidth;
         $('mtgHC' + id + '_' + index).setStyle({width: newWidth + 'px'});
@@ -1184,7 +1176,7 @@ MyTableGrid.prototype = {
         var editor = this.columnModel[x].editor || 'input';
         var type = this.columnModel[x].type || 'string';
         var input = null;
-        var isInputFlg = !(editor == 'radio' || editor == 'checkbox' || editor instanceof MyTableGrid.CellCheckbox || editor instanceof MyTableGrid.CellRadioButton);
+        var isInputFlg = !(editor == 'radio' || editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox || editor instanceof MY.TableGrid.CellRadioButton);
 
         if (isInputFlg) {
             element.setStyle({
@@ -1219,7 +1211,7 @@ MyTableGrid.prototype = {
             editor.render(input);
             input.focus();
             input.select();
-        } else if (editor == 'checkbox' || editor instanceof MyTableGrid.CellCheckbox) {
+        } else if (editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox) {
             input = $('mtgInput' + this._mtgId + '_' + x + ',' + y);
             input.checked = (!input.checked);
             if (editor.selectable == undefined || !editor.selectable) {
@@ -1228,21 +1220,21 @@ MyTableGrid.prototype = {
                 this.setValueAt(value, x, y, false);
                 if (y >= 0 && this.modifiedRows.indexOf(y) == -1) this.modifiedRows.push(y); //if doesn't exist in the array the row is registered
             }
-            if (editor instanceof MyTableGrid.CellCheckbox && editor.onClickCallback) {
+            if (editor instanceof MY.TableGrid.CellCheckbox && editor.onClickCallback) {
                 editor.onClickCallback(value, input.checked);
             }
             this.keys._bInputFocused = false;
             this.editedCellId = null;
             if (editor.selectable == undefined || !editor.selectable)
                 if(y >= 0) innerElement.addClassName('modifiedCell');
-        } else if (editor == 'radio' || editor instanceof MyTableGrid.CellRadioButton) {
+        } else if (editor == 'radio' || editor instanceof MY.TableGrid.CellRadioButton) {
             input = $('mtgInput' + this._mtgId + '_' + x + ',' + y);
             input.checked = (!input.checked);
             value = input.checked;
             if (editor.hasOwnProperty('getValueOf')) value = editor.getValueOf(input.checked);
             this.setValueAt(value, x, y, false);
             if (y >= 0 && this.modifiedRows.indexOf(y) == -1) this.modifiedRows.push(y); //if doesn't exist in the array the row is registered
-            if (editor instanceof MyTableGrid.CellRadioButton && editor.onClickCallback) {
+            if (editor instanceof MY.TableGrid.CellRadioButton && editor.onClickCallback) {
                 editor.onClickCallback(value, input.checked);
             }
             this.keys._bInputFocused = false;
@@ -1260,10 +1252,9 @@ MyTableGrid.prototype = {
         var id = this._mtgId;
         var keys = this.keys;
         var cm = this.columnModel;
-        var fs = this.fontSize;
         var width = parseInt(element.getStyle('width'));
         var height = parseInt(element.getStyle('height'));
-        var coords = keys.getCoordsFromCell(element);
+        var coords = this.getCurrentPosition();
         var x = coords[0];
         var y = coords[1];
         var cellHeight = this.cellHeight;
@@ -1276,7 +1267,7 @@ MyTableGrid.prototype = {
         var columnId = cm[x].id;
         var alignment = (type == 'number')? 'right' : 'left';
 
-        var isInputFlg = !(editor == 'radio' || editor == 'checkbox' || editor instanceof MyTableGrid.CellCheckbox || editor instanceof MyTableGrid.CellRadioButton);
+        var isInputFlg = !(editor == 'radio' || editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox || editor instanceof MY.TableGrid.CellRadioButton);
         if (isInputFlg) {
             if (editor.hide) editor.hide(); // this only happen when editor is a Combobox
             if (editor instanceof MY.DatePicker && editor.visibleFlg) return false;
@@ -1321,7 +1312,7 @@ MyTableGrid.prototype = {
             this.newRowsAdded[Math.abs(y)-1][columnId] = value;
         }
 
-        if ((editor instanceof MyTableGrid.BrowseInput || editor instanceof MyTableGrid.CellInput || editor instanceof MY.DatePicker) && editor.afterUpdateCallback) {
+        if ((editor instanceof MY.TableGrid.BrowseInput || editor instanceof MY.TableGrid.CellInput || editor instanceof MY.DatePicker) && editor.afterUpdateCallback) {
             editor.afterUpdateCallback(element, value);
         }
         keys._bInputFocused = false;
@@ -1354,7 +1345,7 @@ MyTableGrid.prototype = {
                 editor = cm[selectedHCIndex].editor;
                 sortable = cm[selectedHCIndex].sortable;
                 hbHeight = cm[selectedHCIndex].height;
-                if (sortable || editor == 'checkbox' || editor instanceof MyTableGrid.CellCheckbox) {
+                if (sortable || editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox) {
                     var hc = element.up();
                     var leftPos = hc.offsetLeft + hc.offsetWidth;
                     leftPos = leftPos - 16 - self.scrollLeft;
@@ -1399,13 +1390,13 @@ MyTableGrid.prototype = {
                 var selectAllItem = $$('#mtgHBM' + id + ' .mtgSelectAll')[0];
                 if (self.renderedRows > 0
                         && (cm[selectedHCIndex].editor == 'checkbox'
-                            || cm[selectedHCIndex].editor instanceof MyTableGrid.CellCheckbox)) {
+                            || cm[selectedHCIndex].editor instanceof MY.TableGrid.CellCheckbox)) {
                     selectAllItem.down('input').checked = cm[selectedHCIndex].selectAllFlg;
                     selectAllItem.show();
                     selectAllItem.onclick = function() { // onclick handler
                         var flag = cm[selectedHCIndex].selectAllFlg = $('mtgSelectAll' + id).checked;
                         var selectableFlg = false;
-                        if (cm[selectedHCIndex].editor instanceof MyTableGrid.CellCheckbox
+                        if (cm[selectedHCIndex].editor instanceof MY.TableGrid.CellCheckbox
                                 && cm[selectedHCIndex].editor.selectable) selectableFlg = true;
                         var renderedRows = self.renderedRows;
                         var beginAtRow = 0;
@@ -1421,7 +1412,7 @@ MyTableGrid.prototype = {
                                 if (y >= 0 && self.modifiedRows.indexOf(y) == -1) self.modifiedRows.push(y);
                             }
                         }
-                        //if (cm[selectedHCIndex].editor instanceof MyTableGrid.CellCheckbox // Maybe this is a mistake
+                        //if (cm[selectedHCIndex].editor instanceof MY.TableGrid.CellCheckbox // Maybe this is a mistake
                         //        && cm[selectedHCIndex].editor.onClickCallback) cm[selectedHCIndex].editor.onClickCallback();
                     };
                 } else {
@@ -1803,7 +1794,7 @@ MyTableGrid.prototype = {
         var editor = cm[x].editor;
         var columnId = cm[x].id;
         if (refreshValueFlg == undefined || refreshValueFlg) {
-            if (editor != null && (editor == 'checkbox' || editor instanceof MyTableGrid.CellCheckbox || editor == 'radio' || editor instanceof MyTableGrid.CellRadioButton)) {
+            if (editor != null && (editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox || editor == 'radio' || editor instanceof MY.TableGrid.CellRadioButton)) {
                 var input = $('mtgInput'+id+'_'+x+','+y);
                 if (editor.hasOwnProperty('getValueOf')) {
                     var trueVal = editor.getValueOf(true);
@@ -1914,7 +1905,7 @@ MyTableGrid.prototype = {
         var selectAllFlg = false;
         if (idx == -1) {
             for (var i = 0; i < cm.length; i++) {
-                if (cm[i].editor == 'checkbox' || cm[i].editor instanceof MyTableGrid.CellCheckbox
+                if (cm[i].editor == 'checkbox' || cm[i].editor instanceof MY.TableGrid.CellCheckbox
                         && cm[i].editor.selectable) {
                     idx = cm[i].positionIndex;
                     selectAllFlg = cm[i].selectAllFlg;
@@ -2078,12 +2069,13 @@ MyTableGrid.prototype = {
         }
         return result;
     }
-};
+});
 
+MY.TableGrid.ADD_BTN = 1;
+MY.TableGrid.DEL_BTN = 4;
+MY.TableGrid.SAVE_BTN = 8;
 
-var HeaderBuilder = Class.create();
-
-HeaderBuilder.prototype = {
+var HeaderBuilder = Class.create({
     initialize : function(id, cm) {
         this.columnModel = cm;
         this._mtgId = id;
@@ -2417,4 +2409,4 @@ HeaderBuilder.prototype = {
         }
         return this._leafElements;
     }
-};
+});
