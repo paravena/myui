@@ -1051,15 +1051,15 @@ MY.TableGrid = Class.create({
                 aTemp[k++] = cm[c];
         }
         cm = this.columnModel = aTemp;
-        var htr = $('mtgHRT'+id).down('tr');
-        htr.getElementsBySelector('th').each(function(th, index){
+        $('mtgHRT'+id).select('th').each(function(th, index){
             if (index < cm.length) {
                 th.id = 'mtgHC'+id+'_'+index;
                 try {
-                    var ihc = th.down('div');
+                    var ihc = th.down('div.mtgInnerHeaderCell');
                     ihc.id = 'mtgIHC'+id+'_'+index;
                     ihc.down('span').id = 'mtgSortIcon'+id+'_'+index;
-                    ihc.down('div').id = 'mtgHS'+id+'_'+index;
+                    var hs = th.down('div.mtgHS');
+                    hs.id = 'mtgHS'+id+'_'+index;
                 } catch (ihc_ex) {
                     // exception of ihc.down('div') being non existant
                 }
@@ -1141,7 +1141,7 @@ MY.TableGrid = Class.create({
                     return function() {
                         if (self._blurCellElement(element))
                             self.editedCellId = null;
-                        if (self.onCellBlur) self.onCellBlur(element, row[x], x, y, self.columnModel[x].id);
+                        if (self.onCellBlur) self.onCellBlur(element, row[x], x, y, cm[x].id);
                     };
                 })(i, j, element);
                 keys.event.blur(element, f_blur);
@@ -1151,7 +1151,7 @@ MY.TableGrid = Class.create({
             var f_focus = (function(x, y, element) {
                 return function() {
                     if (self.onCellFocus) {
-                        self.onCellFocus(element, row[x], x, y, self.columnModel[x].id);
+                        self.onCellFocus(element, row[x], x, y, cm[x].id);
                     }
                 };
             })(i, j, element);
@@ -1165,13 +1165,12 @@ MY.TableGrid = Class.create({
     _editCellElement : function(element) {
         this.keys._bInputFocused = true;
         var cm = this.columnModel;
-        var width = parseInt(element.getStyle('width'));
-        var height = parseInt(element.getStyle('height'));
         var coords = this.getCurrentPosition();
         var x = coords[0];
         var y = coords[1];
-        var id = 'mtgIC' + this._mtgId + '_' + x +','+y;
-        var innerElement = $(id);
+        var width = parseInt(element.getStyle('width'));
+        var height = parseInt(element.getStyle('height'));
+        var innerElement = element.down();
         var value = this.getValueAt(x, y);
         var editor = this.columnModel[x].editor || 'input';
         var type = this.columnModel[x].type || 'string';
@@ -1182,7 +1181,6 @@ MY.TableGrid = Class.create({
             element.setStyle({
                 height: this.cellHeight + 'px'
             });
-
             innerElement.setStyle({
                 position: 'relative',
                 width: width + 'px',
@@ -1197,17 +1195,13 @@ MY.TableGrid = Class.create({
             }
             // Creating a normal input
             var inputId = 'mtgInput' + this._mtgId + '_' + x + ',' + y;
-            var div = new Element('div').setStyle({border: 0, margin: 0, padding: 0});
             input = new Element('input', {id: inputId, type: 'text', value: value});
             input.addClassName('mtgInputText');
-
             input.setStyle({
                 padding : '3px',
                 width: (width - 8) + 'px'
             });
-
-            div.insert(input);
-            innerElement.appendChild(input);
+            innerElement.insert(input);
             editor.render(input);
             input.focus();
             input.select();

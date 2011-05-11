@@ -205,10 +205,16 @@ KeyTable.prototype = {
 	 * @param fn callback function for when triggered
 	 */
 	addEvent : function(sType, nTarget, fn) {
+        /*
         this._oaoEvents[sType][nTarget.id] = {
             "nCell": nTarget,
             "fn": fn
         };
+        */
+        this._oaoEvents[sType].push( {
+            "nCell": nTarget,
+            "fn": fn
+        } );
 	},
 
 	/**
@@ -220,10 +226,26 @@ KeyTable.prototype = {
 	 * @return number of matching events removed
 	 */
 	removeEvent : function(sType, nTarget, fn) {
+        var iCorrector = 0;
+        for (var i = 0, iLen = this._oaoEvents[sType].length ; i < iLen - iCorrector; i++) {
+            if (typeof fn != 'undefined') {
+                if (this._oaoEvents[sType][i - iCorrector].nCell == nTarget && this._oaoEvents[sType][i - iCorrector].fn == fn) {
+                    this._oaoEvents[sType].splice(i - iCorrector, 1);
+                    iCorrector++;
+                }
+            } else {
+                if (this._oaoEvents[sType][i].nCell == nTarget) {
+                    this._oaoEvents[sType].splice(i, 1);
+                    return 1;
+                }
+            }
+        }
+        return iCorrector;
+        /*
 		var iCorrector = 0;
         this._oaoEvents[sType][nTarget.id] = null;
         iCorrector++;
-		return iCorrector;
+		return iCorrector;*/
 	},
 
 	/**
@@ -427,13 +449,23 @@ KeyTable.prototype = {
 	 * @return  number of events fired
 	 */
 	eventFire: function(sType, nTarget) {
+        /*
 		var iFired = 0;
         var aEvent = this._oaoEvents[sType][nTarget.id];
         if (aEvent) {
             aEvent.fn(nTarget);
             iFired++;
         }
-		return iFired;
+		return iFired;*/
+        var iFired = 0;
+        var aEvents = this._oaoEvents[sType];
+        for (var i = 0; i < aEvents.length; i++) {
+            if (aEvents[i].nCell == nTarget) {
+                aEvents[i].fn(nTarget);
+                iFired++;
+            }
+        }
+        return iFired;
 	},
 
 	/**
