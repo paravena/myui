@@ -44,6 +44,7 @@ a.toolbarbtn {
     padding: 2px;
     border: 1px solid transparent;
 }
+
 a.toolbarbtn span {
     padding: 3px 3px 3px 20px;
 }
@@ -259,33 +260,17 @@ div.mtgComboBoxBtn {
     margin: 0;
 }
 
-/***********************************************
- * Calendar Definition
- ***********************************************/
-div.mtgCalendarBtn {
-    position: absolute;
-    top: 2px;
-    right: 0;
-    background: url(images/calb.png) no-repeat;
-    border: 0;
-    border-left: 2px solid  #609;
-    width: 20px;
-    height: 20px;
-    padding: 0;
-    margin: 0;
-}
-
 div.mtgBrowseBtn {
     position: absolute;
-    top: 2px;
-    right: 0;
-    background: url(images/magb.png) no-repeat;
-    border: 0;
-    border-left: 2px solid  #609;
+    top: 0;
+    right : 0;
+    background: #fff url(images/magb.png) no-repeat 1px 1px;
     width: 20px;
-    height: 20px;
-    padding: 0;
+    height: 22px;
     margin: 0;
+    border: solid #609 1px;
+    border-left-style: none;
+
 }
 
 div.mtgMenu {
@@ -296,6 +281,9 @@ div.mtgMenu {
     z-index: 100;
     visibility : hidden;
     border: 1px solid #609;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
 }
 
 div.mtgMenu ul {
@@ -323,6 +311,9 @@ a.mtgMenuItem:hover {
     background-color: #90c;
     text-decoration: none;
     color: white;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
 }
 
 .mtgMenuItemIcon {
@@ -359,41 +350,6 @@ span.mtgSortDescendingIcon {
     background: url(images/sort_descending.png) no-repeat transparent;
     width: 16px;
     height: 16px;
-}
-
-/***********************************************
- * Autocompleter Definition
- ***********************************************/
-div.autocomplete {
-    position: absolute;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 11px;
-    color: black;
-    /*width: 250px;*/
-    background-color: white;
-    border: 1px solid #ccc;
-    margin: 0;
-    padding: 0;
-}
-div.autocomplete ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
-div.autocomplete ul li {
-    list-style-type: none;
-    display: block;
-    margin: 0;
-    padding: 3px;
-    /*height: 18px;*/
-    cursor: pointer;
-    vertical-align: middle;
-    border-bottom: 1px solid #ddd;
-}
-
-div.autocomplete ul li.selected {
-   background-color: #e6d7f5;
 }
 
 /***********************************************
@@ -505,30 +461,4 @@ span.mtgSortDescIcon {
 
 div.modifiedCell {
     background : url(images/m.png) no-repeat 0 0;
-}
-
-div.loadingBox {
-    background: #609 url(images/ajax-loader.gif) no-repeat 6px 4px;
-    width: 80px;
-	height: 20px;
-	padding:4px 5px 2px 8px;
-    color: white;
-    text-align: right;
-    font-weight: bold;
-    font-size: 12px;
-    border: solid 1px dimgray;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    margin: auto;
-}
-
-div.overlay {
-    position: absolute;
-    background-color: dimgray;
-    filter:alpha(opacity=60);
-    -moz-opacity: 0.6;
-    opacity: 0.6;
-    visibility: hidden;
-    z-index: 20;
 }
