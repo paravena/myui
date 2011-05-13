@@ -5,7 +5,7 @@
     <title>TableGrid Last Version</title>
     <link type="text/css" href="../../css/main.css" rel="stylesheet">
     <link type="text/css" href="../../css/myui/myui.css" rel="stylesheet">
-    <link type="text/css" href="../../css/myui/TableGrid.css" rel="stylesheet">
+    <link type="text/css" href="../../css/myui/tablegrid.css" rel="stylesheet">
     <link type="text/css" href="../../css/myui/DatePicker.css" rel="stylesheet">
     <script type="text/javascript" src="../../scripts/prototype/prototype.js"></script>
     <script type="text/javascript" src="../../scripts/scriptaculous/scriptaculous.js"></script>
