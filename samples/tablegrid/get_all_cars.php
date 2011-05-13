@@ -76,14 +76,14 @@
     mysql_close($con);
 ?>
 {
-    options: {
-        pager: {
-            currentPage: <?php echo $page?>,
-            total: <?php echo $count?>,
-            from: <?php echo ($from + 1)?>,
-            to: <?php echo ($to + 1)?>,
-            pages: <?php echo $numberOfPages?>
+    "options" : {
+        "pager": {
+            "currentPage": "<?php echo $page?>",
+            "total": "<?php echo $count?>",
+            "from": "<?php echo ($from + 1)?>",
+            "to": "<?php echo ($to + 1)?>",
+            "pages": "<?php echo $numberOfPages?>"
         }
     },
-    rows : <?php print json_encode($rows); ?>
+    "rows" : <?php print json_encode($rows); ?>
 }

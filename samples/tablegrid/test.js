@@ -1,11 +1,12 @@
 var a = {
-    options: {
-        pager: {
-            currentPage: 1,
-            total: 129,
-            from: 1,
-            to: 101,
-            pages: 2        }
+    "options" : {
+        "pager": {
+            "currentPage": "1",
+            "total": "129",
+            "from": "1",
+            "to": "101",
+            "pages": "2"
+        }
     },
     rows : [
         ["9","PEUGEOT","106","2002","2100000","ES",false,"12\/12\/2007","106","1"],
@@ -108,4 +109,4 @@ var a = {
         ["45","CHEVROLET","Spark","2008","21000","ES",false,"09\/11\/2009","Spark","1"],
         ["46","CHEVROLET","Spark","2008","2100000","ES",false,"09\/11\/2009","Spark","1"],
         ["47","CHEVROLET","Spark","2008","21000","ES",false,"09\/11\/2009","Spark","1"]
-    ]};
+    ]}

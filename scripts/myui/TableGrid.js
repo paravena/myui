@@ -1519,7 +1519,6 @@ MY.TableGrid = Class.create({
     },
 
     _retrieveDataFromUrl : function(pageNumber, firstTimeFlg) {
-        alert('step 1');
         if (!firstTimeFlg && this.onPageChange) {
             if (!this.onPageChange()) return;
         }
@@ -1527,18 +1526,14 @@ MY.TableGrid = Class.create({
         if(this.pager != null && this.pager.pageParameter) pageParameter = this.pager.pageParameter;
         this.request[pageParameter] = pageNumber;
         this._toggleLoadingOverlay();
-        alert('step 2');
         for (var i = 0; i < this.columnModel.length; i++) {
             this.columnModel[i].selectAllFlg = false;
         }
-        alert('step 3');
         var self = this;
         new Ajax.Request(this.url, {
             parameters: self.request,
             onSuccess: function(response) {
-                alert('step 4 response: ' + response.responseText);
                 var tableModel = response.responseText.evalJSON();
-                alert('step 5 ' + tableModel.rows.length);
                 try {
                     self.rows = tableModel.rows || [];
                     self.pager = null;
@@ -1547,7 +1542,6 @@ MY.TableGrid = Class.create({
                     self.pager.pageParameter = pageParameter;
                     self.renderedRows = 0;
                     self.innerBodyDiv.innerHTML = self._createTableBody(tableModel.rows);
-                    alert('step 6');
                     self.bodyTable = $('mtgBT' + self._mtgId);
                     if (tableModel.rows.length > 0 && !firstTimeFlg) {
                         self._applyCellCallbacks();
@@ -1570,7 +1564,6 @@ MY.TableGrid = Class.create({
                 }
             },
             onFailure : function(transport) {
-                alert('step failure');
                 if (self.onFailure) self.onFailure(transport);
                 self._toggleLoadingOverlay();
                 self.scrollTop = self.bodyDiv.scrollTop = 0;

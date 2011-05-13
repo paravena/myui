@@ -22,5 +22,5 @@
     mysql_close($con);
 ?>
 {
-    rows : <?php print json_encode($rows); ?>
+    "rows" : <?php print json_encode($rows); ?>
 }
