@@ -64,57 +64,35 @@ MY.TableGrid.BrowseInput = Class.create({
         this.validate = options.validate || null;
 	},
 
-	render : function(tableGrid, options) {
-        /* TODO review
-		tableGrid = tableGrid || null;
-		options = options || {};
-		var inputId = 'mtgInput';
-		var self = this;
+	render : function(input) {
+        this.targetElement = input;
+        if (this.targetElement) this.decorate(this.targetElement);
+	},
 
-		if (tableGrid != null) {
-			var coords = tableGrid.getCurrentPosition();
-			inputId = 'mtgInput' + tableGrid._mtgId + '_' + coords[0] + ',' + coords[1];
-		}
-
-		var div = new Element('div').setStyle({border: 0, margin: 0, padding: 0});
-
-		var input = new Element('input', {id: inputId,
-			type: 'text',
-			value: options.value
-		});
-
-		input.addClassName('mtgInputText');
-        var marginTop = '2px';
-        if (Prototype.Browser.IE) {
-            var ieVersion = parseInt(navigator.userAgent.substring(navigator.userAgent.indexOf("MSIE")+5));
-            if (ieVersion <= 7) marginTop = '1px';
-        }
-
-		input.setStyle({
-			width: (options.width - 10) + 'px',
-            marginTop: marginTop
-		});
-		div.insert(input);
-		var brBtn = new Element('div');
-		brBtn.addClassName('mtgBrowseBtn');
-		var onClickFlg = false;
-		Event.observe(brBtn, 'click', function(event) {
-            if (window.event) window.event.cancelBubble = true; //IE hack
-            event.preventDefault();
-            event.stopPropagation();
-            event.stopped = true;
+    decorate : function(element) {
+        var self = this;
+        var width = element.getDimensions().width;
+        var height = element.getDimensions().height;
+        Element.wrap(element, 'div'); // auto complete container
+        element.setStyle({width : (width - 29)+'px'});
+        var container = element.up();
+        container.addClassName('my-autocompleter');
+        container.id = this.id + '_container';
+        container.setStyle({width : width + 'px', height: height + 'px'});
+        var browseBtn = new Element('div');
+        browseBtn.addClassName('mtgBrowseBtn gradient');
+        container.insert(browseBtn);
+        var onClickFlg = false;
+        browseBtn.on('click', function(event){
             if (self.onClick) self.onClick();
+            event.stop();
             onClickFlg = true;
-		});
-		div.insert(brBtn);
-		this.afterUpdateCallback = function(element, value) {
-			tableGrid.setValueAt(value, coords[0], coords[1]);
-			if (self.afterUpdate && !onClickFlg) {
-				self.afterUpdate(element, value);
-			}
-			onClickFlg = false;
-		};
-		return div;
-		*/
-	}
+        });
+        this.afterUpdateCallback = function(element, value) {
+            if (self.afterUpdate && !onClickFlg) {
+                self.afterUpdate(element, value);
+            }
+            onClickFlg = false;
+        };
+    }
 });

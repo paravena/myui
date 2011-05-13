@@ -176,7 +176,7 @@ iframe.ie6_blocker {
     position: absolute;
     top: 0;
     right : 0;
-    background: #bbb url(images/calb.png) no-repeat 2px 1px;
+    background: #fff url(images/calb.png) no-repeat 1px 1px;
     width: 20px;
     height: 22px;
     margin: 0;

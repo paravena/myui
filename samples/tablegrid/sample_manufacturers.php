@@ -4,6 +4,7 @@
 <head>
     <title>TableGrid Last Version</title>
     <link type="text/css" href="../../css/main.css" rel="stylesheet">
+    <link type="text/css" href="../../css/myui/myui.css" rel="stylesheet">
     <link type="text/css" href="../../css/myui/TableGrid.css" rel="stylesheet">
     <link type="text/css" href="../../css/myui/DatePicker.css" rel="stylesheet">
     <script type="text/javascript" src="../../scripts/prototype/prototype.js"></script>
@@ -18,7 +19,7 @@
             width: '640px',
             title: 'Manufacturers',
             toolbar : {
-                elements: [MyTableGrid.ADD_BTN, MyTableGrid.DEL_BTN, MyTableGrid.SAVE_BTN],
+                elements: [MY.TableGrid.ADD_BTN, MY.TableGrid.DEL_BTN, MY.TableGrid.SAVE_BTN],
                 onSave: function() {
                     var newRowsAdded = tableGrid1.getNewRowsAdded();
                     var temp = '';
@@ -51,12 +52,11 @@
                     }
                     alert('deleted rows: ' + temp);
                 },
-
                 onAdd: function() {
                     //alert('on add handler');
                 },
                 onDelete: function() {
-                    return confirm('Are you sure to to perform this operation');
+                    //alert('on delete handler');
                 }
             },
             rowClass : function(rowIdx) {
@@ -73,10 +73,10 @@
                 title : 'Id',
                 width : 30,
                 editable: true,
-                editor: new MyTableGrid.CellCheckbox({
+                editor: new MY.TableGrid.CellCheckbox({
                     selectable : true,
                     onClick : function(value, checked) {
-//                        alert(value + ' ' + checked);
+                        alert(value + ' ' + checked);
                     }
                 })
             },
@@ -95,14 +95,14 @@
                 sortable: true
             }
         ],
-        url: 'get_all_manufacturers1.php'
+        url : 'get_all_manufacturers.php'
     };
 
 
-    window.onload = function() {
-        tableGrid1 = new MyTableGrid(tableModel);
-        tableGrid1.show('mytable1');
-    };
+    Event.observe(document, 'dom:loaded', function() {
+        tableGrid1 = new MY.TableGrid(tableModel);
+        tableGrid1.render('mytable1');
+    });
 </script>
 <body>
     <div class="container">

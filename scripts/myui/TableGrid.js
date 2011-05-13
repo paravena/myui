@@ -146,7 +146,7 @@ MY.TableGrid = Class.create({
 
         var self = this;
 
-        Event.observe(this.bodyDiv, 'dom:dataLoaded', function(){
+        this.bodyDiv.on('dom:dataLoaded', function() {
             self._showLoaderSpinner();
             self.bodyTable = $('mtgBT' + id);
             self._applyCellCallbacks();
@@ -316,7 +316,7 @@ MY.TableGrid = Class.create({
         html[idx++] = '<div id="mtgHB'+id+'" class="mtgHeaderButton" style="width:14px;height:'+this.headerHeight+'px">';
         html[idx++] = '</div>';
         // Adding Header Button Menu
-        html[idx++] = '<div id="mtgHBM'+id+'" class="mtgMenu">';
+        html[idx++] = '<div id="mtgHBM'+id+'" class="mtgMenu shadow">';
         html[idx++] = '<ul>';
         html[idx++] = '<li>';
         html[idx++] = '<a id="mtgSortAsc'+id+'" class="mtgMenuItem" href="javascript:void(0)">';
@@ -603,10 +603,13 @@ MY.TableGrid = Class.create({
         var cm = this.columnModel;
         var bh = this.bodyHeight + 30;
         var cellHeight = (Prototype.Browser.IE)? 25 : 22;
-        var height = (cm.length * 25 > bh)? bh : cm.length * cellHeight;
+        var height = (cm.length * 25 > bh)? bh : 0;
         var html = [];
         var idx = 0;
-        html[idx++] = '<div id="mtgSM'+id+'" class="mtgMenu" style="height:'+height+'px">';
+        if (height > 0)
+            html[idx++] = '<div id="mtgSM'+id+'" class="mtgMenu shadow" style="height:'+height+'px">';
+        else
+            html[idx++] = '<div id="mtgSM'+id+'" class="mtgMenu shadow">';
         html[idx++] = '<ul>';
         for (var i = 0; i < cm.length; i++) {
             var column = cm[i];
@@ -628,12 +631,13 @@ MY.TableGrid = Class.create({
      * Applies Setting Menu behavior
      */
     _applySettingMenuBehavior : function() {
+        var self = this;
         var settingMenu = $('mtgSM' + this._mtgId);
         var settingButton = $('mtgSB' + this._mtgId);
 
         var width = settingMenu.getWidth();
 
-        Event.observe(settingButton, 'click', function() {
+        settingButton.on('click', function() {
             if (settingMenu.getStyle('visibility') == 'hidden') {
                 var topPos = settingButton.offsetTop;
                 var leftPos = settingButton.offsetLeft;
@@ -648,11 +652,11 @@ MY.TableGrid = Class.create({
         });
 
         var miFlg = false;
-        Event.observe(settingMenu, 'mousemove', function() {
+        settingMenu.on('mousemove', function(event) {
             miFlg = true;
         });
 
-        Event.observe(settingMenu, 'mouseout', function(event) {
+        settingMenu.on('mouseout', function(event) {
             miFlg = false;
             var element = event.element();
             setTimeout(function() {
@@ -661,8 +665,7 @@ MY.TableGrid = Class.create({
             },500);
         });
 
-        var self = this;
-        $$('#mtgSM' + this._mtgId + ' input[@type:checkbox]').each(function(checkbox, index) {
+        $('mtgSM'+this._mtgId).select('input').each(function(checkbox, index) {
             checkbox.onclick = function() {
                 self._toggleColumnVisibility(index, checkbox.checked);
             };
@@ -1265,7 +1268,6 @@ MY.TableGrid = Class.create({
         if (isInputFlg) {
             if (editor.hide) editor.hide(); // this only happen when editor is a Combobox
             if (editor instanceof MY.DatePicker && editor.visibleFlg) return false;
-
             if (editor.validate) { // this only happen when there is a validate method
                 var isValidFlg = editor.validate(value, input);
                 if (editor instanceof MY.ComboBox && !isValidFlg) {
@@ -1517,6 +1519,7 @@ MY.TableGrid = Class.create({
     },
 
     _retrieveDataFromUrl : function(pageNumber, firstTimeFlg) {
+        alert('step 1');
         if (!firstTimeFlg && this.onPageChange) {
             if (!this.onPageChange()) return;
         }
@@ -1524,14 +1527,18 @@ MY.TableGrid = Class.create({
         if(this.pager != null && this.pager.pageParameter) pageParameter = this.pager.pageParameter;
         this.request[pageParameter] = pageNumber;
         this._toggleLoadingOverlay();
+        alert('step 2');
         for (var i = 0; i < this.columnModel.length; i++) {
             this.columnModel[i].selectAllFlg = false;
         }
+        alert('step 3');
         var self = this;
         new Ajax.Request(this.url, {
             parameters: self.request,
-            onSuccess: function(transport) {
-                var tableModel = transport.responseText.evalJSON();
+            onSuccess: function(response) {
+                alert('step 4 response: ' + response.responseText);
+                var tableModel = response.responseText.evalJSON();
+                alert('step 5 ' + tableModel.rows.length);
                 try {
                     self.rows = tableModel.rows || [];
                     self.pager = null;
@@ -1540,6 +1547,7 @@ MY.TableGrid = Class.create({
                     self.pager.pageParameter = pageParameter;
                     self.renderedRows = 0;
                     self.innerBodyDiv.innerHTML = self._createTableBody(tableModel.rows);
+                    alert('step 6');
                     self.bodyTable = $('mtgBT' + self._mtgId);
                     if (tableModel.rows.length > 0 && !firstTimeFlg) {
                         self._applyCellCallbacks();
@@ -1554,7 +1562,7 @@ MY.TableGrid = Class.create({
                         self.afterRender();
                     }
                 } catch (ex) {
-                    if (self.onFailure) self.onFailure(transport);
+                    if (self.onFailure) self.onFailure(response);
                 } finally {
                     self._toggleLoadingOverlay();
                     self.scrollTop = self.bodyDiv.scrollTop = 0;
@@ -1562,6 +1570,7 @@ MY.TableGrid = Class.create({
                 }
             },
             onFailure : function(transport) {
+                alert('step failure');
                 if (self.onFailure) self.onFailure(transport);
                 self._toggleLoadingOverlay();
                 self.scrollTop = self.bodyDiv.scrollTop = 0;
