@@ -142,8 +142,6 @@ MY.TableGrid = Class.create({
         this.scrollTop = 0;
         this.targetColumnId = null;
 
-        $(target).insert({after:'<div class="my-autocompleter-list shadow" id="list" style="display:none;z-index:1000"></div>'});
-
         var self = this;
 
         this.bodyDiv.on('dom:dataLoaded', function() {

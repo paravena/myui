@@ -112,10 +112,6 @@ MY.Autocompleter = Class.create({
     },
 
     show: function() {
-        if (!this.update) {
-            document.body.insert('<div id="'+this.id+'_update" class="my-autocompleter-list shadow"></div>');
-            this.update = $(this.id+'_update');
-        }
         this.options.onShow(this.element, this.update);
     },
 
@@ -124,6 +120,10 @@ MY.Autocompleter = Class.create({
     },
 
     getUpdatedChoices : function() {
+        if (!this.update) {
+            document.body.insert('<div id="'+this.id+'_update" class="my-autocompleter-list shadow"></div>');
+            this.update = $(this.id+'_update');
+        }
         if (this.options.url) {
             var self = this;
             var parameters = this.options.parameters;
