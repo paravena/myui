@@ -547,7 +547,7 @@ KeyTable.prototype = {
 			nTarget = nTarget.parentNode;
 		}*/
 		var nTarget = Event.findElement(event, 'TD');
-		if (nTarget) {
+		if (nTarget != this._nCurrentFocus) {
 			this.setFocus(nTarget);
 			this.captureKeys();
 		}

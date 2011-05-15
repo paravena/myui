@@ -80,7 +80,7 @@
 				editable: true,
 				editor: new MY.ComboBox({
                     items: repList,
-                    listId : 'list',
+                    //*listId : 'list',
                     afterUpdate : function(input, selectedItem) {
                     }
 				})
@@ -297,6 +297,10 @@
 	</script>
 	<body style="margin:20px">
         <h1>TableGrid Sample</h1>
-        <div id="mytable" style="position:relative; width: 70%; height: 350px;"></div>
+        <div class="container">
+            <div class="samples">
+                <div id="mytable" style="position:relative; width: 70%; height: 350px;"></div>
+            </div>
+        </div>
 	</body>
 </html>

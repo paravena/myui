@@ -60,7 +60,7 @@ MY.Autocompleter = Class.create({
                             width : (self.elementWidth - 2) + 'px',
                             height: uh + 'px'
                         });
-                    } else { // up
+                    } else { // above
                         if (uh > (p.top - vst)) {
                             uh = p.top - vst - 10;
                             topPos = -(uh + 8);
@@ -103,14 +103,7 @@ MY.Autocompleter = Class.create({
         this.options.paramName = this.options.paramName || this.element.name;
         this.element.setAttribute('autocomplete', 'off');
         this.options.decorate();
-
-        if (this.options.listId != null)
-            this.update = $(this.options.listId);
-        else
-            this.update = $(this.id + '_update');
         this.container = $(this.id + '_container');
-        this.update.hide();
-
         $(document).on('click', this.onBlur.bindAsEventListener(this));
         this.element.on('keydown', this.onKeyPress.bindAsEventListener(this));
         this.element.on('focus', function() {
@@ -119,6 +112,10 @@ MY.Autocompleter = Class.create({
     },
 
     show: function() {
+        if (!this.update) {
+            document.body.insert('<div id="'+this.id+'_update" class="my-autocompleter-list shadow"></div>');
+            this.update = $(this.id+'_update');
+        }
         this.options.onShow(this.element, this.update);
     },
 
@@ -165,14 +162,18 @@ MY.Autocompleter = Class.create({
         container.addClassName('my-autocompleter');
         container.id = this.id + '_container';
         container.setStyle({width : width + 'px', height: height + 'px'});
-        if (this.options.listId == null)
-            container.insert({after: '<div id="'+this.id+'_update" class="my-autocompleter-list shadow"></div>'});
         element.value = this.options.initialText;
     },
 
     hide: function() {
         this.stopIndicator();
-        if (Element.getStyle(this.update, 'display') != 'none') this.options.onHide(this.element, this.update);
+        //if (Element.getStyle(this.update, 'display') != 'none') this.options.onHide(this.element, this.update);
+        if (this.update) {
+            this.update.remove();
+            this.active = false;
+            this.hasFocus = false;
+            this.update = null;
+         }
     },
 
     startIndicator: function() {

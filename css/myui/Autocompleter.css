@@ -18,6 +18,7 @@
 
 .my-autocompleter-list {
     position: absolute;
+    display : block;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 11px;
     color: black;

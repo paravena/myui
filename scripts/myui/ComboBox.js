@@ -53,6 +53,10 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
     
     showAll : function() {
         if (!this.active) {
+            if (!this.update) {
+                document.body.insert('<div id="'+this.id+'_update" class="my-autocompleter-list shadow"></div>');
+                this.update = $(this.id+'_update');
+            }
             this.element.focus();
             this.element.select();
             this.hasFocus = true;
@@ -86,8 +90,6 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
             self.showAll();
             event.stop();
         });
-        if (this.options.listId == null)
-            container.insert({after: '<div id="'+this.id+'_update" class="my-autocompleter-list shadow"></div>'});
         element.value = this.options.initialText;
     }
 });

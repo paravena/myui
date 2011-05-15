@@ -80,46 +80,6 @@ MY.DatePicker = Class.create({
         return this._mdpId;
     },
 
-    _positionCalendarDiv : function() {
-        var above = false;
-        var c_dim = this._calendarDiv.getDimensions();
-        var c_height = c_dim.height;
-        var c_width = c_dim.width;
-        var w_top = Utilities.getWindowScrollTop();
-        var w_height = Utilities.getWindowHeight();
-        var e_dim = $(this.options.get('popupBy')).cumulativeOffset();
-        var s_dim = $(this.options.get('popupBy')).cumulativeScrollOffset();
-        var e_top = e_dim.top - s_dim.top;
-        var e_left = e_dim.left - s_dim.left;
-        var e_height = $(this.options.get('popupBy')).getDimensions().height;
-        var e_bottom = e_top + e_height;
-
-        if ((( e_bottom + c_height ) > (w_top + w_height)) && ( e_bottom - c_height > w_top )) above = true;
-        var left_px = e_left.toString() + 'px';
-        var top_px = (above ? (e_top - c_height - 2) : ( e_top + e_height + 2)).toString() + 'px';
-
-        this._calendarDiv.style.left = left_px;
-        this._calendarDiv.style.top = top_px;
-        this._calendarDiv.setStyle({visibility: ''});
-
-        // draw an iframe behind the calendar -- ugly hack to make IE 6 happy
-        if (navigator.appName == 'Microsoft Internet Explorer') {
-            this.iframe = $(document.body).build('iframe',
-                {
-                    src: 'javascript:false',
-                    className: 'ie6_blocker'
-                },
-                {
-                    left: left_px,
-                    top: top_px,
-                    height: c_height.toString() + 'px',
-                    width: c_width.toString() + 'px',
-                    border: '0px'
-                }
-            );
-        }
-    },
-
     _initCalendarDiv : function() {
         var parent = null;
         var style = null;
@@ -156,6 +116,48 @@ MY.DatePicker = Class.create({
         this._refresh();
         this.setUseTime(this.useTimeFlg);
         this._applyKeyboardBehavior();
+    },
+
+    _positionCalendarDiv : function() {
+        var above = false;
+        var c_dim = this._calendarDiv.getDimensions();
+        var c_height = c_dim.height;
+        var c_width = c_dim.width;
+        var w_top = Utilities.getWindowScrollTop();
+        var w_height = Utilities.getWindowHeight();
+        var e_dim = $(this.options.get('popupBy')).cumulativeOffset();
+        var s_dim = $(this.options.get('popupBy')).cumulativeScrollOffset();
+        var e_top = e_dim.top - s_dim.top;
+        var e_left = e_dim.left - s_dim.left;
+        var e_height = $(this.options.get('popupBy')).getDimensions().height;
+        var e_bottom = e_top + e_height;
+
+        if ((( e_bottom + c_height ) > (w_top + w_height)) && ( e_bottom - c_height > w_top )) above = true;
+        var left_px = e_left.toString() + 'px';
+        var top_px = (above ? (e_top - c_height - 2) : ( e_top + e_height + 2)).toString() + 'px';
+
+        this._calendarDiv.style.left = left_px;
+        this._calendarDiv.style.top = top_px;
+        this._calendarDiv.setStyle({visibility: ''});
+
+        // draw an iframe behind the calendar -- ugly hack to make IE 6 happy
+        /*
+        if (navigator.appName == 'Microsoft Internet Explorer') {
+            this.iframe = $(document.body).build('iframe',
+                {
+                    src: 'javascript:false',
+                    className: 'ie6_blocker'
+                },
+                {
+                    left: left_px,
+                    top: top_px,
+                    height: c_height.toString() + 'px',
+                    width: c_width.toString() + 'px',
+                    border: '0px'
+                }
+            );
+        }
+        */
     },
 
     _initHeaderDiv : function() {
