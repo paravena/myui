@@ -1,4 +1,4 @@
-div.myTableGrid {
+.my-tablegrid {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 11px;
 }
@@ -6,7 +6,7 @@ div.myTableGrid {
 /********************************
  * Title definition
  ********************************/
-div.mtgHeaderTitle {
+.my-tablegrid-header-title {
     border-top: solid 1px #ccc;
     border-left: solid 1px #ccc;
     border-right: solid 1px #ccc;
@@ -18,26 +18,26 @@ div.mtgHeaderTitle {
 /********************************
  * Toolbar definition
  ********************************/
-div.mtgToolbar {
+.my-tablegrid-toolbar {
     border-top: solid 1px #ccc;
     border-left: solid 1px #ccc;
     border-right: solid 1px #ccc;
     background-color: #eee;
 }
 
-span.addbutton {
+span.add-button {
     background: url(images/add.png) left center no-repeat;
 }
 
-span.delbutton {
+span.delete-button {
     background: url(images/close.png) left center no-repeat;
 }
 
-span.savebutton {
+span.save-button {
     background: url(images/save.png) left center no-repeat;
 }
 
-a.toolbarbtn {
+a.toolbar-button {
     float: left;
     color: black;
     text-decoration: none;
@@ -45,16 +45,16 @@ a.toolbarbtn {
     border: 1px solid transparent;
 }
 
-a.toolbarbtn span {
+a.toolbar-button span {
     padding: 3px 3px 3px 20px;
 }
 
-a.toolbarbtn:hover {
+a.toolbar-button:hover {
     background-color: #eef;
     border: 1px solid #ccc;
 }
 
-div.toolbarsep  {
+div.toolbar-separator  {
     float: left;
     width: 0;
     height: 100%;
@@ -66,7 +66,7 @@ div.toolbarsep  {
 /********************************
  * Header definition
  ********************************/
-div.mtgHeaderRow  {
+div.my-tablegrid-header-row  {
     background: #ccc url(images/hrow.gif) repeat-x;
     border-top: solid 1px #ccc;
     border-left: solid 1px #ccc;
@@ -74,24 +74,24 @@ div.mtgHeaderRow  {
     cursor: default;
 }
 
-table.mtgHeaderRowTable {
+table.my-tablegrid-header-row-table {
     padding: 0;
     color: black;
     text-align: left;
 }
 
-table.mtgHeaderRowTable tr {
+table.my-tablegrid-header-row-table tr {
     /*background: #ccc url(images/mtg/hrow.gif) repeat-x;*/
 }
 
-th.mtgHeaderCell {
+th.my-tablegrid-header-cell {
     border: 1px solid transparent;
     border-right-color: #ddd;
     border-bottom-color: #ddd;
     color: dimgray;
 }
 
-th div.mtgInnerHeaderCell {
+th div.my-tablegrid-inner-header-cell {
     position: relative;
     white-space: nowrap;
     font-size: 11px;
@@ -99,14 +99,14 @@ th div.mtgInnerHeaderCell {
     overflow: hidden;
 }
 
-div.mtgHS {
+div.my-tablegrid-header-separator {
     cursor: col-resize !important;
     cursor: w-resize;
     overflow: hidden;
     background-color: transparent;
 }
 
-div.mtgHeaderButton {
+div.my-tablegrid-header-button {
     position: absolute;
     background: url(images/ddn.png) center no-repeat;
     border-left: solid #ddd 1px;
@@ -114,7 +114,7 @@ div.mtgHeaderButton {
     z-index: 50;
 }
 
-div.mtgColMoveTop {
+div.my-tablegrid-column-move-top {
     position: absolute;
     top: 0;
     left: 0;
@@ -125,7 +125,7 @@ div.mtgColMoveTop {
     visibility: hidden
 }
 
-div.mtgColMoveBottom {
+div.my-tablegrid-column-move-bottom {
     position: absolute;
     top: 0;
     left: 0;
@@ -139,29 +139,29 @@ div.mtgColMoveBottom {
  * Body definition
  ********************************/
 
-div.mtgBody {
+div.my-tablegrid-body {
     border: solid 1px #ccc;
     border-top: solid 1px #eee;
 }
 
-table.mtgBodyTable {
+table.my-tablegrid-body-table {
     table-layout: fixed;
     position: relative;
     z-index: 0;
 }
 
-table.mtgBodyTable td  {
+table.my-tablegrid-body-table td  {
     border-bottom: solid 1px #ddd;
     padding: 0;
 }
 
-td.mtgCell {
+td.my-tablegrid-cell {
     border-left: 1px solid transparent;
     /*border-left: 1px solid transparent;*/
     border-right: 1px solid #ddd;
 }
 
-td div.mtgInnerCell {
+td div.my-tablegrid-inner-cell {
     position: relative;
     white-space: nowrap;
     font-size: 11px;
@@ -180,7 +180,7 @@ td.focus {
     /*border-left: solid 1px #90c;*/
 }
 
-td.focus div.mtgInnerCell {
+td.focus div.my-tablegrid-inner-cell {
     background-color: #90c;
     color: white;
 }
@@ -189,7 +189,7 @@ td div.more {
    background: url(images/more.gif) no-repeat right bottom;
 }
 
-div.mtgResizeMarker {
+div.my-tablegrid-resize-marker {
     cursor: col-resize !important;
     cursor: w-resize;
     position: absolute;
@@ -273,7 +273,7 @@ div.mtgBrowseBtn {
 
 }
 
-div.mtgMenu {
+div.my-tablegrid-menu {
     position: absolute;
     width: 130px;
     overflow: auto;
@@ -286,18 +286,18 @@ div.mtgMenu {
     border-radius: 3px;
 }
 
-div.mtgMenu ul {
+div.my-tablegrid-menu ul {
     margin: 3px;
     padding: 0;
 }
 
-div.mtgMenu ul li {
+div.my-tablegrid-menu ul li {
     position: relative;
     list-style-type: none;
     padding: 0;
 }
 
-a.mtgMenuItem {
+a.my-tablegrid-menu-item {
     position: relative;
     display: block;
     color: black;
@@ -307,7 +307,7 @@ a.mtgMenuItem {
     line-height: 20px;
 }
 
-a.mtgMenuItem:hover {
+a.my-tablegrid-menu-item:hover {
     background-color: #90c;
     text-decoration: none;
     color: white;
@@ -316,7 +316,7 @@ a.mtgMenuItem:hover {
     border-radius: 3px;
 }
 
-.mtgMenuItemIcon {
+.my-tablegrid-menu-item-icon {
     position: absolute;
     top:0;
     left:0;
@@ -324,12 +324,12 @@ a.mtgMenuItem:hover {
     padding: 0;
 }
 
-span.mtgMenuItemChk {
+span.my-tablegrid-menu-item-checkbox {
     margin: 0;
     padding: 0;
 }
 
-div.mtgSettingButton {
+div.my-tablegrid-setting-button {
     position: absolute;
     top: 3px;
     /*right: 3px;*/
@@ -340,13 +340,13 @@ div.mtgSettingButton {
     padding: 1px;
 }
 
-span.mtgSortAscendingIcon {
+span.sort-ascending-icon {
     background: url(images/sort_ascending.png) no-repeat transparent;
     width: 16px;
     height: 16px;
 }
 
-span.mtgSortDescendingIcon {
+span.sort-descending-icon {
     background: url(images/sort_descending.png) no-repeat transparent;
     width: 16px;
     height: 16px;
@@ -355,7 +355,7 @@ span.mtgSortDescendingIcon {
 /***********************************************
  * Pager Definition
  ***********************************************/
-div.mtgPager {
+div.my-tablegrid-pager {
     background-color: #eee;
     border-left: solid 1px #ccc;
     border-right: solid 1px #ccc;
@@ -364,101 +364,101 @@ div.mtgPager {
     padding: 2px;
 }
 
-input.mtgPageInput {
+input.my-tablegrid-page-input {
     font-size: 11px;
     width: 25px;
     margin: 0;
 }
 
-span.mtgPagerMsg {
+span.my-tablegrid-pager-message {
     float: left;
     padding: 2px;
 }
 
-table.mtgPagerTable {
+table.my-tablegrid-pager-table {
     float: right;
     font-size: 11px;
     margin: 0;
 }
 
-table.mtgPagerTable td {
+table.my-tablegrid-pager-table td {
     padding-left: 2px;
     padding-right: 2px;
 }
 
-a.mtgPagerCtrl {
+a.my-tablegrid-pager-control {
     cursor: pointer;
     text-decoration: none;
 }
 
-div.mtgFirstPage {
-    background: url(images/first.gif) center no-repeat transparent;
-    width: 16px;
-    height: 16px;
-}
-
-div.mtgLoader {
+div.my-tablegrid-pager-loader {
     background: url(images/mtg-loader.gif) center no-repeat transparent;
     width: 16px;
     height: 16px;
 }
 
-div.mtgFirstPageDisabled {
+div.first-page {
+    background: url(images/first.gif) center no-repeat transparent;
+    width: 16px;
+    height: 16px;
+}
+
+div.first-page-disabled {
     background: url(images/first-disabled.gif) center no-repeat transparent;
     width: 16px;
     height: 16px;
 }
 
-div.mtgPrevPage {
+div.previous-page {
     background: url(images/prev.gif) center no-repeat transparent;
     width: 16px;
     height: 16px;
 }
 
-div.mtgPrevPageDisabled {
+div.previous-page-disabled {
     background: url(images/prev-disabled.gif) center no-repeat transparent;
     width: 16px;
     height: 16px;
 }
 
-div.mtgNextPage {
+div.next-page {
     background: url(images/next.gif) center no-repeat transparent;
     width: 16px;
     height: 16px;
 }
 
-div.mtgNextPageDisabled {
+div.next-page-disabled {
     background: url(images/next-disabled.gif) center no-repeat transparent;
     width: 16px;
     height: 16px;
 }
 
-div.mtgLastPage {
+div.last-page {
     background: url(images/last.gif) center no-repeat transparent;
     width: 16px;
     height: 16px;
 }
 
-div.mtgLastPageDisabled {
+div.last-page-disabled {
     background: url(images/last-disabled.gif) center no-repeat transparent;
     width: 16px;
     height: 16px;
 }
 
-div.mtgSep {
+div.my-tablegrid-pager-separator {
     background: url(images/y-sep.png) center no-repeat transparent;
     width: 2px;
     height: 13px;
 }
 
-span.mtgSortAscIcon {
+span.my-tablegrid-sort-asc-icon {
     background: url(images/sort-arrow-asc.png) center no-repeat transparent;
 }
 
-span.mtgSortDescIcon {
+span.my-tablegrid-sort-asc-icon {
     background: url(images/sort-arrow-desc.png) center no-repeat transparent;
 }
 
-div.modifiedCell {
+div.modified-cell {
     background : url(images/m.png) no-repeat 0 0;
 }

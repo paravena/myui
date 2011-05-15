@@ -43,7 +43,7 @@ MY.TableGrid = Class.create({
      * MyTableGrid constructor
      */
     initialize : function(tableModel) {
-        this._mtgId = $$('.myTableGrid').length + 1;
+        this._mtgId = $$('.my-tablegrid').length + 1;
         this.tableModel = tableModel;
         this.columnModel = tableModel.columnModel || [];
         this.rows = tableModel.rows || [];
@@ -239,10 +239,10 @@ MY.TableGrid = Class.create({
 
         var idx = 0;
         var html = [];
-        html[idx++] = '<div id="myTableGrid'+id+'" class="myTableGrid" style="position:relative;width:'+this.tableWidth+'"px;height:'+this.tableHeight+'px;z-index:0">';
+        html[idx++] = '<div id="myTableGrid'+id+'" class="my-tablegrid" style="position:relative;width:'+this.tableWidth+'"px;height:'+this.tableHeight+'px;z-index:0">';
 
         if (this.options.title) { // Adding header title
-            html[idx++] = '<div id="mtgHeaderTitle'+id+'" class=" mtgHeaderTitle" style="position:absolute;top:'+this.topPos+'px;left:'+this.leftPos+'px;width:'+(this.tableWidth - 6)+'px;height:'+(this.titleHeight - 6)+'px;padding:3px;z-index:10">';
+            html[idx++] = '<div id="mtgHeaderTitle'+id+'" class="my-tablegrid-header-title" style="position:absolute;top:'+this.topPos+'px;left:'+this.leftPos+'px;width:'+(this.tableWidth - 6)+'px;height:'+(this.titleHeight - 6)+'px;padding:3px;z-index:10">';
             html[idx++] = this.options.title;
             html[idx++] = '</div>';
             this.topPos += this.titleHeight + 1;
@@ -250,27 +250,27 @@ MY.TableGrid = Class.create({
 
         if (this.options.toolbar) {
             var elements = this.options.toolbar.elements || [];
-            html[idx++] = '<div id="mtgHeaderToolbar'+id+'" class="mtgToolbar" style="position:absolute;top:'+this.topPos+'px;left:'+this.leftPos+'px;width:'+(this.tableWidth - 4)+'px;height:'+(this.toolbarHeight - 4)+'px;padding:2px;z-index:10">';
+            html[idx++] = '<div id="mtgHeaderToolbar'+id+'" class="my-tablegrid-toolbar" style="position:absolute;top:'+this.topPos+'px;left:'+this.leftPos+'px;width:'+(this.tableWidth - 4)+'px;height:'+(this.toolbarHeight - 4)+'px;padding:2px;z-index:10">';
             var beforeFlg = false;
             if(elements.indexOf(MY.TableGrid.SAVE_BTN) >= 0) {
-                html[idx++] = '<a href="#" class="toolbarbtn"><span class="savebutton" id="mtgSaveBtn'+id+'">'+this._messages.save+'</span></a>';
+                html[idx++] = '<a href="#" class="toolbar-button"><span class="save-button" id="mtgSaveBtn'+id+'">'+this._messages.save+'</span></a>';
                 beforeFlg = true;
             }
             if(elements.indexOf(MY.TableGrid.ADD_BTN) >= 0) {
-                if (beforeFlg) html[idx++] = '<div class="toolbarsep">&#160;</div>';
-                html[idx++] = '<a href="#" class="toolbarbtn"><span class="addbutton" id="mtgAddBtn'+id+'">'+this._messages.add+'</span></a>';
+                if (beforeFlg) html[idx++] = '<div class="toolbar-separator">&#160;</div>';
+                html[idx++] = '<a href="#" class="toolbar-button"><span class="add-button" id="mtgAddBtn'+id+'">'+this._messages.add+'</span></a>';
                 beforeFlg = true;
             }
             if(elements.indexOf(MY.TableGrid.DEL_BTN) >= 0) {
-                if (beforeFlg) html[idx++] = '<div class="toolbarsep">&#160;</div>';
-                html[idx++] = '<a href="#" class="toolbarbtn"><span class="delbutton" id="mtgDelBtn'+id+'">'+this._messages.remove+'</span></a>';
+                if (beforeFlg) html[idx++] = '<div class="toolbar-separator">&#160;</div>';
+                html[idx++] = '<a href="#" class="toolbar-button"><span class="delete-button" id="mtgDelBtn'+id+'">'+this._messages.remove+'</span></a>';
             }
             html[idx++] = '</div>';
             this.topPos += this.toolbarHeight + 1;
         }
         overlayTopPos = this.topPos;
         // Adding Header Row
-        html[idx++] = '<div id="headerRowDiv'+id+'" class="mtgHeaderRow" style="position:absolute;top:'+this.topPos+'px;left:'+this.leftPos+'px;width:'+this.tableWidth+'px;height:'+this.headerHeight+'px;padding:0;overflow:hidden;z-index:0">';
+        html[idx++] = '<div id="headerRowDiv'+id+'" class="my-tablegrid-header-row" style="position:absolute;top:'+this.topPos+'px;left:'+this.leftPos+'px;width:'+this.tableWidth+'px;height:'+this.headerHeight+'px;padding:0;overflow:hidden;z-index:0">';
         //header row box useful for drag and drop
         html[idx++] = '<div id="mtgHRB'+id+'" style="position:relative;padding:0;margin:0;width:'+(this.headerWidth+21)+'px;height:'+this.headerHeight+'px;">';
         // Adding Header Row Cells
@@ -289,51 +289,51 @@ MY.TableGrid = Class.create({
         html[idx++] = '<div id="overlayDiv'+id+'" class="overlay" style="position:absolute;top:'+overlayTopPos+'px;width:'+(this.tableWidth+2)+'px;height:'+(overlayHeight+2)+'px;overflow:none;">';
         html[idx++] = '<div class="loadingBox" style="margin-top:'+((overlayHeight+2)/2 - 14)+'px">'+this._messages.loading+'</div>';
         html[idx++] = '</div>'; // closes overlay
-        html[idx++] = '<div id="bodyDiv'+id+'" class="mtgBody" style="position:absolute;top:'+this.topPos+'px;left:'+this.leftPos+'px;width:'+this.tableWidth+'px;height:'+this.bodyHeight+'px;overflow:auto;">';
-        html[idx++] = '<div id="innerBodyDiv'+id+'" class="mtgInnerBody" style="position:relative;top:0px;width:'+(this.tableWidth - this.scrollBarWidth)+'px;overflow:none;">';
+        html[idx++] = '<div id="bodyDiv'+id+'" class="my-tablegrid-body" style="position:absolute;top:'+this.topPos+'px;left:'+this.leftPos+'px;width:'+this.tableWidth+'px;height:'+this.bodyHeight+'px;overflow:auto;">';
+        html[idx++] = '<div id="innerBodyDiv'+id+'" class="my-tablegrid-inner-body" style="position:relative;top:0px;width:'+(this.tableWidth - this.scrollBarWidth)+'px;overflow:none;">';
         html[idx++] = '</div>'; // closes innerBodyDiv
         html[idx++] = '</div>'; // closes bodyDiv
 
         // Adding Pager Panel
         if (this.pager) {
             this.topPos += this.bodyHeight + 2;
-            html[idx++] = '<div id="pagerDiv'+id+'" class="mtgPager" style="position:absolute;top:'+this.topPos+'px;left:0;bottom:0;width:'+(this.tableWidth - 4)+'px;height:'+(this.pagerHeight - 4)+'px">';
+            html[idx++] = '<div id="pagerDiv'+id+'" class="my-tablegrid-pager" style="position:absolute;top:'+this.topPos+'px;left:0;bottom:0;width:'+(this.tableWidth - 4)+'px;height:'+(this.pagerHeight - 4)+'px">';
             html[idx++] = this._updatePagerInfo(true);
             html[idx++] = '</div>'; // closes Pager Div
         }
 
         // Adding Table Setting Button Control
         if (this.addSettingBehaviorFlg) {
-            html[idx++] = '<div id="mtgSB'+id+'" class="mtgSettingButton" style="left:'+(this.tableWidth - 20)+'px">';
+            html[idx++] = '<div id="mtgSB'+id+'" class="my-tablegrid-setting-button" style="left:'+(this.tableWidth - 20)+'px">';
             html[idx++] = '</div>';
             // Adding Table Setting Menu
             html[idx++] = this._createSettingMenu();
         }
 
         // Adding Header Button Control
-        html[idx++] = '<div id="mtgHB'+id+'" class="mtgHeaderButton" style="width:14px;height:'+this.headerHeight+'px">';
+        html[idx++] = '<div id="mtgHB'+id+'" class="my-tablegrid-header-button" style="width:14px;height:'+this.headerHeight+'px">';
         html[idx++] = '</div>';
         // Adding Header Button Menu
-        html[idx++] = '<div id="mtgHBM'+id+'" class="mtgMenu shadow">';
+        html[idx++] = '<div id="mtgHBM'+id+'" class="my-tablegrid-menu shadow">';
         html[idx++] = '<ul>';
         html[idx++] = '<li>';
-        html[idx++] = '<a id="mtgSortAsc'+id+'" class="mtgMenuItem" href="javascript:void(0)">';
+        html[idx++] = '<a id="mtgSortAsc'+id+'" class="my-tablegrid-menu-item" href="javascript:void(0)">';
         html[idx++] = '<table cellspacing="0" cellpadding="0" width="100%" border="0">';
-        html[idx++] = '<tr><td width="25"><span class="mtgMenuItemIcon mtgSortAscendingIcon">&nbsp;</span></td>';
+        html[idx++] = '<tr><td width="25"><span class="my-tablegrid-menu-item-icon sort-ascending-icon">&nbsp;</span></td>';
         html[idx++] = '<td>'+this._messages.sortAsc+'</td></tr></table>';
         html[idx++] = '</a>';
         html[idx++] = '</li>';
         html[idx++] = '<li>';
-        html[idx++] = '<a id="mtgSortDesc'+id+'" class="mtgMenuItem" href="javascript:void(0)">';
+        html[idx++] = '<a id="mtgSortDesc'+id+'" class="my-tablegrid-menu-item" href="javascript:void(0)">';
         html[idx++] = '<table cellspacing="0" cellpadding="0" width="100%" border="0">';
-        html[idx++] = '<tr><td width="25"><span class="mtgMenuItemIcon mtgSortDescendingIcon">&nbsp;</span></td>';
+        html[idx++] = '<tr><td width="25"><span class="my-tablegrid-menu-item-icon sort-descending-icon">&nbsp;</span></td>';
         html[idx++] = '<td>'+this._messages.sortDesc+'</td></tr></table>';
         html[idx++] = '</a>';
         html[idx++] = '</li>';
         html[idx++] = '<li class="mtgSelectAll">';
-        html[idx++] = '<a class="mtgMenuItem" href="javascript:void(0)">';
+        html[idx++] = '<a class="my-tablegrid-menu-item" href="javascript:void(0)">';
         html[idx++] = '<table cellspacing="0" cellpadding="0" width="100%" border="0">';
-        html[idx++] = '<tr><td width="25"><span class="mtgMenuItemChk"><input type="checkbox" id="mtgSelectAll'+id+'"></span></td>';
+        html[idx++] = '<tr><td width="25"><span class="my-tablegrid-menu-item-checkbox"><input type="checkbox" id="mtgSelectAll'+id+'"></span></td>';
         html[idx++] = '<td>'+this._messages.selectAll+'</td></tr></table>';
         html[idx++] = '</a>';
         html[idx++] = '</li>';
@@ -341,14 +341,14 @@ MY.TableGrid = Class.create({
         html[idx++] = '</div>';
 
         // Adding resize markers
-        html[idx++] = '<div id="resizeMarkerLeft'+id+'" class="mtgResizeMarker">';
+        html[idx++] = '<div id="resizeMarkerLeft'+id+'" class="my-tablegrid-resize-marker">';
         html[idx++] = '</div>';
-        html[idx++] = '<div id="resizeMarkerRight'+id+'" class="mtgResizeMarker">';
+        html[idx++] = '<div id="resizeMarkerRight'+id+'" class="my-tablegrid-resize-marker">';
         html[idx++] = '</div>';
 
         // Adding Dragging controls
-        html[idx++] = '<div id="mtgColMoveTop'+id+'" class="mtgColMoveTop">&nbsp;</div>';
-        html[idx++] = '<div id="mtgColMoveBottom'+id+'" class="mtgColMoveBottom">&nbsp;</div>';
+        html[idx++] = '<div id="mtgColMoveTop'+id+'" class="my-tablegrid-column-move-top">&nbsp;</div>';
+        html[idx++] = '<div id="mtgColMoveBottom'+id+'" class="my-tablegrid-column-move-bottom">&nbsp;</div>';
 
         html[idx++] = '<div id="dragColumn'+id+'" class="dragColumn" style="width:100px;height:18px;">';
         html[idx++] = '<span class="columnTitle">&nbsp;</span>';
@@ -376,7 +376,7 @@ MY.TableGrid = Class.create({
 
         if (firstRenderingFlg) {
             this.innerBodyDiv.setStyle({height: (rows.length * cellHeight) + 'px'});
-            html[idx++] = '<table id="mtgBT'+id+'" border="0" cellspacing="0" cellpadding="0" width="'+headerWidth+'" class="mtgBodyTable">';
+            html[idx++] = '<table id="mtgBT'+id+'" border="0" cellspacing="0" cellpadding="0" width="'+headerWidth+'" class="my-tablegrid-body-table">';
             html[idx++] = '<tbody>';
         }
         var lastRowToRender = renderedRows + renderedRowsAllowed;
@@ -402,8 +402,8 @@ MY.TableGrid = Class.create({
      */
     _createRow : function(row, rowIdx) {
         var id = this._mtgId;
-        var tdTmpl = '<td id="mtgC{id}_{x},{y}" height="{height}" width="{width}" style="width:{width}px;height:{height}px;padding:0;margin:0;display:{display}" class="mtgCell mtgC{id} mtgC{id}_{x} mtgR{id}_{y}">';
-        var icTmpl = '<div id="mtgIC{id}_{x},{y}" style="width:{width}px;height:{height}px;padding:3px;text-align:{align}" class="mtgInnerCell mtgIC{id} mtgIC{id}_{x} mtgIR{id}_{y}">';
+        var tdTmpl = '<td id="mtgC{id}_{x},{y}" height="{height}" width="{width}" style="width:{width}px;height:{height}px;padding:0;margin:0;display:{display}" class="my-tablegrid-cell mtgC{id} mtgC{id}_{x} mtgR{id}_{y}">';
+        var icTmpl = '<div id="mtgIC{id}_{x},{y}" style="width:{width}px;height:{height}px;padding:3px;text-align:{align}" class="my-tablegrid-inner-cell mtgIC{id} mtgIC{id}_{x} mtgIR{id}_{y}">';
         var checkboxTmpl = '<input id="mtgInput{id}_{x},{y}" name="mtgInput{id}_{x},{y}" type="checkbox" value="{value}" class="mtgInput{id}_{x} mtgInputCheckbox" checked="{checked}">';
         var radioTmpl = '<input id="mtgInput{id}_{x},{y}" name="mtgInput{id}_{x}" type="radio" value="{value}" class="mtgInput{id}_{x} mtgInputRadio">';
         if (Prototype.Browser.Opera || Prototype.Browser.WebKit) {
@@ -560,7 +560,7 @@ MY.TableGrid = Class.create({
                         }
                         if (editor.onClickCallback) editor.onClickCallback(element.value, element.checked);
                         if (editor.selectable == undefined || !editor.selectable)
-                            innerElement.addClassName('modifiedCell');
+                            innerElement.addClassName('modified-cell');
                     };
                 })(editor, element, innerElement);
             }
@@ -605,14 +605,14 @@ MY.TableGrid = Class.create({
         var html = [];
         var idx = 0;
         if (height > 0)
-            html[idx++] = '<div id="mtgSM'+id+'" class="mtgMenu shadow" style="height:'+height+'px">';
+            html[idx++] = '<div id="mtgSM'+id+'" class="my-tablegrid-menu shadow" style="height:'+height+'px">';
         else
-            html[idx++] = '<div id="mtgSM'+id+'" class="mtgMenu shadow">';
+            html[idx++] = '<div id="mtgSM'+id+'" class="my-tablegrid-menu shadow">';
         html[idx++] = '<ul>';
         for (var i = 0; i < cm.length; i++) {
             var column = cm[i];
             html[idx++] = '<li>';
-            html[idx++] = '<a href="#" class="mtgMenuItem">';
+            html[idx++] = '<a href="#" class="my-tablegrid-menu-item">';
             html[idx++] = '<table border="0" cellpadding="0" cellspacing="0" width="100%">';
             html[idx++] = '<tr><td width="25"><span><input id="'+column.id+'" type="checkbox" checked="'+column.visible+'"></span></td>';
             html[idx++] = '<td><label for="'+column.id+'">&nbsp;'+ column.title+'</label></td></tr>';
@@ -1071,13 +1071,13 @@ MY.TableGrid = Class.create({
         for (i = -numberOfRowsAdded; i < renderedRows; i++) {
             $$('.mtgR'+id+'_'+i).each(function(td, index) {
                 td.id = 'mtgC'+id+'_'+index+','+i;
-                td.className = 'mtgCell mtgC'+id+' mtgC'+id+'_'+index+' mtgR'+id+'_'+i;
+                td.className = 'my-tablegrid-cell mtgC'+id+' mtgC'+id+'_'+index+' mtgR'+id+'_'+i;
             });
 
             $$('.mtgIR'+id+'_'+i).each(function(div, index) {
                 div.id = 'mtgIC'+id+'_'+index+','+i;
-                var modifiedCellClass = (div.className.match(/modifiedCell/)) ? ' modifiedCell' : '';
-                div.className = 'mtgInnerCell mtgIC'+id+' mtgIC'+id+'_'+index+' mtgIR'+id+'_'+i+modifiedCellClass;
+                var modifiedCellClass = (div.className.match(/modified-cell/)) ? ' modified-cell' : '';
+                div.className = 'my-tablegrid-inner-cell mtgIC'+id+' mtgIC'+id+'_'+index+' mtgIR'+id+'_'+i+modifiedCellClass;
                 if (div.firstChild && div.firstChild.tagName == 'INPUT') { // when it contains a checkbox or radio button
                     var input = div.firstChild;
                     input.id = 'mtgInput'+id+'_'+index+','+i;
@@ -1221,7 +1221,7 @@ MY.TableGrid = Class.create({
             this.keys._bInputFocused = false;
             this.editedCellId = null;
             if (editor.selectable == undefined || !editor.selectable)
-                if(y >= 0) innerElement.addClassName('modifiedCell');
+                if(y >= 0) innerElement.addClassName('modified-cell');
         } else if (editor == 'radio' || editor instanceof MY.TableGrid.CellRadioButton) {
             input = $('mtgInput' + this._mtgId + '_' + x + ',' + y);
             input.checked = (!input.checked);
@@ -1235,7 +1235,7 @@ MY.TableGrid = Class.create({
             this.keys._bInputFocused = false;
             this.editedCellId = null;
             if (editor.selectable == undefined || !editor.selectable)
-                if(y >= 0) innerElement.addClassName('modifiedCell');
+                if(y >= 0) innerElement.addClassName('modified-cell');
         }
     },
 
@@ -1300,7 +1300,7 @@ MY.TableGrid = Class.create({
 
         if (y >= 0 && this.rows[y][columnId] != value) {
             this.rows[y][columnId] = value;
-            innerElement.addClassName('modifiedCell');
+            innerElement.addClassName('modified-cell');
             if (this.modifiedRows.indexOf(y) == -1) this.modifiedRows.push(y); //if doesn't exist in the array the row is registered
         } else if (y < 0) {
             this.newRowsAdded[Math.abs(y)-1][columnId] = value;
@@ -1446,7 +1446,7 @@ MY.TableGrid = Class.create({
         var cm = this.columnModel;
         var id = this._mtgId;
         if (cm[idx].sortable) {
-            $('mtgSortIcon'+id+'_'+idx).className = (ascDescFlg == 'ASC')? 'mtgSortAscIcon' : 'mtgSortDescIcon';
+            $('mtgSortIcon'+id+'_'+idx).className = (ascDescFlg == 'ASC')? 'my-tablegrid-sort-asc-icon' : 'my-tablegrid-sort-desc-icon';
             this.request[this.sortColumnParameter] = cm[idx].id;
             this.request[this.ascDescFlagParameter] = ascDescFlg;
             this._retrieveDataFromUrl(1);
@@ -1589,40 +1589,40 @@ MY.TableGrid = Class.create({
                 temp = temp.replace(/\{from\}/g, pager.from);
                 temp = temp.replace(/\{to\}/g, pager.to);
             }
-            html[idx++] = '<span class="mtgPagerMsg">'+temp+'</span>';
+            html[idx++] = '<span class="my-tablegrid-pager-message">'+temp+'</span>';
             if (pager.pages) {
                 temp = this._messages.pagePromptMsg;
                 temp = temp.replace(/\{pages\}/g, pager.pages);
-                var input = '<input type="text" name="mtgPageInput'+id+'" id="mtgPageInput'+id+'" value="'+pager.currentPage+'" class="mtgPageInput" size="3" maxlength="3">';
+                var input = '<input type="text" name="mtgPageInput'+id+'" id="mtgPageInput'+id+'" value="'+pager.currentPage+'" class="my-tablegrid-page-input" size="3" maxlength="3">';
                 temp = temp.replace(/\{input\}/g, input);
-                html[idx++] = '<table class="mtgPagerTable" border="0" cellpadding="0" cellspacing="0">';
+                html[idx++] = '<table class="my-tablegrid-pager-table" border="0" cellpadding="0" cellspacing="0">';
                 html[idx++] = '<tbody>';
                 html[idx++] = '<tr>';
 
                 html[idx++] = '<td><div id="mtgLoader'+id+'" class="mtgLoader">&nbsp;</div></td>';
-                html[idx++] = '<td><div class="mtgSep">&nbsp;</div></td>';
-                html[idx++] = '<td><a id="mtgFirst'+id+'" class="mtgPagerCtrl"><div class="mtgFirstPage">&nbsp;</div></a></td>';
-                html[idx++] = '<td><a id="mtgPrev'+id+'" class="mtgPagerCtrl"><div class="mtgPrevPage">&nbsp;</div></a></td>';
-                html[idx++] = '<td><div class="mtgSep">&nbsp;</div></td>';
+                html[idx++] = '<td><div class="my-tablegrid-pager-separator">&nbsp;</div></td>';
+                html[idx++] = '<td><a id="mtgFirst'+id+'" class="my-tablegrid-pager-control"><div class="first-page">&nbsp;</div></a></td>';
+                html[idx++] = '<td><a id="mtgPrev'+id+'" class="my-tablegrid-pager-control"><div class="previous-page">&nbsp;</div></a></td>';
+                html[idx++] = '<td><div class="my-tablegrid-pager-separator">&nbsp;</div></td>';
                 html[idx++] = temp;
 
-                html[idx++] = '<td><div class="mtgSep">&nbsp;</div></td>';
-                html[idx++] = '<td><a id="mtgNext'+id+'" class="mtgPagerCtrl"><div class="mtgNextPage">&nbsp;</div></a></td>';
-                html[idx++] = '<td><a id="mtgLast'+id+'" class="mtgPagerCtrl"><div class="mtgLastPage">&nbsp;</div></a></td>';
+                html[idx++] = '<td><div class="my-tablegrid-pager-separator">&nbsp;</div></td>';
+                html[idx++] = '<td><a id="mtgNext'+id+'" class="my-tablegrid-pager-control"><div class="next-page">&nbsp;</div></a></td>';
+                html[idx++] = '<td><a id="mtgLast'+id+'" class="my-tablegrid-pager-control"><div class="last-page">&nbsp;</div></a></td>';
                 html[idx++] = '</tr>';
                 html[idx++] = '</tbody>';
                 html[idx++] = '</table>';
             } else {
-                html[idx++] = '<table class="mtgPagerTable" border="0" cellpadding="0" cellspacing="0">';
+                html[idx++] = '<table class="my-tablegrid-pager-table" border="0" cellpadding="0" cellspacing="0">';
                 html[idx++] = '<tbody>';
                 html[idx++] = '<tr>';
-                html[idx++] = '<td><div id="mtgLoader'+id+'" class="mtgLoader">&nbsp;</div></td>';
+                html[idx++] = '<td><div id="my-tablegrid-pager-loader'+id+'" class="mtgLoader">&nbsp;</div></td>';
                 html[idx++] = '</tr>';
                 html[idx++] = '</tbody>';
                 html[idx++] = '</table>';
             }
         } else {
-            html[idx++] = '<span class="mtgPagerMsg">'+this._messages.pagerNoDataFound+'</span>';
+            html[idx++] = '<span class="my-tablegrid-pager-message">'+this._messages.pagerNoDataFound+'</span>';
         }
         return html.join('');
     },
@@ -1635,42 +1635,42 @@ MY.TableGrid = Class.create({
         var total = self.pager.total;
         if (total > 0) {
             if (currentPage > 1) {
-                $('mtgFirst'+this._mtgId).down('div').className = 'mtgFirstPage';
+                $('mtgFirst'+this._mtgId).down('div').className = 'first-page';
                 $('mtgFirst'+this._mtgId).onclick = function() {
                     self._retrieveDataFromUrl.call(self, 1);
                 };
             } else {
-                $('mtgFirst'+this._mtgId).down('div').className = 'mtgFirstPageDisabled';
+                $('mtgFirst'+this._mtgId).down('div').className = 'first-page-disabled';
             }
 
 
             if (currentPage > 0 && currentPage < pages) {
-                $('mtgNext'+this._mtgId).down('div').className = 'mtgNextPage';
+                $('mtgNext'+this._mtgId).down('div').className = 'next-page';
                 $('mtgNext'+this._mtgId).onclick = function() {
                     self._retrieveDataFromUrl.call(self, currentPage + 1);
                 };
             } else {
-                $('mtgNext'+this._mtgId).down('div').className = 'mtgNextPageDisabled';
+                $('mtgNext'+this._mtgId).down('div').className = 'next-page-disabled';
             }
 
 
             if (currentPage > 1 && currentPage <= pages) {
-                $('mtgPrev'+this._mtgId).down('div').className = 'mtgPrevPage';
+                $('mtgPrev'+this._mtgId).down('div').className = 'previous-page';
                 $('mtgPrev'+this._mtgId).onclick = function() {
                     self._retrieveDataFromUrl.call(self, currentPage - 1);
                 };
             } else {
-                $('mtgPrev'+this._mtgId).down('div').className = 'mtgPrevPageDisabled';
+                $('mtgPrev'+this._mtgId).down('div').className = 'previous-page-disabled';
             }
 
 
             if (currentPage < pages) {
-                $('mtgLast'+this._mtgId).down('div').className = 'mtgLastPage';
+                $('mtgLast'+this._mtgId).down('div').className = 'last-page';
                 $('mtgLast'+this._mtgId).onclick = function() {
                     self._retrieveDataFromUrl.call(self, self.pager.pages);
                 };
             } else {
-                $('mtgLast'+this._mtgId).down('div').className = 'mtgLastPageDisabled';
+                $('mtgLast'+this._mtgId).down('div').className = 'last-page-disabled';
             }
 
             var keyHandler = function(event) {
@@ -2089,10 +2089,10 @@ var HeaderBuilder = Class.create({
      * Creates header row
      */
     _createHeaderRow : function() {
-        var thTmpl = '<th id="mtgHC{id}_{x}" colspan="{colspan}" rowspan="{rowspan}" width="{width}" height="{height}" style="position:relative;width:{width}px;height:{height}px;padding:0;margin:0;border-bottom-color:{color}" class="mtgHeaderCell mtgHC{id}">';
-        var thTmplLast = '<th id="mtgHC{id}_{x}" colspan="{colspan}" rowspan="{rowspan}" width="{width}" height="{height}" style="width:{width}px;height:{height}px;padding:0;margin:0;border-right:none;border-bottom:1px solid #ccc;" class="mtgHeaderCell mtgHC{id}">';
-        var ihcTmpl = '<div id="mtgIHC{id}_{x}" class="mtgInnerHeaderCell mtgIHC{id}" style="float:left;width:{width}px;height:{height}px;padding:4px 3px;z-index:20">';
-        var ihcTmplLast = '<div class="mtgInnerHeaderCell" style="position:relative;width:{width}px;height:{height}px;padding:3px;z-index:20">';
+        var thTmpl = '<th id="mtgHC{id}_{x}" colspan="{colspan}" rowspan="{rowspan}" width="{width}" height="{height}" style="position:relative;width:{width}px;height:{height}px;padding:0;margin:0;border-bottom-color:{color}" class="my-tablegrid-header-cell mtgHC{id}">';
+        var thTmplLast = '<th id="mtgHC{id}_{x}" colspan="{colspan}" rowspan="{rowspan}" width="{width}" height="{height}" style="width:{width}px;height:{height}px;padding:0;margin:0;border-right:none;border-bottom:1px solid #ccc;" class="my-tablegrid-header-cell mtgHC{id}">';
+        var ihcTmpl = '<div id="mtgIHC{id}_{x}" class="my-tablegrid-inner-header-cell mtgIHC{id}" style="float:left;width:{width}px;height:{height}px;padding:4px 3px;z-index:20">';
+        var ihcTmplLast = '<div class="my-tablegrid-inner-header-cell" style="position:relative;width:{width}px;height:{height}px;padding:3px;z-index:20">';
         var hsTmpl = '<div id="mtgHS{id}_{x}" class="mtgHS mtgHS{id}" style="float:right;width:1px;height:{height}px;z-index:30">';
         var siTmpl = '<span id="mtgSortIcon{id}_{x}" style="width:8px;height:4px;visibility:hidden">&nbsp;&nbsp;&nbsp;</span>';
 
@@ -2105,7 +2105,7 @@ var HeaderBuilder = Class.create({
         var idx = 0;
         this.filledPositions = [];
 
-        html[idx++] = '<table id="mtgHRT'+id+'" width="'+(this.headerWidth+21)+'" cellpadding="0" cellspacing="0" border="0" class="mtgHeaderRowTable">';
+        html[idx++] = '<table id="mtgHRT'+id+'" width="'+(this.headerWidth+21)+'" cellpadding="0" cellspacing="0" border="0" class="my-tablegrid-header-row-table">';
         html[idx++] = '<thead>';
 
         var temp = null;
