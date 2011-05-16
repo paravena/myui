@@ -13,7 +13,7 @@ var MyUI = {
         }
     },
 
-    REQUIRED_PROTOTYPE: '1.6.0.3',
+    REQUIRED_PROTOTYPE: '1.7',
     load: function() {
         function convertVersionString(versionString) {
             var v = versionString.replace(/_.*|\./g, '');
@@ -35,7 +35,7 @@ var MyUI = {
         }).each(function(s) {
             var path = s.src.replace(js, '');
             var includes = s.src.match(/\?.*load=([a-z,]*)/);
-            (includes ? includes[1] : 'Utilities,Date,DatePicker,TableGrid,KeyTable,controls,Autocompleter,ComboBox').split(',').each(
+            (includes ? includes[1] : 'Utilities,Date,DatePicker,TableGrid,KeyTable,controls,Autocompleter,ComboBox,TextField').split(',').each(
                 function(include) {
                     MyUI.require(path + include + '.js');
             });

@@ -47,7 +47,7 @@ MY.DatePicker = Class.create({
         var self = this;
         var width = element.getDimensions().width;
         var height = element.getDimensions().height;
-        Element.wrap(element, 'div'); // auto complete container
+        Element.wrap(element, 'div'); // date picker container
         element.setStyle({width : (width - 29)+'px'});
         this.container = element.up();
         this.container.addClassName('my-datepicker-container');

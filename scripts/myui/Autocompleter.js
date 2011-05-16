@@ -157,6 +157,7 @@ MY.Autocompleter = Class.create({
     decorate : function(element) {
         var width = element.getDimensions().width;
         var height = element.getDimensions().height;
+        element.setStyle({width: (width - 8) + 'px'});
         Element.wrap(element, 'div'); // auto complete container
         var container = element.up();
         container.addClassName('my-autocompleter');

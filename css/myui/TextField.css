@@ -1,0 +1,26 @@
+.my-textfield-container {
+    display: inline-block;
+    position: relative;
+}
+
+.my-textfield-container input {
+    border: 1px solid #609;
+    outline: none;
+    padding: 3px;
+    margin: 0;
+}
+
+.my-textfield-hint {
+
+}
+
+.my-textfield-error-icon {
+    background: url(images/error.png) no-repeat center;
+    width: 16px;
+    height: 16px;
+}
+
+.my-textfield-input-error {
+    background: url(images/invalid_line.gif) bottom repeat-x;
+    border: solid red 1px;
+}

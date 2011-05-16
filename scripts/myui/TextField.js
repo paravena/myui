@@ -1,74 +1,49 @@
-var MYUI = new Object();
-
-MYUI.Messages = {
-    errors : {
-        title: 'An Error Ocurred',
-        required: '{0} is required',
-        minlength: '{0} cannot be less than {1} characters',
-        maxlength: '{0} cannot be more than {1} characters'
-    }
-};
-
 MY.TextField = Class.create({
-    initialize : function(id, options) {
-        this.id = id;
-        this.input = $(id);
-        this.name = options.name || id;
-        this.options = options || {};
+    initialize : function(options) {
+        options = options || {};
+        this.input = $(options.input);
+        this.id = this.input.id;
+        this.name = options.name || this.input;
         this.tabIndex = options.tabIndex || null;
-        this.defaultValue = options.defaultValue || null;
+        this.initialText = options.initialText || null;
         this.required = options.required || false;
-        this.width = options.width || 100;
-        this.customValidate = options.validate || null;
-        this.customValidateErrorMsg = options.validateErrorMsg || '';
+        if (this.input) this.render(this.input);
     },
 
-    render : function() {
-        var id = this.id;
-        var input = this.input;
-        if (this.tabIndex) input.setAttribute('tabIndex', this.tabIndex);
+    render : function(input) {
         var self = this;
-        var width = this.width;
-        input.addClassName('myuiTextField');
-        input.setStyle({
-            width: width + 'px'
-        });
-        if (this.defaultValue) input.value = this.defaultValue;
-        // Adding input container
-        var inputContainer = new Element('div', {id: 'inputContainer'+id});
-        inputContainer.addClassName('myuiInputContainer');
-        inputContainer.setStyle({width: (width + 30) + 'px'});
-        if (Prototype.Browser.IE) inputContainer.setStyle({zoom:1, display:'inline'});
-        input.insert({before: inputContainer});
-        input.remove();
-        inputContainer.insert(input);
-        // Adding input hint
-        this.divHint = new Element('div', {
-            id: id+'Hint'
-        }).update('&#160;');
-        this.divHint.addClassName('myuiInputHint');
-        if (Prototype.Browser.IE) this.divHint.setStyle({marginTop: '4px'});
-        inputContainer.insert(this.divHint);
-        Event.observe(input, 'focus', function(){
-            if (self.defaultValue != null
-                    && self.defaultValue.strip() == input.value)
+        this.decorate(input);
+        input.on('focus', function(){
+            if (self.initialText != null && self.initialText.strip() == input.value)
                 input.value = '';
         });
         // registering validate handler
-        Event.observe(input, 'blur', this.validate.bind(this));
+        input.on('blur', this.validate.bindAsEventListener(this));
+    },
+
+    decorate : function(element) {
+        if (this.tabIndex) element.setAttribute('tabIndex', this.tabIndex);
+        if (this.initialText) element.value = this.initialText;
+        var width = element.getDimensions().width;
+        var height = element.getDimensions().height;
+        Element.wrap(element, 'div');
+        this.container = element.up();
+        this.container.addClassName('my-textfield-container');
+        this.container.id = this.id + '_container';
+        this.container.setStyle({width : width + 'px', height: height + 'px'});
     },
 
     validate : function() {
+        /*
         var id = this.id;
         var input = this.input;
         var divHint = this.divHint;
-        var errorMessages = MYUI.Messages.errors;
+        var errorMessages = MY.TextField.Messages.errors;
         if (this.required) {
             if (input.value.strip() == '') {
                 input.addClassName('myuiErrorInput');
                 divHint.addClassName('myuiErrorIcon');
                 var message = errorMessages.required.replace(/\{0\}/g, this.name);
-                /*
                 new Tip(divHint, message, {
                     title: errorMessages.title,
                     style: 'error',
@@ -76,7 +51,6 @@ MY.TextField = Class.create({
                     hook: { tip: 'topLeft', mouse: true },
                     offset: { x: 10, y: 10 }
                 });
-                */
                 return;
             } else {
                 input.removeClassName('myuiErrorInput');
@@ -88,7 +62,6 @@ MY.TextField = Class.create({
             if (!this.customValidate(input.value)) {
                 input.addClassName('myuiErrorInput');
                 divHint.addClassName('myuiErrorIcon');
-                /*
                 new Tip(divHint, this.customValidateErrorMsg, {
                     title: errorMessages.title,
                     style: 'error',
@@ -96,11 +69,20 @@ MY.TextField = Class.create({
                     hook: { tip: 'topLeft', mouse: true },
                     offset: { x: 10, y: 10 }
                 });
-                */
             } else {
                 input.removeClassName('myuiErrorInput');
                 divHint.removeClassName('myuiErrorIcon');
             }
         }
+        */
     }
 });
+
+MY.TextField.Messages = {
+    errors : {
+        title: 'An Error Ocurred',
+        required: '{0} is required',
+        minlength: '{0} cannot be less than {1} characters',
+        maxlength: '{0} cannot be more than {1} characters'
+    }
+};
