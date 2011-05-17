@@ -7,6 +7,7 @@ MY.TextField = Class.create({
         this.tabIndex = options.tabIndex || null;
         this.initialText = options.initialText || null;
         this.required = options.required || false;
+        this.customValidation = options.validate || null;
         if (this.input) this.render(this.input);
     },
 
@@ -34,47 +35,29 @@ MY.TextField = Class.create({
     },
 
     validate : function() {
-        /*
         var id = this.id;
         var input = this.input;
-        var divHint = this.divHint;
-        var errorMessages = MY.TextField.Messages.errors;
         if (this.required) {
             if (input.value.strip() == '') {
-                input.addClassName('myuiErrorInput');
-                divHint.addClassName('myuiErrorIcon');
-                var message = errorMessages.required.replace(/\{0\}/g, this.name);
-                new Tip(divHint, message, {
-                    title: errorMessages.title,
-                    style: 'error',
-                    stem: 'topLeft',
-                    hook: { tip: 'topLeft', mouse: true },
-                    offset: { x: 10, y: 10 }
+                input.addClassName('my-textfield-input-error');
+                new MY.ToolTip({
+                    parent: input,
+                    message : 'required',
+                    type: 'error'
                 });
                 return;
             } else {
-                input.removeClassName('myuiErrorInput');
-                divHint.removeClassName('myuiErrorIcon');
+                input.removeClassName('my-textfield-input-error');
             }
         }
 
-        if (this.customValidate) {
-            if (!this.customValidate(input.value)) {
-                input.addClassName('myuiErrorInput');
-                divHint.addClassName('myuiErrorIcon');
-                new Tip(divHint, this.customValidateErrorMsg, {
-                    title: errorMessages.title,
-                    style: 'error',
-                    stem: 'topLeft',
-                    hook: { tip: 'topLeft', mouse: true },
-                    offset: { x: 10, y: 10 }
-                });
+        if (this.customValidation) {
+            if (!this.customValidation(input.value)) {
+                input.addClassName('my-textfield-input-error');
             } else {
-                input.removeClassName('myuiErrorInput');
-                divHint.removeClassName('myuiErrorIcon');
+                input.removeClassName('my-textfield-input-error');
             }
         }
-        */
     }
 });
 

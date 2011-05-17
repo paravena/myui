@@ -6,6 +6,7 @@
 		<link type="text/css" href="../../css/main.css" rel="stylesheet">
         <link type="text/css" href="../../css/myui/myui.css" rel="stylesheet">
 		<link type="text/css" href="../../css/myui/TextField.css" rel="stylesheet">
+		<link type="text/css" href="../../css/myui/ToolTip.css" rel="stylesheet">
 		<script type="text/javascript" src="../../scripts/prototype/prototype.js"></script>
 		<script type="text/javascript" src="../../scripts/scriptaculous/scriptaculous.js"></script>
 		<script type="text/javascript" src="../../scripts/myui/myui.js"></script>
@@ -13,7 +14,7 @@
 	<script type="text/javascript">
         var textField = null;
         Event.observe(document, 'dom:loaded', function() {
-            textField = new MY.TextField({input: 'name', initialText: 'Enter name'});
+            textField = new MY.TextField({input: 'name', initialText: 'Enter name', required: true});
         });
 	</script>
 	<body style="margin:20px">
