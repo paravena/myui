@@ -37,10 +37,11 @@ MY.TextField = Class.create({
     validate : function() {
         var id = this.id;
         var input = this.input;
+        var tooltip = null;
         if (this.required) {
             if (input.value.strip() == '') {
                 input.addClassName('my-textfield-input-error');
-                new MY.ToolTip({
+                tooltip = new MY.ToolTip({
                     parent: input,
                     message : 'required',
                     type: 'error'
@@ -48,6 +49,7 @@ MY.TextField = Class.create({
                 return;
             } else {
                 input.removeClassName('my-textfield-input-error');
+                if (tooltip) tooltip.remove();
             }
         }
 
