@@ -5,15 +5,18 @@ MY.ToolTip = Class.create({
         this.parentElement = $(options.parent);
         this.type = options.type || 'info';
         this.render();
-        var self = this;
-        this.onMouseMoveHandler = this.parentElement.observe('mousemove', function(event) {
+
+        this.onMouseMoveHandler = function(event) {
             var x = Event.pointerX(event);
             var y = Event.pointerY(event);
-            self.show(x, y);
-        });
-        this.onMouseOutHandler = this.parentElement.observe('mouseout', function(event) {
-            self.hide();
-        });
+            this.show(x, y);
+        }.bindAsEventListener(this);
+        this.parentElement.observe('mousemove', this.onMouseMoveHandler);
+
+        this.onMouseOutHandler = function(event) {
+            this.hide();
+        }.bindAsEventListener(this);
+        this.parentElement.observe('mouseout', this.onMouseOutHandler);
     },
 
     render : function() {
@@ -43,8 +46,8 @@ MY.ToolTip = Class.create({
     },
 
     remove : function() {
-        this.onMouseMoveHandler.stop();
-        this.onMouseOutHandler.stop();
+        Event.stopObserving(this.parentElement, 'mousemove', this.onMouseMoveHandler);
+        Event.stopObserving(this.parentElement, 'mouseout', this.onMouseOutHandler);
         this.tooltip.remove();
     }
 });
