@@ -48,7 +48,7 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
 
     render : function($super, input) {
         $super(input);
-        this.element.on('keydown', this._keyPress.bindAsEventListener(this));
+        this.element.observe('keydown', this._keyPress.bindAsEventListener(this));
     },
     
     showAll : function() {
@@ -86,7 +86,7 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
         var comboBoxBtn = new Element('div');
         comboBoxBtn.addClassName('my-combobox-button gradient');
         container.insert(comboBoxBtn);
-        comboBoxBtn.on('click', function(event){
+        comboBoxBtn.observe('click', function(event){
             self.showAll();
             event.stop();
         });

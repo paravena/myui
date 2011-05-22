@@ -38,7 +38,7 @@ MY.DatePicker = Class.create({
         this.options.set('popupBy', this.targetElement);
         this.options.set('onchange', this.targetElement.onchange);
         if (!this.options.get('embedded')) {
-            this.targetElement.on('keydown', this._keyPress.bindAsEventListener(this));
+            this.targetElement.observe('keydown', this._keyPress.bindAsEventListener(this));
         }
         this.decorate(this.targetElement);
     },
@@ -56,7 +56,7 @@ MY.DatePicker = Class.create({
         var datePickerSelectBtn = new Element('div');
         datePickerSelectBtn.addClassName('my-datepicker-select-button');
         this.container.insert(datePickerSelectBtn);
-        datePickerSelectBtn.on('click', function(event) {
+        datePickerSelectBtn.observe('click', function(event) {
             self.show();
             event.stop();
         });
@@ -70,7 +70,8 @@ MY.DatePicker = Class.create({
         if (!this.options.get('embedded')) {
             this._positionCalendarDiv();
             // set the click handler to check if a user has clicked away from the document
-            this._closeIfClickedOutHandler = $(document).on('click', this._closeIfClickedOut.bindAsEventListener(this));
+            this._closeIfClickedOutHandler = this._closeIfClickedOut.bindAsEventListener(this);
+             $(document).observe('click', this._closeIfClickedOutHandler);
         }
         this._callback('afterShow');
         this.visibleFlg = true;
@@ -122,7 +123,7 @@ MY.DatePicker = Class.create({
         var above = false;
         var c_dim = this._calendarDiv.getDimensions();
         var c_height = c_dim.height;
-        var c_width = c_dim.width;
+        //var c_width = c_dim.width;
         var w_top = Utilities.getWindowScrollTop();
         var w_height = Utilities.getWindowHeight();
         var e_dim = $(this.options.get('popupBy')).cumulativeOffset();
@@ -550,12 +551,12 @@ MY.DatePicker = Class.create({
     _close : function() {
         if (!this.visibleFlg) return false;
         this._callback('beforeClose');
-        this._closeIfClickedOutHandler.stop();
+        Event.stopObserving($(document),'click', this._closeIfClickedOutHandler);
         this._calendarDiv.remove();
         this.keys.stop();
         this.keys = null;
         this.visibleFlg = false;
-        if (this.iframe) this.iframe.remove();
+        //if (this.iframe) this.iframe.remove();
         if (this.targetElement.type != 'hidden' && ! this.targetElement.disabled) this.targetElement.focus();
         this._callback('afterClose');
     },
@@ -587,15 +588,15 @@ MY.DatePicker = Class.create({
         for (var i = 0; i < this._calendarDayGrid.length; i++) {
             var element = this._calendarDayGrid[i];
             (function(element) {
-                element.on('mouseover', function () {
+                element.observe('mouseover', function () {
                     self._dayHover(this);
                 });
 
-                element.on('mouseout', function () {
+                element.observe('mouseout', function () {
                     self._dayHoverOut(this)
                 });
 
-                element.on('click', function() {
+                element.observe('click', function() {
                     self.keys.setFocus(element, false);
                     self.keys.captureKeys();
                     self.keys.eventFire('focus', element);

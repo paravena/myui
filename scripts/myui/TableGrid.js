@@ -144,7 +144,7 @@ MY.TableGrid = Class.create({
 
         var self = this;
 
-        this.bodyDiv.on('dom:dataLoaded', function() {
+        this.bodyDiv.observe('dom:dataLoaded', function() {
             self._showLoaderSpinner();
             self.bodyTable = $('mtgBT' + id);
             self._applyCellCallbacks();
@@ -635,7 +635,7 @@ MY.TableGrid = Class.create({
 
         var width = settingMenu.getWidth();
 
-        settingButton.on('click', function() {
+        settingButton.observe('click', function() {
             if (settingMenu.getStyle('visibility') == 'hidden') {
                 var topPos = settingButton.offsetTop;
                 var leftPos = settingButton.offsetLeft;
@@ -650,11 +650,11 @@ MY.TableGrid = Class.create({
         });
 
         var miFlg = false;
-        settingMenu.on('mousemove', function(event) {
+        settingMenu.observe('mousemove', function(event) {
             miFlg = true;
         });
 
-        settingMenu.on('mouseout', function(event) {
+        settingMenu.observe('mouseout', function(event) {
             miFlg = false;
             var element = event.element();
             setTimeout(function() {
@@ -1363,14 +1363,14 @@ MY.TableGrid = Class.create({
                 }
             });
             // Sorting when click on header column
-            Event.observe(element, 'click', function() {
+            element.observe('click', function() {
                 if (!element.id) return;
                 selectedHCIndex = parseInt(element.id.substring(element.id.indexOf('_') + 1, element.id.length));
                 self._toggleSortData(selectedHCIndex);
             });
         });
 
-        Event.observe(headerButton, 'click', function() {
+        headerButton.observe('click', function() {
             var cm = self.columnModel;
             if (headerButtonMenu.getStyle('visibility') == 'hidden') {
                 if (cm[selectedHCIndex].sortable) {

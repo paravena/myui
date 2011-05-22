@@ -83,7 +83,7 @@ MY.TableGrid.BrowseInput = Class.create({
         browseBtn.addClassName('mtgBrowseBtn gradient');
         container.insert(browseBtn);
         var onClickFlg = false;
-        browseBtn.on('click', function(event){
+        browseBtn.observe('click', function(event){
             if (self.onClick) self.onClick();
             event.stop();
             onClickFlg = true;

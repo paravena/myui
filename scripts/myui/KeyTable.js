@@ -85,8 +85,8 @@ KeyTable.prototype = {
 				this._nOldFocus = null;
 			}
 		};
-
-		this._onClickHandler = $(document).on('click', f_onClick.bindAsEventListener(this));
+        this._onClickHandler = f_onClick.bindAsEventListener(this);
+		$(document).observe('click', this._onClickHandler);
 
         if (targetTable instanceof MY.TableGrid) this.addMouseBehavior();
 
@@ -95,7 +95,8 @@ KeyTable.prototype = {
             if (!result) event.stop();
         };
 
-        this._onKeyPressHandler = $(document).on('keydown', f_onKeyPress.bindAsEventListener(this));
+        this._onKeyPressHandler = f_onKeyPress.bindAsEventListener(this);
+        $(document).observe('keydown', this._onKeyPressHandler);
 	},
 
 	addMouseBehavior : function() {
@@ -120,14 +121,14 @@ KeyTable.prototype = {
                 };
             })(element);
 
-            element.on('click', f_click.bindAsEventListener(this));
+            element.observe('click', f_click.bindAsEventListener(this));
 
             var f_dblclick = (function(element){
                 return function() {
                     self.eventFire('action', element);
                 };
             })(element);
-            element.on('dblclick', f_dblclick);
+            element.observe('dblclick', f_dblclick);
         }
     },
 
@@ -254,7 +255,6 @@ KeyTable.prototype = {
 	 * @param event key event
 	 */
 	 onKeyPress : function(event) {
-        var self = this;
         if (this.blockFlg || !this.blockKeyCaptureFlg) return true;
 		// If a modifier key is pressed (except shift), ignore the event
 		if (event.metaKey || event.altKey || event.ctrlKey) return true;
@@ -588,11 +588,7 @@ KeyTable.prototype = {
     },
 
     stop : function() {
-        if (Prototype.Browser.Gecko || Prototype.Browser.Opera ) {
-            this._onKeyPressHandler.stop();
-        } else {
-            this._onKeyPressHandler.stop();
-        }
-        if (this._onClickHandler) this._onClickHandler.stop();
+        Event.stopObserving($(document), 'keydown', this._onKeyPressHandler);
+        if (this._onClickHandler) Event.stopObserving($(document), 'click', this._onClickHandler);
     }
 };

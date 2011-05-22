@@ -13,7 +13,7 @@ var MyUI = {
         }
     },
 
-    REQUIRED_PROTOTYPE: '1.7',
+    REQUIRED_PROTOTYPE: '1.6',
     load: function() {
         function convertVersionString(versionString) {
             var v = versionString.replace(/_.*|\./g, '');

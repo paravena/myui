@@ -104,9 +104,9 @@ MY.Autocompleter = Class.create({
         this.element.setAttribute('autocomplete', 'off');
         this.options.decorate();
         this.container = $(this.id + '_container');
-        $(document).on('click', this.onBlur.bindAsEventListener(this));
-        this.element.on('keydown', this.onKeyPress.bindAsEventListener(this));
-        this.element.on('focus', function() {
+        $(document).observe('click', this.onBlur.bindAsEventListener(this));
+        this.element.observe('keydown', this.onKeyPress.bindAsEventListener(this));
+        this.element.observe('focus', function() {
             if (this.element.value == this.options.initialText) this.element.value = '';
         }.bind(this));
     },
@@ -401,8 +401,8 @@ MY.Autocompleter = Class.create({
     },
 
     addObservers: function(element) {
-        element.on('mouseover', this.onHover.bindAsEventListener(this));
-        element.on('click', this.onClick.bindAsEventListener(this));
+        element.observe('mouseover', this.onHover.bindAsEventListener(this));
+        element.observe('click', this.onClick.bindAsEventListener(this));
     },
 
     onObserverEvent: function() {

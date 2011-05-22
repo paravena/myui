@@ -14,12 +14,12 @@ MY.TextField = Class.create({
     render : function(input) {
         var self = this;
         this.decorate(input);
-        input.on('focus', function(){
+        input.observe('focus', function(){
             if (self.initialText != null && self.initialText.strip() == input.value)
                 input.value = '';
         });
         // registering validate handler
-        input.on('blur', this.validate.bindAsEventListener(this));
+        input.observe('blur', this.validate.bindAsEventListener(this));
     },
 
     decorate : function(element) {

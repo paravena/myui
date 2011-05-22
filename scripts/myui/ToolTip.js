@@ -6,12 +6,12 @@ MY.ToolTip = Class.create({
         this.type = options.type || 'info';
         this.render();
         var self = this;
-        this.onMouseMoveHandler = this.parentElement.on('mousemove', function(event) {
+        this.onMouseMoveHandler = this.parentElement.observe('mousemove', function(event) {
             var x = Event.pointerX(event);
             var y = Event.pointerY(event);
             self.show(x, y);
         });
-        this.onMouseOutHandler = this.parentElement.on('mouseout', function(event) {
+        this.onMouseOutHandler = this.parentElement.observe('mouseout', function(event) {
             self.hide();
         });
     },
