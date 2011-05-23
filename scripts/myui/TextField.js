@@ -9,6 +9,7 @@ MY.TextField = Class.create({
         this.required = options.required || false;
         this.customValidation = options.validate || null;
         if (this.input) this.render(this.input);
+        this.tooltip = null;
     },
 
     render : function(input) {
@@ -37,19 +38,19 @@ MY.TextField = Class.create({
     validate : function() {
         var id = this.id;
         var input = this.input;
-        var tooltip = null;
+
         if (this.required) {
             if (input.value.strip() == '') {
                 input.addClassName('my-textfield-input-error');
-                tooltip = new MY.ToolTip({
+                this.tooltip = new MY.ToolTip({
                     parent: input,
-                    message : 'required',
+                    message : i18n.getMessage('error.required.field', {field : input.name}),
                     type: 'error'
                 });
                 return;
             } else {
                 input.removeClassName('my-textfield-input-error');
-                if (tooltip) tooltip.remove();
+                if (this.tooltip) this.tooltip.remove();
             }
         }
 
