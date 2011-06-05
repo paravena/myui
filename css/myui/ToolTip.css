@@ -1,20 +1,24 @@
 .my-tooltip {
     position: absolute;
+    padding: 2px;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-    padding: 2px 4px;
-    border: 1px #ccc double;
 }
 
-.error {
-    color: #fff;
-    background-color: #f00;
-
-}
-
-
-.my-tooltip .info {
+.my-tooltip-error {
     color: #000;
-    background-color: #ff9;
+    background: url('images/error.png') no-repeat 3px 3px #ccc;
+    border: #f00 solid 1px;
+
+}
+
+.my-tooltip-info {
+    color: #000;
+    background: url('images/info.png') no-repeat 3px 3px #ff9;
+    border: #000 solid 1px;
+}
+
+.my-tooltip-inner {
+    padding: 1px 1px 1px 25px;
 }

@@ -5,10 +5,9 @@ MY.ToolTip = Class.create({
         this.parentElement = $(options.parent);
         this.type = options.type || 'info';
         this.render();
-
         this.onMouseMoveHandler = function(event) {
-            var x = Event.pointerX(event);
-            var y = Event.pointerY(event);
+            var x = Event.pointerX(event) + 10;
+            var y = Event.pointerY(event) + 10;
             this.show(x, y);
         }.bindAsEventListener(this);
         this.parentElement.observe('mousemove', this.onMouseMoveHandler);
@@ -22,10 +21,10 @@ MY.ToolTip = Class.create({
     render : function() {
         var toolTipId = this.parentElement.id + '_tooltip';
         var html = [];
-        html.push('<div id="'+toolTipId+'" class="my-tooltip ' + this.type + '" style="display:none">');
-        html.push('<span class="my-tooltip-inner">');
+        html.push('<div id="'+toolTipId+'" class="my-tooltip my-tooltip-' + this.type + ' shadow" style="display:none">');
+        html.push('<div class="my-tooltip-inner">');
         html.push(this.message);
-        html.push('</span>');
+        html.push('</div>');
         html.push('</div>');
         document.body.insert(html.join(''));
         this.tooltip = $(toolTipId);

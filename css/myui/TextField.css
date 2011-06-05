@@ -22,5 +22,5 @@
 
 .my-textfield-input-error {
     background: url(images/invalid_line.gif) bottom repeat-x;
-    border: solid red 1px;
+    border: solid #f00 1px;
 }

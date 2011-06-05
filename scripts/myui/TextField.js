@@ -7,7 +7,7 @@ MY.TextField = Class.create({
         this.tabIndex = options.tabIndex || null;
         this.initialText = options.initialText || null;
         this.required = options.required || false;
-        this.customValidation = options.validate || null;
+        this.customValidate = options.validate || null;
         if (this.input) this.render(this.input);
         this.tooltip = null;
     },
@@ -36,14 +36,12 @@ MY.TextField = Class.create({
     },
 
     validate : function() {
-        var id = this.id;
         var input = this.input;
-
         if (this.required) {
             if (input.value.strip() == '') {
                 input.addClassName('my-textfield-input-error');
                 this.tooltip = new MY.ToolTip({
-                    parent: input,
+                    parent: input.up(),
                     message : i18n.getMessage('error.required.field', {field : input.name}),
                     type: 'error'
                 });
@@ -54,21 +52,21 @@ MY.TextField = Class.create({
             }
         }
 
-        if (this.customValidation) {
-            if (!this.customValidation(input.value)) {
+        if (this.customValidate) {
+            var errors = [];
+            if (!this.customValidate(input.value, errors)) {
                 input.addClassName('my-textfield-input-error');
+                if (errors.length > 0) {
+                    this.tooltip = new MY.ToolTip({
+                        parent: input.up(),
+                        message : errors.pop(),
+                        type: 'error'
+                    });
+                }
             } else {
                 input.removeClassName('my-textfield-input-error');
+                if (this.tooltip) this.tooltip.remove();
             }
         }
     }
 });
-
-MY.TextField.Messages = {
-    errors : {
-        title: 'An Error Ocurred',
-        required: '{0} is required',
-        minlength: '{0} cannot be less than {1} characters',
-        maxlength: '{0} cannot be more than {1} characters'
-    }
-};

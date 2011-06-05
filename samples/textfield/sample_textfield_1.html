@@ -14,7 +14,18 @@
 	<script type="text/javascript">
         var textField = null;
         Event.observe(document, 'dom:loaded', function() {
-            textField = new MY.TextField({input: 'name', initialText: 'Enter name', required: true});
+            textField = new MY.TextField({input: 'name',
+                initialText: 'Enter name',
+                required: true,
+                validate : function(value, errors) {
+                    var result = true;
+                    if (value != 'hello') {
+                        errors.push('bad name');
+                        result = false;
+                    }
+                    return result;
+                }
+            });
         });
 	</script>
 	<body style="margin:20px">

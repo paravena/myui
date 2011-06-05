@@ -25,7 +25,7 @@ i18n.getMessage = function(messageId, options) {
     var result = messageId;
     var languageCd = navigator.language.substring(0,2).toUpperCase();
     try {
-        var messages = this[languageCd];
+        var messages = this[languageCd] || this['EN'];
         if (messages[messageId]) {
             var template = new Template(messages[messageId]);
             return template.evaluate(options);
