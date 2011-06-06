@@ -23,7 +23,8 @@ i18n['ES']['error.invalid.min.size'] = 'valor #{value} es menos que el minimo ta
 i18n.getMessage = function(messageId, options) {
     options = options || {};
     var result = messageId;
-    var languageCd = navigator.language.substring(0,2).toUpperCase();
+    var language = window.navigator.userLanguage || window.navigator.language;
+    var languageCd = language.substring(0,2).toUpperCase();
     try {
         var messages = this[languageCd] || this['EN'];
         if (messages[messageId]) {
