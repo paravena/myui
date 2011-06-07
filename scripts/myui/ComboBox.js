@@ -90,7 +90,6 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
             self.showAll();
             event.stop();
         });
-        element.value = this.options.initialText;
     }
 });
 

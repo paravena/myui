@@ -5,8 +5,9 @@ var _translations = {
     'Clear' : 'Clear'
 };
 
-MY.DatePicker = Class.create({
+MY.DatePicker = Class.create(MY.TextField, {
     initialize: function(options) {
+        this.baseInitialize(options);
         this._mdpId = $$('.my-datepicker').length + 1;
         this.targetElement = $(options.input); // make sure it's an element, not a string
 
@@ -31,7 +32,8 @@ MY.DatePicker = Class.create({
         if (this.targetElement) this.render(this.targetElement);
     },
 
-    render : function(input) {
+    render : function($super, input) {
+        $super(input);
         this.targetElement = $(input);
         if (this.targetElement.tagName != 'INPUT') this.targetElement = this.targetElement.down('INPUT');
         this.targetElement.datePicker = this;
@@ -334,12 +336,14 @@ MY.DatePicker = Class.create({
             cell.day = day;
             cell.month = month;
             cell.year = iterator.getFullYear();
+            /*
             if (vdc) {
-                if (vdc(iterator.stripTime()))
+                if (vdc(iterator.stripTime(), []))
                     cell.removeClassName('disabled');
                 else
                     cell.addClassName('disabled')
             }
+            */
             iterator.setDate(day + 1);
         }
 
@@ -464,9 +468,11 @@ MY.DatePicker = Class.create({
             selectedDate.setYear(parts.get('year'));
             selectedDate.setMonth(parts.get('month'));
 
-            if (vdc && ! vdc(selectedDate.stripTime())) {
-                return false;
-            }
+//            if (vdc && ! vdc(selectedDate.stripTime(), [])) {
+//                return false;
+//            }
+
+            if (vdc)  vdc(selectedDate.stripTime(), []);
             this.selectedDate = selectedDate;
             this.selectionMade = true;
         }

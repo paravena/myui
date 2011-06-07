@@ -1,26 +1,29 @@
 MY.TextField = Class.create({
     initialize : function(options) {
-        options = options || {};
-        this.input = $(options.input);
-        this.id = this.input.id;
-        this.name = options.name || this.input;
-        this.tabIndex = options.tabIndex || null;
-        this.initialText = options.initialText || null;
-        this.required = options.required || false;
-        this.customValidate = options.validate || null;
-        if (this.input) this.render(this.input);
-        this.tooltip = null;
+        this.baseInitialize(this.options);
+        this.decorate(this.input);
+    },
+
+    baseInitialize : function(options) {
+        this.options = $H({}).merge(options || {});
+        if (this.options.input) this.render(this.options.input);
     },
 
     render : function(input) {
-        var self = this;
-        this.decorate(input);
-        input.observe('focus', function(){
-            if (self.initialText != null && self.initialText.strip() == input.value)
-                input.value = '';
-        });
+        this.input = $(input);
+        this.id = this.input.id;
+        this.name = this.options.name || this.input;
+        this.tabIndex = this.options.tabIndex || null;
+        this.initialText = this.options.initialText || null;
+        this.required = this.options.required || false;
+        this.customValidate = this.options.validate || null;
+        this.tooltip = null;
+        if (this.initialText) this.input.value = this.initialText;
+        this.input.observe('focus', function() {
+            if (this.initialText != null && this.input.value == this.initialText.strip()) this.input.value = '';
+        }.bind(this));
         // registering validate handler
-        input.observe('blur', this.validate.bindAsEventListener(this));
+        this.input.observe('blur', this.validate.bindAsEventListener(this));
     },
 
     decorate : function(element) {

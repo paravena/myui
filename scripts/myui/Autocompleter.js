@@ -1,12 +1,13 @@
 /**
  * Autocompleter control
  */
-MY.Autocompleter = Class.create({
+MY.Autocompleter = Class.create(MY.TextField, {
     initialize : function(options) {
         this.baseInitialize(options);
     },
 
-    baseInitialize : function(options) {
+    baseInitialize : function($super, options) {
+        $super(options);
         var self = this;
         this.element = $(options.input);
         this.hasFocus = false;
@@ -95,7 +96,8 @@ MY.Autocompleter = Class.create({
         if (this.element) this.render(this.element);
     },
 
-    render : function(input) {
+    render : function($super, input) {
+        $super(input);
         this.element = $(input);
         this.id = this.element.id;
         this.oldElementValue = this.element.value;
@@ -106,9 +108,6 @@ MY.Autocompleter = Class.create({
         this.container = $(this.id + '_container');
         $(document).observe('click', this.onBlur.bindAsEventListener(this));
         this.element.observe('keydown', this.onKeyPress.bindAsEventListener(this));
-        this.element.observe('focus', function() {
-            if (this.element.value == this.options.initialText) this.element.value = '';
-        }.bind(this));
     },
 
     show: function() {
@@ -163,7 +162,6 @@ MY.Autocompleter = Class.create({
         container.addClassName('my-autocompleter');
         container.id = this.id + '_container';
         container.setStyle({width : width + 'px', height: height + 'px'});
-        element.value = this.options.initialText;
     },
 
     hide: function() {

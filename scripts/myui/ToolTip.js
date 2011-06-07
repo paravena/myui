@@ -47,6 +47,10 @@ MY.ToolTip = Class.create({
     remove : function() {
         Event.stopObserving(this.parentElement, 'mousemove', this.onMouseMoveHandler);
         Event.stopObserving(this.parentElement, 'mouseout', this.onMouseOutHandler);
-        this.tooltip.remove();
+        try {
+            this.tooltip.remove();
+        } catch(e) {
+            // ignored
+        }
     }
 });
