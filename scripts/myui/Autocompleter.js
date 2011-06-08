@@ -15,26 +15,26 @@ MY.Autocompleter = Class.create(MY.TextField, {
         this.active = false;
         this.index = 0;
         this.entryCount = 0;
-        this.options = options || {};
+
+        this.options = $H({
+            items : null,
+            listId: null,
+            tokens : [],
+            frequency : 0.4,
+            minChars : 2,
+            url : null,
+            parameters : {},
+            finderParamName : 'find',
+            listTextPropertyName : 'text',
+            listValuePropertyName : 'value',
+            height : null,
+            initialText : '',
+            indicator : null,
+            autoSelect : false
+        }).merge(options || {}).toObject();
 
         if (this.setOptions)
             this.setOptions(this.options);
-
-        this.options.items = this.options.items || null;
-        this.options.listId = this.options.listId || null;
-
-        this.options.tokens = this.options.tokens || [];
-        this.options.frequency = this.options.frequency || 0.4;
-        this.options.minChars = this.options.minChars || 2;
-        this.options.url = this.options.url || null;
-        this.options.parameters = this.options.parameters || {};
-        this.options.finderParamName = this.options.finderParamName || 'find';
-        this.options.listTextPropertyName = this.options.listTextPropertyName || 'text';
-        this.options.listValuePropertyName = this.options.listValuePropertyName || 'value';
-        this.options.height = this.options.height || null;
-        this.options.initialText = this.options.initialText || '';
-        this.options.indicator = this.options.indicator || null;
-        this.options.autoSelect = this.options.autoSelect || false;
 
         this.options.decorate = this.options.decorate ||  function() {
             self.decorate(self.element);
