@@ -1,12 +1,15 @@
 MY.TextField = Class.create({
     initialize : function(options) {
-        this.baseInitialize(this.options);
-        this.decorate(this.input);
+        this.baseInitialize(options);
+        if (options.input) {
+            this.render(options.input);
+            this.decorate($(options.input));
+
+        }
     },
 
     baseInitialize : function(options) {
         this.options = $H({}).merge(options || {}).toObject();
-        if (this.options.input) this.render(this.options.input);
     },
 
     render : function(input) {
@@ -40,6 +43,7 @@ MY.TextField = Class.create({
 
     validate : function() {
         var input = this.input;
+        var result = true;
         if (this.required) {
             if (input.value.strip() == '') {
                 input.addClassName('my-textfield-input-error');
@@ -48,7 +52,7 @@ MY.TextField = Class.create({
                     message : i18n.getMessage('error.required.field', {field : input.name}),
                     type: 'error'
                 });
-                return;
+                return false;
             } else {
                 input.removeClassName('my-textfield-input-error');
                 if (this.tooltip) this.tooltip.remove();
@@ -66,10 +70,12 @@ MY.TextField = Class.create({
                         type: 'error'
                     });
                 }
+                return false;
             } else {
                 input.removeClassName('my-textfield-input-error');
                 if (this.tooltip) this.tooltip.remove();
             }
         }
+        return result;
     }
 });

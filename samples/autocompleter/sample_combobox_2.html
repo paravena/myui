@@ -11,8 +11,9 @@
 		<script type="text/javascript" src="../../scripts/myui/myui.js"></script>
 	</head>
 	<script type="text/javascript">
+        var comboBox = null;
         Event.observe(document, 'dom:loaded', function() {
-            new MY.ComboBox({
+            comboBox = new MY.ComboBox({
                 input : 'manufacturerDesc',
                 url : 'get_manufacturers_list.php',
                 initialText : 'Select a manufacturer'

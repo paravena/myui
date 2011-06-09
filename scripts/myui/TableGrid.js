@@ -1267,9 +1267,9 @@ MY.TableGrid = Class.create({
             if (editor.hide) editor.hide(); // this only happen when editor is a Combobox
             if (editor instanceof MY.DatePicker && editor.visibleFlg) return false;
             if (editor.validate) { // this only happen when there is a validate method
-                var isValidFlg = editor.validate(value, input);
+                var isValidFlg = editor.validate();
                 if (editor instanceof MY.ComboBox && !isValidFlg) {
-                    value = editor.getItems()[0][editor.listTextPropertyName];
+                    value = editor.getItems()[0][editor.options.listTextPropertyName];
                 } else {
                     if (!isValidFlg) {
                         if (y >= 0)

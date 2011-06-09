@@ -30,11 +30,13 @@ MY.Autocompleter = Class.create(MY.TextField, {
             height : null,
             initialText : '',
             indicator : null,
-            autoSelect : false
+            autoSelect : false,
+            choices : 10,
+            partialSearch : true,
+            partialChars : 1,
+            ignoreCase : true,
+            fullSearch : false
         }).merge(options || {}).toObject();
-
-        if (this.setOptions)
-            this.setOptions(this.options);
 
         this.options.decorate = this.options.decorate ||  function() {
             self.decorate(self.element);
@@ -85,6 +87,49 @@ MY.Autocompleter = Class.create(MY.TextField, {
                     self.active = false;
                 };
 
+        this.options.selector = this.options.selector ||
+                function() {
+                    var result = []; // Beginning matches
+                    var partial = []; // Inside matches
+                    var entry = self.getToken();
+                    var items = self.options.items;
+                    var listTextPropertyName = self.options.listTextPropertyName;
+                    var listValuePropertyName = self.options.listValuePropertyName;
+                    var text = '';
+                    var value = '';
+                    for (var i = 0; i < items.length && result.length < self.options.choices; i++) {
+                        if (typeof(items[i]) == 'object') {
+                            text = items[i][listTextPropertyName];
+                            value = items[i][listValuePropertyName];
+                        } else {
+                            text = items[i];
+                            value = items[i];
+                        }
+                        var foundPos = self.options.ignoreCase ? text.toLowerCase().indexOf(entry.toLowerCase()) : text.indexOf(entry);
+
+                        while (foundPos != -1) {
+                            if (foundPos == 0 && text.length != entry.length) {
+                                result.push("<li id=\"" + value + "\"><strong>" + text.substr(0, entry.length) + "</strong>" + text.substr(entry.length) + "</li>");
+                                break;
+                            } else if (entry.length >= self.options.partialChars && self.options.partialSearch && foundPos != -1) {
+                                if (self.options.fullSearch || /\s/.test(text.substr(foundPos - 1, 1))) {
+                                    partial.push("<li>" + text.substr(0, foundPos) + "<strong>" +
+                                            text.substr(foundPos, entry.length) + "</strong>" + text.substr(
+                                            foundPos + entry.length) + "</li>");
+                                    break;
+                                }
+                            }
+                            foundPos = self.options.ignoreCase ?
+                                    text.toLowerCase().indexOf(entry.toLowerCase(), foundPos + 1) :
+                                    text.indexOf(entry, foundPos + 1);
+                        }
+                    }
+                    if (partial.length)
+                        result = result.concat(partial.slice(0, self.options.choices - result.length));
+                    return "<ul>" + result.join('') + "</ul>";
+                };
+
+
         if (typeof(this.options.tokens) == 'string')
             this.options.tokens = new Array(this.options.tokens);
 
@@ -132,12 +177,12 @@ MY.Autocompleter = Class.create(MY.TextField, {
                 onComplete: function(response) {
                     self.options.items = response.responseText.evalJSON();
                     self.stopIndicator();
-                    self.updateChoices(self.options.selector(self));
+                    self.updateChoices(self.options.selector());
                 },
                 parameters: parameters
             });
         } else {
-            this.updateChoices(this.options.selector(this));
+            this.updateChoices(this.options.selector());
         }
     },
 
@@ -219,56 +264,6 @@ MY.Autocompleter = Class.create(MY.TextField, {
         this.hasFocus = true;
         if (this.observer) clearTimeout(this.observer);
         this.observer = setTimeout(this.onObserverEvent.bind(this), this.options.frequency * 1000);
-    },
-
-    setOptions : function(options) {
-        this.options = Object.extend({
-            choices : 10,
-            partialSearch : true,
-            partialChars : 1,
-            ignoreCase : true,
-            fullSearch : false,
-            selector : function(instance) {
-                var result = []; // Beginning matches
-                var partial = []; // Inside matches
-                var entry = instance.getToken();
-                var items = instance.options.items;
-                var listTextPropertyName = instance.options.listTextPropertyName;
-                var listValuePropertyName = instance.options.listValuePropertyName;
-                var text = '';
-                var value = '';
-                for (var i = 0; i < items.length && result.length < instance.options.choices; i++) {
-                    if (typeof(items[i]) == 'object') {
-                        text = items[i][listTextPropertyName];
-                        value = items[i][listValuePropertyName];
-                    } else {
-                        text = items[i];
-                        value = items[i];
-                    }
-                    var foundPos = instance.options.ignoreCase ? text.toLowerCase().indexOf(entry.toLowerCase()) : text.indexOf(entry);
-
-                    while (foundPos != -1) {
-                        if (foundPos == 0 && text.length != entry.length) {
-                            result.push("<li id=\"" + value + "\"><strong>" + text.substr(0, entry.length) + "</strong>" + text.substr(entry.length) + "</li>");
-                            break;
-                        } else if (entry.length >= instance.options.partialChars && instance.options.partialSearch && foundPos != -1) {
-                            if (instance.options.fullSearch || /\s/.test(text.substr(foundPos - 1, 1))) {
-                                partial.push("<li>" + text.substr(0, foundPos) + "<strong>" +
-                                        text.substr(foundPos, entry.length) + "</strong>" + text.substr(
-                                        foundPos + entry.length) + "</li>");
-                                break;
-                            }
-                        }
-                        foundPos = instance.options.ignoreCase ?
-                                text.toLowerCase().indexOf(entry.toLowerCase(), foundPos + 1) :
-                                text.indexOf(entry, foundPos + 1);
-                    }
-                }
-                if (partial.length)
-                    result = result.concat(partial.slice(0, instance.options.choices - result.length));
-                return "<ul>" + result.join('') + "</ul>";
-            }
-        }, options || {});
     },
 
     activate: function() {

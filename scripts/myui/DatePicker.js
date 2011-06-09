@@ -29,10 +29,7 @@ MY.DatePicker = Class.create(MY.TextField, {
         }).merge(options || {}).toObject();
         this.useTimeFlg = this.options.time;
         this.format = this.options.format;
-        if (this.targetElement) {
-            this.render(this.targetElement);
-            this.decorate(this.targetElement);
-        }
+        if (this.targetElement) this.render(this.targetElement);
     },
 
     render : function($super, input) {
@@ -45,6 +42,7 @@ MY.DatePicker = Class.create(MY.TextField, {
         if (!this.options.embedded) {
             this.targetElement.observe('keydown', this._keyPress.bindAsEventListener(this));
         }
+        this.decorate(this.targetElement);
     },
 
     decorate : function(element) {

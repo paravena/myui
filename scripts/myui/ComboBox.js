@@ -16,7 +16,7 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
             } else if (instance.options.url) {
                 new Ajax.Request(instance.options.url, {
                     onSuccess: function(transport) {
-                        items = transport.responseText.evalJSON();
+                        items = instance.options.items = transport.responseText.evalJSON();
                     },
                     asynchronous: false
                 });
