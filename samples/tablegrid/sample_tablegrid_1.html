@@ -52,7 +52,13 @@
 				id : 'from_name',
 				title : 'From',
 				width : 140,
-				editable: true
+				editable: true,
+                editor : new MY.TextField({
+                    validate : function (value, errors) {
+                        errors.push('A weird error in this field :-)');
+                        return false;
+                    }
+                })
 			},
 			{
 				id : 'subject',
@@ -300,7 +306,7 @@
         <h1>TableGrid Sample</h1>
         <div class="container">
             <div class="samples">
-                <div id="mytable" style="position:relative; width: 70%; height: 350px;"></div>
+                <div id="mytable" style="position:relative; width: 90%; height: 350px;"></div>
             </div>
         </div>
 	</body>

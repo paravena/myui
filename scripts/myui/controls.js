@@ -44,18 +44,6 @@ MY.TableGrid.CellRadioButton = Class.create({
 	}
 });
 
-MY.TableGrid.CellInput = Class.create({
-	initialize : function(options) {
-		options = options || {};
-		this.afterUpdateCallback = options.afterUpdate || null;
-        this.onKeyPressCallback = options.onKeyPress || null;
-        this.validate = options.validate || null;
-	},
-
-    render : function(input) {
-    }
-});
-
 MY.TableGrid.BrowseInput = Class.create({
 	initialize : function(options) {
 		options = options || {};

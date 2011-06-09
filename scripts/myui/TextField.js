@@ -1,5 +1,6 @@
 MY.TextField = Class.create({
     initialize : function(options) {
+        options = options || {};
         this.baseInitialize(options);
         if (options.input) {
             this.render(options.input);
@@ -77,5 +78,10 @@ MY.TextField = Class.create({
             }
         }
         return result;
+    },
+
+    reset : function() {
+        if (this.input) this.input.removeClassName('my-textfield-input-error');
+        if (this.tooltip) this.tooltip.remove();
     }
 });

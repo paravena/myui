@@ -91,7 +91,7 @@ MY.TableGrid = Class.create({
         this.headerHeight = this.hb.getTableHeaderHeight();
         this.columnModel = this.hb.getLeafElements();
         for (var i = 0; i < this.columnModel.length; i++) {
-            if (!this.columnModel[i].hasOwnProperty('editor')) this.columnModel[i].editor = new MY.TableGrid.CellInput();
+            if (!this.columnModel[i].hasOwnProperty('editor')) this.columnModel[i].editor = new MY.TextField();
             if (!this.columnModel[i].hasOwnProperty('editable')) {
                 this.columnModel[i].editable = false;
                 if (this.columnModel[i].editor == 'checkbox' || this.columnModel[i].editor instanceof MY.TableGrid.CellCheckbox ||
@@ -1204,6 +1204,7 @@ MY.TableGrid = Class.create({
             });
             innerElement.insert(input);
             editor.render(input);
+            if (editor.validate) editor.validate();
             input.focus();
             input.select();
         } else if (editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox) {
@@ -1265,7 +1266,9 @@ MY.TableGrid = Class.create({
         var isInputFlg = !(editor == 'radio' || editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox || editor instanceof MY.TableGrid.CellRadioButton);
         if (isInputFlg) {
             if (editor.hide) editor.hide(); // this only happen when editor is a Combobox
+            if (editor.reset) editor.reset();
             if (editor instanceof MY.DatePicker && editor.visibleFlg) return false;
+            /*
             if (editor.validate) { // this only happen when there is a validate method
                 var isValidFlg = editor.validate();
                 if (editor instanceof MY.ComboBox && !isValidFlg) {
@@ -1279,7 +1282,7 @@ MY.TableGrid = Class.create({
                     }
                 }
             }
-
+            */
             element.setStyle({
                 height: cellHeight + 'px'
             });
@@ -1306,7 +1309,7 @@ MY.TableGrid = Class.create({
             this.newRowsAdded[Math.abs(y)-1][columnId] = value;
         }
 
-        if ((editor instanceof MY.TableGrid.BrowseInput || editor instanceof MY.TableGrid.CellInput || editor instanceof MY.DatePicker) && editor.afterUpdateCallback) {
+        if ((editor instanceof MY.TableGrid.BrowseInput || editor instanceof MY.TextField || editor instanceof MY.DatePicker) && editor.afterUpdateCallback) {
             editor.afterUpdateCallback(element, value);
         }
         keys._bInputFocused = false;
