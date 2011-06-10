@@ -27,7 +27,8 @@ MY.TextField = Class.create({
             if (this.initialText != null && this.input.value == this.initialText.strip()) this.input.value = '';
         }.bind(this));
         // registering validate handler
-        this.input.observe('blur', this.validate.bindAsEventListener(this));
+        this.onBlurHandler = this.validate.bindAsEventListener(this);
+        this.input.observe('blur', this.onBlurHandler);
     },
 
     decorate : function(element) {
@@ -62,7 +63,7 @@ MY.TextField = Class.create({
 
         if (this.customValidate) {
             var errors = [];
-            if (!this.customValidate(input.value, errors)) {
+            if (!this.customValidate(this.getValue(), errors)) {
                 input.addClassName('my-textfield-input-error');
                 if (errors.length > 0) {
                     this.tooltip = new MY.ToolTip({
@@ -83,5 +84,10 @@ MY.TextField = Class.create({
     reset : function() {
         if (this.input) this.input.removeClassName('my-textfield-input-error');
         if (this.tooltip) this.tooltip.remove();
+        Event.stopObserving(this.input, 'blur', this.onBlurHandler);
+    },
+
+    getValue : function() {
+        return this.input.value;
     }
 });

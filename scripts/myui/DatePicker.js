@@ -433,6 +433,12 @@ MY.DatePicker = Class.create(MY.TextField, {
         return (this.selectionMade) ? this.selectedDate.format(this.format) : '&#160;';
     },
 
+    getValue : function() {
+        if (this.input.value != null && this.input.value.trim().length > 0)
+            return this.date || Date.parseString(this.input.value, this.format);
+        return null;
+    },
+
     _parseDate : function() {
         var value = $F(this.targetElement).strip();
         this.selectionMade = (value != '');
@@ -467,12 +473,12 @@ MY.DatePicker = Class.create(MY.TextField, {
             for (var x = 0; x <= 3; x++) selectedDate.setDate(parts.get('day'));
             selectedDate.setYear(parts.get('year'));
             selectedDate.setMonth(parts.get('month'));
-
-//            if (vdc && ! vdc(selectedDate.stripTime(), [])) {
-//                return false;
-//            }
-
-            if (vdc)  vdc(selectedDate.stripTime(), []);
+            /*
+            if (vdc && ! vdc(selectedDate.stripTime(), [])) {
+                return false;
+            }
+            */
+            this.validate();
             this.selectedDate = selectedDate;
             this.selectionMade = true;
         }
