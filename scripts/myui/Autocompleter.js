@@ -333,6 +333,11 @@ MY.Autocompleter = Class.create(MY.TextField, {
         this.updateElement(this.getCurrentEntry());
     },
 
+    getValue: function() {
+        return this.oldElementValue;
+    },
+
+
     updateElement: function(selectedElement) {
         // if an updateElement method is provided
         if (this.options.updateElement) {
@@ -360,10 +365,10 @@ MY.Autocompleter = Class.create(MY.TextField, {
         this.oldElementValue = this.element.value;
         this.element.value = Element.collectTextNodesIgnoreClass(selectedElement, 'informal');
         this.oldElementValue = this.element.value;
+        this.validate();
         this.element.focus();
-
-        if (this.options.afterUpdateElement)
-            this.options.afterUpdateElement(this.element, selectedElement);
+        if (this.options.afterUpdate)
+            this.options.afterUpdate(this.element, selectedElement);
     },
 
     updateChoices: function(choices) {
@@ -394,8 +399,8 @@ MY.Autocompleter = Class.create(MY.TextField, {
     },
 
     addObservers: function(element) {
-        element.observe('mouseover', this.onHover.bindAsEventListener(this));
-        element.observe('click', this.onClick.bindAsEventListener(this));
+        $(element).observe('mouseover', this.onHover.bindAsEventListener(this));
+        $(element).observe('click', this.onClick.bindAsEventListener(this));
     },
 
     onObserverEvent: function() {

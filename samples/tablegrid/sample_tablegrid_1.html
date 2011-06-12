@@ -96,6 +96,13 @@
 				editor: new MY.ComboBox({
                     items: repList,
                     afterUpdate : function(input, selectedItem) {
+                    },
+                    validate : function(value, errors) {
+                        if (value == 'Zach') {
+                            errors.push('Invalid value');
+                            return false;
+                        }
+                        return true;
                     }
 				})
 			}

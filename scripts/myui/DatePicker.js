@@ -434,8 +434,9 @@ MY.DatePicker = Class.create(MY.TextField, {
     },
 
     getValue : function() {
-        if (this.input.value != null && this.input.value.trim().length > 0)
-            return this.date || Date.parseString(this.input.value, this.format);
+        if (this.input.value != null && this.input.value.strip().length > 0) {
+            return Date.parseString(this.input.value, this.format);
+        }
         return null;
     },
 
@@ -478,7 +479,6 @@ MY.DatePicker = Class.create(MY.TextField, {
                 return false;
             }
             */
-            this.validate();
             this.selectedDate = selectedDate;
             this.selectionMade = true;
         }
@@ -492,10 +492,16 @@ MY.DatePicker = Class.create(MY.TextField, {
 
         this._updateFooter();
         this._setSelectedClass();
-        if (this.selectionMade) this.updateValue();
+
+        if (this.selectionMade) {
+            this.updateValue();
+            this.validate();
+        }
+
         if (this._closeOnClick()) {
             this._close();
         }
+
         if (via_click && !this.options.embedded) {
             if ((new Date() - this.lastClickAt) < 333) this._close();
             this.lastClickAt = new Date();
