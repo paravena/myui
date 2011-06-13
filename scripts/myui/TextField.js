@@ -29,6 +29,7 @@ MY.TextField = Class.create({
         // registering validate handler
         this.onBlurHandler = this.validate.bindAsEventListener(this);
         this.input.observe('blur', this.onBlurHandler);
+        this.reset();
     },
 
     decorate : function(element) {

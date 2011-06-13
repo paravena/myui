@@ -8,6 +8,8 @@
     <link type="text/css" href="../../css/myui/tablegrid.css" rel="stylesheet">
     <link type="text/css" href="../../css/myui/DatePicker.css" rel="stylesheet">
     <link type="text/css" href="../../css/myui/Autocompleter.css" rel="stylesheet">
+    <link type="text/css" href="../../css/myui/TextField.css" rel="stylesheet">
+    <link type="text/css" href="../../css/myui/ToolTip.css" rel="stylesheet">
     <script type="text/javascript" src="../../scripts/prototype/1.7/prototype.js"></script>
     <script type="text/javascript" src="../../scripts/scriptaculous/scriptaculous.js"></script>
     <script type="text/javascript" src="../../scripts/myui/myui.js"></script>
@@ -103,8 +105,10 @@
                         title : 'Year',
                         width : 60,
                         editable: true,
-                        editor: new MY.TableGrid.CellInput({
-                            validate : function(value, input){
+                        editor: new MY.TextField({
+                            validate : function(value, errors) {
+                                if (parseInt(value) < 1900)
+                                    errors.push('less than 1900');
                                 return parseInt(value) > 1900;
                             }
                         })

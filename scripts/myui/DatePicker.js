@@ -324,7 +324,7 @@ MY.DatePicker = Class.create(MY.TextField, {
         var iterator = new Date(this.beginningDate);
         var today = new Date().stripTime();
         var this_month = this.date.getMonth();
-        var vdc = this.options.validate;
+        //var vdc = this.options.validate;
 
         for (var cellIndex = 0; cellIndex < 42; cellIndex++) {
             var day = iterator.getDate();
@@ -502,6 +502,9 @@ MY.DatePicker = Class.create(MY.TextField, {
             this._close();
         }
 
+        if (this.options.afterUpdate)
+            this.options.afterUpdate(this.targetElement, selectedDate);
+
         if (via_click && !this.options.embedded) {
             if ((new Date() - this.lastClickAt) < 333) this._close();
             this.lastClickAt = new Date();
@@ -567,13 +570,16 @@ MY.DatePicker = Class.create(MY.TextField, {
     },
 
     _close : function() {
+        var self = this;
         if (!this.visibleFlg) return false;
         this._callback('beforeClose');
         Event.stopObserving($(document),'click', this._closeIfClickedOutHandler);
         this._calendarDiv.remove();
         this.keys.stop();
         this.keys = null;
-        this.visibleFlg = false;
+        setTimeout(function() { // hack: A delay required by IE
+            self.visibleFlg = false;
+        }, 0.5);
         //if (this.iframe) this.iframe.remove();
         if (this.targetElement.type != 'hidden' && ! this.targetElement.disabled) this.targetElement.focus();
         this._callback('afterClose');

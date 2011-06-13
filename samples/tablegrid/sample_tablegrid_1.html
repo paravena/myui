@@ -96,6 +96,7 @@
 				editor: new MY.ComboBox({
                     items: repList,
                     afterUpdate : function(input, selectedItem) {
+                        alert('after update is called');
                     },
                     validate : function(value, errors) {
                         if (value == 'Zach') {

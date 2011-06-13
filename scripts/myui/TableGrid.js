@@ -1266,8 +1266,8 @@ MY.TableGrid = Class.create({
         var isInputFlg = !(editor == 'radio' || editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox || editor instanceof MY.TableGrid.CellRadioButton);
         if (isInputFlg) {
             if (editor.hide) editor.hide(); // this only happen when editor is a Combobox
-            if (editor.reset) editor.reset();
             if (editor instanceof MY.DatePicker && editor.visibleFlg) return false;
+            if (editor.reset) editor.reset();
             /*
             if (editor.validate) { // this only happen when there is a validate method
                 var isValidFlg = editor.validate();
