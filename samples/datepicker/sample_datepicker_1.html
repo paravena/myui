@@ -17,11 +17,14 @@
         Event.observe(document, 'dom:loaded', function() {
             datePicker = new MY.DatePicker({
                 input: 'arrivalDt',
-                format: 'dd-MMM-yyyy',
+                format: 'dd-MM-yy',
                 initialText : '22-June-2011',
                 validate: function(value, errors) {
-                    errors.push('Not a valid date');
-                    return false;
+                    if (value.isAfter(new Date())) {
+                        errors.push('Selected date is after current');
+                        return false;
+                    }
+                    return true;
                 }
             });
         });
