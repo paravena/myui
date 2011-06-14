@@ -35,7 +35,8 @@ MY.Autocompleter = Class.create(MY.TextField, {
             partialSearch : true,
             partialChars : 1,
             ignoreCase : true,
-            fullSearch : false
+            fullSearch : false,
+            getParameters : null
         }).merge(options || {}).toObject();
 
         this.options.decorate = this.options.decorate ||  function() {
@@ -172,6 +173,11 @@ MY.Autocompleter = Class.create(MY.TextField, {
             var self = this;
             var parameters = this.options.parameters;
             parameters[this.options.finderParamName] = this.getToken();
+            if (this.options.getParameters) {
+                var moreParams = this.options.getParameters();
+                for (var p in moreParams)
+                    parameters[p] = moreParams[p];
+            }
             this.startIndicator();
             new Ajax.Request(this.options.url, {
                 onComplete: function(response) {

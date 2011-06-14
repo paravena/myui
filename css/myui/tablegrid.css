@@ -1,5 +1,5 @@
 .my-tablegrid {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: helvetica, arial, freesans, clean, sans-serif;
     font-size: 11px;
 }
 
@@ -12,7 +12,8 @@
     border-right: solid 1px #ccc;
     background-color: #eee;
     font-weight: bold;
-    color: black;
+    color: #333;
+    text-shadow: 1px 1px 0 white;
 }
 
 /********************************
@@ -25,6 +26,7 @@
     background-color: #eee;
 }
 
+/*
 span.add-button {
     background: url(images/add.png) left center no-repeat;
 }
@@ -36,16 +38,23 @@ span.delete-button {
 span.save-button {
     background: url(images/save.png) left center no-repeat;
 }
+*/
 
 a.toolbar-button {
+    display: inline-block;
+    color: #333;
+    text-shadow: 1px 1px 0 white;
+    white-space: nowrap;
     float: left;
-    color: black;
     text-decoration: none;
-    padding: 2px;
-    border: 1px solid #ccc;
+    padding: 3px;
+    border: 1px solid #d4d4d4;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr='#f4f4f4', endColorstr='#ececec');
+    background: -webkit-gradient(linear, left top, left bottom, from(#f4f4f4), to(#ececec));
+    background: -moz-linear-gradient(top, #f4f4f4, #ececec);
 }
 
 a.toolbar-button span {
@@ -54,7 +63,12 @@ a.toolbar-button span {
 
 a.toolbar-button:hover {
     background-color: #eef;
-    border: 1px solid #ccc;
+    border: 1px solid #609;
+    color: #fff;
+    text-shadow: 1px 1px 0 #333;
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr='#e6d7f5', endColorstr='#660099');
+    background: -webkit-gradient(linear, left top, left bottom, from(#e6d7f5), to(#660099));
+    background: -moz-linear-gradient(top, #e6d7f5, #660099);
 }
 
 div.toolbar-separator  {
@@ -91,7 +105,8 @@ th.my-tablegrid-header-cell {
     border: 1px solid transparent;
     border-right-color: #ddd;
     border-bottom-color: #ddd;
-    color: dimgray;
+    color: #696969;
+    text-shadow: 1px 1px 0 #ddd;
 }
 
 th div.my-tablegrid-inner-header-cell {
@@ -365,6 +380,7 @@ div.my-tablegrid-pager {
     border-bottom: solid 1px #ccc;
     cursor: default;
     padding: 2px;
+    text-shadow: 1px 1px 0 white;
 }
 
 input.my-tablegrid-page-input {

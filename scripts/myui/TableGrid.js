@@ -250,7 +250,7 @@ MY.TableGrid = Class.create({
 
         if (this.options.toolbar) {
             var elements = this.options.toolbar.elements || [];
-            html[idx++] = '<div id="mtgHeaderToolbar'+id+'" class="my-tablegrid-toolbar" style="position:absolute;top:'+this.topPos+'px;left:'+this.leftPos+'px;width:'+(this.tableWidth - 4)+'px;height:'+(this.toolbarHeight - 4)+'px;padding:2px;z-index:10">';
+            html[idx++] = '<div id="mtgHeaderToolbar'+id+'" class="my-tablegrid-toolbar" style="position:absolute;top:'+this.topPos+'px;left:'+this.leftPos+'px;width:'+(this.tableWidth - 4)+'px;height:'+(this.toolbarHeight - 2)+'px;padding:1px 2px;z-index:10">';
             var beforeFlg = false;
             if(elements.indexOf(MY.TableGrid.SAVE_BTN) >= 0) {
                 html[idx++] = '<a href="#" class="toolbar-button"><span class="save-button" id="mtgSaveBtn'+id+'">'+this._messages.save+'</span></a>';

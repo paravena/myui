@@ -16,7 +16,11 @@
             comboBox = new MY.ComboBox({
                 input : 'manufacturerDesc',
                 url : 'get_manufacturers_list.php',
-                initialText : 'Select a manufacturer'
+                initialText : 'Select a manufacturer',
+                getParameters: function() {
+                    var params = {test : 'hola'};
+                    return params;
+                }
             });
         });
 	</script>
