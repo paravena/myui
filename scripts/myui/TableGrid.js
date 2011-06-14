@@ -306,6 +306,10 @@ MY.TableGrid = Class.create({
         if (this.addSettingBehaviorFlg) {
             html[idx++] = '<div id="mtgSB'+id+'" class="my-tablegrid-setting-button" style="left:'+(this.tableWidth - 20)+'px">';
             html[idx++] = '</div>';
+//            html[idx++] = '<a id="mtgSB'+id+'" class="toolbar-button" style="position:absolute;z-index:100;width:20px;left:'+(this.tableWidth - 20)+'px">';
+//            html[idx++] = '<span>';
+//            html[idx++] = '</span>';
+//            html[idx++] = '</a>';
             // Adding Table Setting Menu
             html[idx++] = this._createSettingMenu();
         }
