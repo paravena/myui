@@ -23,13 +23,13 @@ MY.TextField = Class.create({
         this.customValidate = this.options.validate || null;
         this.tooltip = null;
         if (this.initialText) this.input.value = this.initialText;
+        this.reset();
         this.input.observe('focus', function() {
             if (this.initialText != null && this.input.value == this.initialText.strip()) this.input.value = '';
         }.bind(this));
         // registering validate handler
         this.onBlurHandler = this.validate.bindAsEventListener(this);
         this.input.observe('blur', this.onBlurHandler);
-        this.reset();
     },
 
     decorate : function(element) {
@@ -85,7 +85,7 @@ MY.TextField = Class.create({
     reset : function() {
         if (this.input) this.input.removeClassName('my-textfield-input-error');
         if (this.tooltip) this.tooltip.remove();
-        Event.stopObserving(this.input, 'blur', this.onBlurHandler);
+        if (this.onBlurHandler) Event.stopObserving(this.input, 'blur', this.onBlurHandler);
     },
 
     getValue : function() {
