@@ -240,17 +240,17 @@ MY.TableGrid = Class.create({
             html[idx++] = '<div id="mtgHeaderToolbar'+id+'" class="my-tablegrid-toolbar" style="position:absolute;top:'+this.topPos+'px;left:'+this.leftPos+'px;width:'+(this.tableWidth - 4)+'px;height:'+(this.toolbarHeight - 2)+'px;padding:1px 2px;z-index:10">';
             var beforeFlg = false;
             if(elements.indexOf(MY.TableGrid.SAVE_BTN) >= 0) {
-                html[idx++] = '<a href="#" class="toolbar-button"><span class="save-button" id="mtgSaveBtn'+id+'">'+i18n.getMessage('label.save')+'</span></a>';
+                html[idx++] = '<a href="#" class="toolbar-button" id="mtgSaveBtn'+id+'"><span class="icon save-button">&nbsp;</span><span class="text">'+i18n.getMessage('label.save')+'</span></a>';
                 beforeFlg = true;
             }
             if(elements.indexOf(MY.TableGrid.ADD_BTN) >= 0) {
                 if (beforeFlg) html[idx++] = '<div class="toolbar-separator">&#160;</div>';
-                html[idx++] = '<a href="#" class="toolbar-button"><span class="add-button" id="mtgAddBtn'+id+'">'+i18n.getMessage('label.add')+'</span></a>';
+                html[idx++] = '<a href="#" class="toolbar-button" id="mtgAddBtn'+id+'"><span class="icon add-button">&nbsp;</span><span class="text">'+i18n.getMessage('label.add')+'</span></a>';
                 beforeFlg = true;
             }
             if(elements.indexOf(MY.TableGrid.DEL_BTN) >= 0) {
                 if (beforeFlg) html[idx++] = '<div class="toolbar-separator">&#160;</div>';
-                html[idx++] = '<a href="#" class="toolbar-button"><span class="delete-button" id="mtgDelBtn'+id+'">'+i18n.getMessage('label.delete')+'</span></a>';
+                html[idx++] = '<a href="#" class="toolbar-button" id="mtgDelBtn'+id+'"><span class="icon delete-button">&nbsp;</span><span class="text">'+i18n.getMessage('label.delete')+'</span></a>';
             }
             html[idx++] = '</div>';
             this.topPos += this.toolbarHeight + 1;
@@ -291,12 +291,7 @@ MY.TableGrid = Class.create({
 
         // Adding Table Setting Button Control
         if (this.addSettingBehaviorFlg) {
-            html[idx++] = '<div id="mtgSB'+id+'" class="my-tablegrid-setting-button" style="left:'+(this.tableWidth - 20)+'px">';
-            html[idx++] = '</div>';
-//            html[idx++] = '<a id="mtgSB'+id+'" class="toolbar-button" style="position:absolute;z-index:100;width:20px;left:'+(this.tableWidth - 20)+'px">';
-//            html[idx++] = '<span>';
-//            html[idx++] = '</span>';
-//            html[idx++] = '</a>';
+            html[idx++] = '<div id="mtgSB'+id+'" class="my-tablegrid-setting-button" style="left:'+(this.tableWidth - 20)+'px"><div class="icon">&nbsp;</div></div>';
             // Adding Table Setting Menu
             html[idx++] = this._createSettingMenu();
         }

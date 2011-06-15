@@ -37,7 +37,32 @@
 					className = 'hightlight';
 				}
 				return className;
-			}
+			},
+            toolbar : {
+                elements: [MY.TableGrid.ADD_BTN, MY.TableGrid.DEL_BTN, MY.TableGrid.SAVE_BTN],
+                onSave: function() {
+                    var modifiedRows = tableGrid1.getModifiedRows();
+                    var temp = '';
+                    for (var i = 0; i < modifiedRows.length; i++) {
+                        for (var p in modifiedRows[i]) {
+                            temp += p + '=' + modifiedRows[i][p] + '&';
+                        }
+                    }
+                    alert(temp);
+                    new Ajax.Request('./save.php?'+temp, {
+                        onComplete: function(transport){
+                            tableGrid1.clear();
+                            tableGrid1.refresh();
+                        }
+                    });
+                },
+                onAdd: function() {
+                    alert('on add handler');
+                },
+                onDelete: function() {
+                    alert('on delete handler');
+                }
+            }
 		},
 		columnModel : [
 			{
