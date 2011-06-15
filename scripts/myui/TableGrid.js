@@ -26,19 +26,6 @@
  */
 MY.TableGrid = Class.create({
     version: '1.1.0',
-    _messages : {
-        totalDisplayMsg: '<strong><span id="mtgTotal">{total}</span></strong> records found',
-        rowsDisplayMsg: ', displaying <strong><span id="mtgFrom">{from}</span></strong>&nbsp;to&nbsp;<strong><span id="mtgTo">{to}</span></strong>',
-        pagePromptMsg: '<td><strong>Page:</strong></td><td>{input}</td><td>of <strong>{pages}</strong></td>',
-        pagerNoDataFound: '<strong>No records found</strong>',
-        add: 'Add',
-        remove: 'Delete',
-        save: 'Save',
-        sortAsc: 'Sort ascending',
-        sortDesc: 'Sort descending',
-        selectAll: 'Select all',
-        loading: 'Loading ...'
-    },
     /**
      * MyTableGrid constructor
      */
@@ -253,17 +240,17 @@ MY.TableGrid = Class.create({
             html[idx++] = '<div id="mtgHeaderToolbar'+id+'" class="my-tablegrid-toolbar" style="position:absolute;top:'+this.topPos+'px;left:'+this.leftPos+'px;width:'+(this.tableWidth - 4)+'px;height:'+(this.toolbarHeight - 2)+'px;padding:1px 2px;z-index:10">';
             var beforeFlg = false;
             if(elements.indexOf(MY.TableGrid.SAVE_BTN) >= 0) {
-                html[idx++] = '<a href="#" class="toolbar-button"><span class="save-button" id="mtgSaveBtn'+id+'">'+this._messages.save+'</span></a>';
+                html[idx++] = '<a href="#" class="toolbar-button"><span class="save-button" id="mtgSaveBtn'+id+'">'+i18n.getMessage('label.save')+'</span></a>';
                 beforeFlg = true;
             }
             if(elements.indexOf(MY.TableGrid.ADD_BTN) >= 0) {
                 if (beforeFlg) html[idx++] = '<div class="toolbar-separator">&#160;</div>';
-                html[idx++] = '<a href="#" class="toolbar-button"><span class="add-button" id="mtgAddBtn'+id+'">'+this._messages.add+'</span></a>';
+                html[idx++] = '<a href="#" class="toolbar-button"><span class="add-button" id="mtgAddBtn'+id+'">'+i18n.getMessage('label.add')+'</span></a>';
                 beforeFlg = true;
             }
             if(elements.indexOf(MY.TableGrid.DEL_BTN) >= 0) {
                 if (beforeFlg) html[idx++] = '<div class="toolbar-separator">&#160;</div>';
-                html[idx++] = '<a href="#" class="toolbar-button"><span class="delete-button" id="mtgDelBtn'+id+'">'+this._messages.remove+'</span></a>';
+                html[idx++] = '<a href="#" class="toolbar-button"><span class="delete-button" id="mtgDelBtn'+id+'">'+i18n.getMessage('label.delete')+'</span></a>';
             }
             html[idx++] = '</div>';
             this.topPos += this.toolbarHeight + 1;
@@ -287,7 +274,7 @@ MY.TableGrid = Class.create({
         overlayHeight = this.bodyHeight + this.headerHeight;
 
         html[idx++] = '<div id="overlayDiv'+id+'" class="overlay" style="position:absolute;top:'+overlayTopPos+'px;width:'+(this.tableWidth+2)+'px;height:'+(overlayHeight+2)+'px;overflow:none;">';
-        html[idx++] = '<div class="loadingBox" style="margin-top:'+((overlayHeight+2)/2 - 14)+'px">'+this._messages.loading+'</div>';
+        html[idx++] = '<div class="loadingBox" style="margin-top:'+((overlayHeight+2)/2 - 14)+'px">'+i18n.getMessage('label.loading')+'</div>';
         html[idx++] = '</div>'; // closes overlay
         html[idx++] = '<div id="bodyDiv'+id+'" class="my-tablegrid-body" style="position:absolute;top:'+this.topPos+'px;left:'+this.leftPos+'px;width:'+this.tableWidth+'px;height:'+this.bodyHeight+'px;overflow:auto;">';
         html[idx++] = '<div id="innerBodyDiv'+id+'" class="my-tablegrid-inner-body" style="position:relative;top:0px;width:'+(this.tableWidth - this.scrollBarWidth)+'px;overflow:none;">';
@@ -324,21 +311,21 @@ MY.TableGrid = Class.create({
         html[idx++] = '<a id="mtgSortAsc'+id+'" class="my-tablegrid-menu-item" href="javascript:void(0)">';
         html[idx++] = '<table cellspacing="0" cellpadding="0" width="100%" border="0">';
         html[idx++] = '<tr><td width="25"><span class="my-tablegrid-menu-item-icon sort-ascending-icon">&nbsp;</span></td>';
-        html[idx++] = '<td>'+this._messages.sortAsc+'</td></tr></table>';
+        html[idx++] = '<td>'+i18n.getMessage('label.sortAsc')+'</td></tr></table>';
         html[idx++] = '</a>';
         html[idx++] = '</li>';
         html[idx++] = '<li>';
         html[idx++] = '<a id="mtgSortDesc'+id+'" class="my-tablegrid-menu-item" href="javascript:void(0)">';
         html[idx++] = '<table cellspacing="0" cellpadding="0" width="100%" border="0">';
         html[idx++] = '<tr><td width="25"><span class="my-tablegrid-menu-item-icon sort-descending-icon">&nbsp;</span></td>';
-        html[idx++] = '<td>'+this._messages.sortDesc+'</td></tr></table>';
+        html[idx++] = '<td>'+i18n.getMessage('label.sortDesc')+'</td></tr></table>';
         html[idx++] = '</a>';
         html[idx++] = '</li>';
         html[idx++] = '<li class="mtgSelectAll">';
         html[idx++] = '<a class="my-tablegrid-menu-item" href="javascript:void(0)">';
         html[idx++] = '<table cellspacing="0" cellpadding="0" width="100%" border="0">';
         html[idx++] = '<tr><td width="25"><span class="my-tablegrid-menu-item-checkbox"><input type="checkbox" id="mtgSelectAll'+id+'"></span></td>';
-        html[idx++] = '<td>'+this._messages.selectAll+'</td></tr></table>';
+        html[idx++] = '<td>'+i18n.getMessage('label.selectAll')+'</td></tr></table>';
         html[idx++] = '</a>';
         html[idx++] = '</li>';
         html[idx++] = '</ul>';
@@ -1589,19 +1576,14 @@ MY.TableGrid = Class.create({
         var idx = 0;
         var pager = this.pager;
         if (this.pager.total > 0) {
-            var temp = this._messages.totalDisplayMsg;
-            temp = temp.replace(/\{total\}/g, pager.total);
+            var temp = i18n.getMessage('message.totalDisplay', {total: pager.total});
             if (pager.from && pager.to) {
-                temp += this._messages.rowsDisplayMsg;
-                temp = temp.replace(/\{from\}/g, pager.from);
-                temp = temp.replace(/\{to\}/g, pager.to);
+                temp += i18n.getMessage('message.rowsDisplay', {from : pager.from, to: pager.to});
             }
             html[idx++] = '<span class="my-tablegrid-pager-message">'+temp+'</span>';
             if (pager.pages) {
-                temp = this._messages.pagePromptMsg;
-                temp = temp.replace(/\{pages\}/g, pager.pages);
                 var input = '<input type="text" name="mtgPageInput'+id+'" id="mtgPageInput'+id+'" value="'+pager.currentPage+'" class="my-tablegrid-page-input" size="3" maxlength="3">';
-                temp = temp.replace(/\{input\}/g, input);
+                temp = i18n.getMessage('message.pagePrompt', {pages: pager.pages, input: input});
                 html[idx++] = '<table class="my-tablegrid-pager-table" border="0" cellpadding="0" cellspacing="0">';
                 html[idx++] = '<tbody>';
                 html[idx++] = '<tr>';
@@ -1629,7 +1611,7 @@ MY.TableGrid = Class.create({
                 html[idx++] = '</table>';
             }
         } else {
-            html[idx++] = '<span class="my-tablegrid-pager-message">'+this._messages.pagerNoDataFound+'</span>';
+            html[idx++] = '<span class="my-tablegrid-pager-message">'+i18n.getMessage('message.noRecordFound')+'</span>';
         }
         return html.join('');
     },

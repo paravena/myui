@@ -1,10 +1,3 @@
-var _translations = {
-    'OK' : 'OK',
-    'Now' :  'Now',
-    'Today' : 'Today',
-    'Clear' : 'Clear'
-};
-
 MY.DatePicker = Class.create(MY.TextField, {
     initialize: function(options) {
         this.baseInitialize(options);
@@ -268,7 +261,7 @@ MY.DatePicker = Class.create(MY.TextField, {
         if (this.options.buttons) {
             buttons_div.build('span', {innerHTML: '&#160;'});
             if (this.options.time == 'mixed' || !this.options.time) buttons_div.build('a', {
-                innerHTML: _translations['Today'],
+                innerHTML: i18n.getMessage('label.today'),
                 href: '#',
                 onclick: function() {
                     this.today(false);
@@ -279,7 +272,7 @@ MY.DatePicker = Class.create(MY.TextField, {
             if (this.options.time == 'mixed') buttons_div.build('span', {innerHTML: '&#160;|&#160;', className: 'button_separator'});
 
             if (this.options.time) buttons_div.build('a', {
-                innerHTML: _translations['Now'],
+                innerHTML: i18n.getMessage('label.now'),
                 href: '#',
                 onclick: function() {
                     this.today(true);
@@ -289,14 +282,14 @@ MY.DatePicker = Class.create(MY.TextField, {
 
             if (!this.options.embedded && !this._closeOnClick()) {
                 buttons_div.build('span', {innerHTML: '&#160;|&#160;', className: 'button_separator'});
-                buttons_div.build('a', {innerHTML: _translations['OK'], href: '#', onclick: function() {
+                buttons_div.build('a', {innerHTML: i18n.getMessage('label.ok'), href: '#', onclick: function() {
                     this._close();
                     return false;
                 }.bindAsEventListener(this) });
             }
             if (this.options.clearButton) {
                 buttons_div.build('span', {innerHTML: '&#160;|&#160;', className: 'button_separator'});
-                buttons_div.build('a', {innerHTML: _translations['Clear'], href: '#', onclick: function() {
+                buttons_div.build('a', {innerHTML: i18n.getMessage('label.clear'), href: '#', onclick: function() {
                     this.clearDate();
                     if (!this.options.embedded) this._close();
                     return false;
@@ -470,15 +463,10 @@ MY.DatePicker = Class.create(MY.TextField, {
         var parts = $H(partsOrElement);
         if ((this.targetElement.disabled || this.targetElement.readOnly) && this.options.popup != 'force') return false;
         if (parts.get('day')) {
-            var selectedDate = this.selectedDate, vdc = this.options.validate;
+            var selectedDate = this.selectedDate;
             for (var x = 0; x <= 3; x++) selectedDate.setDate(parts.get('day'));
             selectedDate.setYear(parts.get('year'));
             selectedDate.setMonth(parts.get('month'));
-            /*
-            if (vdc && ! vdc(selectedDate.stripTime(), [])) {
-                return false;
-            }
-            */
             this.selectedDate = selectedDate;
             this.selectionMade = true;
         }
@@ -514,7 +502,7 @@ MY.DatePicker = Class.create(MY.TextField, {
     _closeOnClick : function() {
         if (this.options.embedded) return false;
         if (this.options.closeOnClick === null)
-            return (this.options.time) ? false : true;
+            return (!this.options.time);
         else
             return (this.options.closeOnClick)
     },
