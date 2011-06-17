@@ -3,9 +3,7 @@
     font-size: 11px;
 }
 
-/********************************
- * Title definition
- ********************************/
+/* Title definition */
 .my-tablegrid-header-title {
     border-top: solid 1px #ccc;
     border-left: solid 1px #ccc;
@@ -16,9 +14,7 @@
     text-shadow: 1px 1px 0 white;
 }
 
-/********************************
- * Toolbar definition
- ********************************/
+ /* Toolbar buttons */
 .my-tablegrid-toolbar {
     border-top: solid 1px #ccc;
     border-left: solid 1px #ccc;
@@ -27,68 +23,61 @@
 }
 
 span.add-button {
-    background: url(images/add.png) left center no-repeat;
-}
-
-a.toolbar-button:hover span.add-button {
-    background: url(images/add-inv.png) left center no-repeat;
+    background: url(images/sprite-icons.png) -64px -16px;
+    top: -1px;
+    margin-right: 1px;
+    margin-bottom: 0;
+    position: relative;
 }
 
 span.delete-button {
-    background: url(images/remove.png) left center no-repeat;
-}
-
-a.toolbar-button:hover span.delete-button {
-    background: url(images/remove-inv.png) left center no-repeat;
+    background: url(images/sprite-icons.png) -80px -16px;
+    top: -1px;
+    margin-right: 1px;
+    margin-bottom: 0;
+    position: relative;
 }
 
 span.save-button {
-    background: url(images/media-disk-3-5.png) left center no-repeat;
-}
-
-a.toolbar-button:hover span.save-button {
-    background: url(images/media-disk-3-5-inv.png) left center no-repeat;
+    background: url(images/save.png) left center no-repeat;
 }
 
 a.toolbar-button {
     display: inline-block;
-    color: #333;
-    text-shadow: 1px 1px 0 white;
-    white-space: nowrap;
+    padding:  3px;
     float: left;
     text-decoration: none;
-    padding: 3px;
-    border: 1px solid #d4d4d4;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr='#f4f4f4', endColorstr='#ececec');
-    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ececec));
-    background: -moz-linear-gradient(top, #f4f4f4, #ececec);
+    border: 1px solid #bbb;
+    border-bottom-color: #999;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ececec), to(#ddd));
+    background: -moz-linear-gradient(top, #ececec, #ddd);
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr='#ececec', endColorstr='#ddd');
+    box-shadow: 0 1px 0 #f8f8f8;
+    -wekbit-box-shadow: 0 1px 0 #f8f8f8;
+    -moz-box-shadow: 0 1px 0 #f8f8f8;
 }
 
 a.toolbar-button span.icon {
-    padding: 3px 3px 3px 16px;
-    opacity: 0.5;
-    filter: progid:DXImageTransform.Microsoft.alpha(Opacity = 50);
-}
-a.toolbar-button:hover span.icon {
-    opacity: 1.0;
-    filter: progid:DXImageTransform.Microsoft.alpha(Opacity = 100)
+    display: inline-block;
+    vertical-align: bottom;
+    width: 14px;
+    height: 14px;
+
 }
 
 a.toolbar-button span.text {
-    padding: 3px 3px 3px 0;
+    padding: 3px;
+    text-shadow: 1px 1px 0 white;
+    color: #333;
 }
 
 a.toolbar-button:hover {
-    background-color: #eef;
-    border: 1px solid #609;
-    color: #fff;
-    text-shadow: 1px 1px 0 #333;
-    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr='#e6d7f5', endColorstr='#660099');
-    background: -webkit-gradient(linear, left top, left bottom, from(#e6d7f5), to(#660099));
-    background: -moz-linear-gradient(top, #e6d7f5, #660099);
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ececec));
+    background: -moz-linear-gradient(top, #f4f4f4, #ececec);
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr='#f4f4f4', endColorstr='#ececec');
 }
 
 div.toolbar-separator  {
@@ -100,9 +89,37 @@ div.toolbar-separator  {
     margin: 0 5px;
 }
 
-/********************************
- * Header definition
- ********************************/
+/* Setting button */
+div.my-tablegrid-setting-button {
+    position: absolute;
+    top: 3px;
+    width: 16px;
+    height: 16px;
+    z-index: 100;
+    padding: 1px;
+    border: 1px solid #bbb;
+    border-bottom-color: #999;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ececec), to(#ddd));
+    background: -moz-linear-gradient(top, #ececec, #ddd);
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr='#ececec', endColorstr='#ddd');
+}
+
+div.my-tablegrid-setting-button div.icon {
+    background: url("images/down.png") no-repeat center;
+    width: 16px;
+    height: 16px;
+}
+
+div.my-tablegrid-setting-button:hover {
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ececec));
+    background: -moz-linear-gradient(top, #f4f4f4, #ececec);
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr='#f4f4f4', endColorstr='#ececec');
+}
+
+/* Header definition */
 div.my-tablegrid-header-row  {
     background: #ccc url(images/hrow.gif) repeat-x;
     border-top: solid 1px #ccc;
@@ -115,10 +132,6 @@ table.my-tablegrid-header-row-table {
     padding: 0;
     color: black;
     text-align: left;
-}
-
-table.my-tablegrid-header-row-table tr {
-    /*background: #ccc url(images/mtg/hrow.gif) repeat-x;*/
 }
 
 th.my-tablegrid-header-cell {
@@ -365,39 +378,6 @@ a.my-tablegrid-menu-item:hover {
 span.my-tablegrid-menu-item-checkbox {
     margin: 0;
     padding: 0;
-}
-
-div.my-tablegrid-setting-button {
-    position: absolute;
-    top: 3px;
-    width: 16px;
-    height: 16px;
-    z-index: 100;
-    padding: 1px;
-    border: 1px solid #ccc;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr='#f4f4f4', endColorstr='#ececec');
-    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ececec));
-    background: -moz-linear-gradient(top, #f4f4f4, #ececec);
-}
-
-div.my-tablegrid-setting-button div.icon {
-    background: url("images/down.png") no-repeat center;
-    width: 16px;
-    height: 16px;
-}
-
-div.my-tablegrid-setting-button:hover div.icon {
-    background: url("images/down-inv.png") no-repeat center;
-}
-
-div.my-tablegrid-setting-button:hover {
-    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr='#e6d7f5', endColorstr='#660099');
-    background: -webkit-gradient(linear, left top, left bottom, from(#e6d7f5), to(#660099));
-    background: -moz-linear-gradient(top, #e6d7f5, #660099);
-    border: 1px solid #609;
 }
 
 span.sort-ascending-icon {
