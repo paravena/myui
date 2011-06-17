@@ -565,9 +565,10 @@ MY.DatePicker = Class.create(MY.TextField, {
         this._calendarDiv.remove();
         this.keys.stop();
         this.keys = null;
-        setTimeout(function() { // hack: A delay required by IE
-            self.visibleFlg = false;
-        }, 0.5);
+//        setTimeout(function() { // hack: A delay required by IE
+//            self.visibleFlg = false;
+//        }, 0.5);
+        self.visibleFlg = false;
         //if (this.iframe) this.iframe.remove();
         if (this.targetElement.type != 'hidden' && ! this.targetElement.disabled) this.targetElement.focus();
         this._callback('afterClose');
