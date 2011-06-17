@@ -58,6 +58,7 @@ a.toolbar-button span.icon {
     vertical-align: bottom;
     width: 16px;
     height: 16px;
+    margin-left: 3px;
 }
 
 span.add-button {
