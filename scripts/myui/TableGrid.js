@@ -62,7 +62,7 @@ MY.TableGrid = Class.create({
         this.rowClass = this.options.rowClass || null; //row class handler
         this.addSettingBehaviorFlg = (this.options.addSettingBehavior == undefined || this.options.addSettingBehavior)? true : false;
         this.addDraggingBehaviorFlg = (this.options.addDraggingBehavior == undefined || this.options.addDraggingBehavior)? true : false;
-
+        this.onPageChange = this.options.onPageChange || null;
         this.renderedRows = 0; //Use for lazy rendering
         this.renderedRowsAllowed = 0; //Use for lazy rendering depends on bodyDiv height
         this.newRowsAdded = [];
@@ -163,6 +163,8 @@ MY.TableGrid = Class.create({
             }
         }, 0);
 
+        this.options.toolbar = this.options.toolbar || null;
+
         if (this.options.toolbar) {
             var elements = this.options.toolbar.elements || [];
             if (elements.indexOf(MY.TableGrid.ADD_BTN) >= 0) {
@@ -215,10 +217,6 @@ MY.TableGrid = Class.create({
         var width = this.options.width || (target.getWidth() - this._fullPadding(target,'left') - this._fullPadding(target,'right')) + 'px';
         var height = this.options.height || (target.getHeight() - this._fullPadding(target,'top') - this._fullPadding(target,'bottom') + 2) + 'px';
         var id = this._mtgId;
-        var cm = this.columnModel;
-        var gap = this.gap;
-        var imageRefs = this._imageRefs;
-        var imagePath = this._imagePath;
         var overlayTopPos = 0;
         var overlayHeight = 0;
         this.tableWidth = parseInt(width) - 2;
@@ -586,7 +584,6 @@ MY.TableGrid = Class.create({
         var id = this._mtgId;
         var cm = this.columnModel;
         var bh = this.bodyHeight + 30;
-        var cellHeight = (Prototype.Browser.IE)? 25 : 22;
         var height = (cm.length * 25 > bh)? bh : 0;
         var html = [];
         var idx = 0;
@@ -636,7 +633,7 @@ MY.TableGrid = Class.create({
         });
 
         var miFlg = false;
-        settingMenu.observe('mousemove', function(event) {
+        settingMenu.observe('mousemove', function() {
             miFlg = true;
         });
 
@@ -695,7 +692,7 @@ MY.TableGrid = Class.create({
         var columnIndex;
         var self = this;
         var leftPos = 0;
-        $$('.mtgHS' + this._mtgId).each(function(separator, index) {
+        $$('.mtgHS' + this._mtgId).each(function(separator) {
             Event.observe(separator, 'mousemove', function() {
                 columnIndex = parseInt(separator.id.substring(separator.id.indexOf('_') + 1, separator.id.length));
                 if (columnIndex >= 0) {
@@ -1160,7 +1157,6 @@ MY.TableGrid = Class.create({
         var innerElement = element.down();
         var value = this.getValueAt(x, y);
         var editor = this.columnModel[x].editor || 'input';
-        var type = this.columnModel[x].type || 'string';
         var input = null;
         var isInputFlg = !(editor == 'radio' || editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox || editor instanceof MY.TableGrid.CellRadioButton);
 
@@ -1317,7 +1313,7 @@ MY.TableGrid = Class.create({
         if (this.options.title) topPos += this.titleHeight;
         if (this.options.toolbar) topPos += this.toolbarHeight;
         var selectedHCIndex = -1;
-        $$('.mtgIHC' + id).each(function(element, index) {
+        $$('.mtgIHC' + id).each(function(element) {
             var editor = null;
             var sortable = true;
             var hbHeight = null;
@@ -1561,9 +1557,6 @@ MY.TableGrid = Class.create({
 
     _updatePagerInfo : function(emptyFlg) {
         var id = this._mtgId;
-        var imageRefs = this._imageRefs;
-        var imagePath = this._imagePath;
-
         if (emptyFlg)
             return '<span id="mtgLoader'+id+'" class="mtgLoader">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
 
@@ -1858,7 +1851,6 @@ MY.TableGrid = Class.create({
     getSelectedRowsByColumn : function(id) {
         var idx = this.getIndexOf(id);
         var result = [];
-        var cm = this.columnModel;
         var rows = this.rows;
         var newRowsAdded = this.newRowsAdded;
         if (idx < 0) return null;
@@ -2364,7 +2356,6 @@ var HeaderBuilder = Class.create({
 
 
     getLeafElements : function() {
-        var cm = this.columnModel;
         var rnl = this.rnl; //row nested level
         var colspan = 1;
         this.filledPositions = [];
