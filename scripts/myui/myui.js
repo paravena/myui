@@ -1,6 +1,8 @@
 var MyUI = {
-    Version: '1.1.0',
-    require: function(libraryName) {
+    Version: '1.0',
+    REQUIRED_PROTOTYPE: '1.6',
+
+    requireLibrary: function(libraryName) {
         try {
             // inserting via DOM fails in Safari 2.0, so brute force approach
             document.write('<script type="text/javascript" src="' + libraryName + '"><\/script>');
@@ -13,7 +15,19 @@ var MyUI = {
         }
     },
 
-    REQUIRED_PROTOTYPE: '1.6',
+    requireCSS: function(cssDefinitionFile) {
+        try {
+            // inserting via DOM fails in Safari 2.0, so brute force approach
+            document.write('<link type="text/css" href="'+cssDefinitionFile+'" rel="stylesheet">');
+        } catch(e) {
+            // for xhtml+xml served content, fall back to DOM methods
+            var cssDef = document.createElement('link');
+            cssDef.type = 'text/css';
+            cssDef.href = cssDefinitionFile;
+            document.getElementsByTagName('head')[0].appendChild(cssDef);
+        }
+    },
+
     load: function() {
         function convertVersionString(versionString) {
             var v = versionString.replace(/_.*|\./g, '');
@@ -37,7 +51,12 @@ var MyUI = {
             var includes = s.src.match(/\?.*load=([a-z,]*)/);
             (includes ? includes[1] : 'Utilities,i18n,ToolTip,TextField,Date,DatePicker,TableGrid,KeyTable,controls,Autocompleter,ComboBox').split(',').each(
                 function(include) {
-                    MyUI.require(path + include + '.js');
+                    MyUI.requireLibrary(path + include + '.js');
+            });
+            path = path.replace('scripts', 'css');
+            'myui,ToolTip,TextField,DatePicker,TableGrid,Autocompleter'.split(',').each(
+                function(include) {
+                    MyUI.requireCSS(path + include + '.css');
             });
         });
     }

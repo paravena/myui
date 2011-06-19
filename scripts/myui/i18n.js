@@ -55,7 +55,6 @@ i18n.getMessage = function(messageId, options) {
     var result = messageId;
     var language = window.navigator.userLanguage || window.navigator.language;
     var languageCd = language.substring(0,2).toUpperCase();
-    languageCd = 'ES'; // TODO remove
     try {
         var messages = this[languageCd] || this['EN'];
         if (messages[messageId]) {
