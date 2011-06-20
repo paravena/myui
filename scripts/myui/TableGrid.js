@@ -1,10 +1,10 @@
 /**
- * MyTableGrid, version 1.1.1
+ * MYUI, version 1.0
  *
  * Dual licensed under the MIT and GPL licenses.
  *
  * Copyright 2009 Pablo Aravena, all rights reserved.
- * http://pabloaravena.info/mytablegrid
+ * http://pabloaravena.info
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@
  * THE SOFTWARE.
  */
 MY.TableGrid = Class.create({
-    version: '1.1.0',
+    version: '1.0',
     /**
      * MyTableGrid constructor
      */
