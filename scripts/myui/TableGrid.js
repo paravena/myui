@@ -174,7 +174,18 @@ MY.TableGrid = Class.create({
                         addFlg = self.options.toolbar.onAdd.call();
                         if (addFlg == undefined) addFlg = true;
                     }
-                    if (addFlg) self.addNewRow();
+
+                    if (self.options.toolbar.beforeAdd) {
+                        addFlg = self.options.toolbar.beforeAdd.call();
+                        if (addFlg == undefined) addFlg = true;
+                    }
+
+                    if (addFlg) {
+                        self.addNewRow();
+                        if (self.options.toolbar.afterAdd) {
+                            self.options.toolbar.afterAdd.call();
+                        }
+                    }
                 });
             }
 
@@ -185,7 +196,18 @@ MY.TableGrid = Class.create({
                         deleteFlg = self.options.toolbar.onDelete.call();
                         if (deleteFlg == undefined) deleteFlg = true;
                     }
-                    if (deleteFlg) self.deleteRows();
+
+                    if (self.options.toolbar.beforeDelete) {
+                        deleteFlg = self.options.toolbar.beforeDelete.call();
+                        if (deleteFlg == undefined) deleteFlg = true;
+                    }
+
+                    if (deleteFlg) {
+                        self.deleteRows();
+                        if (self.options.toolbar.afterDelete) {
+                            self.options.toolbar.afterDelete.call();
+                        }
+                    }
                 });
             }
 
