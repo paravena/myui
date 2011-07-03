@@ -840,11 +840,6 @@ MY.TableGrid = Class.create({
                             break;
                         }
                     }
-                    if (Prototype.Browser.IE) {
-                        // The drag might register an ondrag or onselectstart event when using IE
-                        Event.observe(document.body, "drag", function() {return false;}, false);
-                        Event.observe(document.body, "selectstart",	function() {return false;}, false);
-                    }
                     dragColumn.down('span').innerHTML = self.columnModel[columnIndex].title;
                     dragColumn.setStyle({visibility: 'visible'});
                 },
@@ -1179,7 +1174,7 @@ MY.TableGrid = Class.create({
             // Creating a normal input
             var inputId = 'mtgInput' + this._mtgId + '_' + x + ',' + y;
             input = new Element('input', {id: inputId, type: 'text', value: value});
-            input.addClassName('mtgInputText');
+            input.addClassName('my-tablegrid-textfield');
             input.setStyle({
                 padding : '3px',
                 width: (width - 8) + 'px'

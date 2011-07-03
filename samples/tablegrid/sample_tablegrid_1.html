@@ -94,7 +94,7 @@
                 editor: new MY.DatePicker({
                     format : 'dd/MM/yy',
                     validate : function(value, errors) {
-                        if (value.isAfter(new Date())) {
+                        if (value != null && value.isAfter(new Date())) {
                             errors.push('Selected date is after current date');
                             return false;
                         }

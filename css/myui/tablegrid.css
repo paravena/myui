@@ -85,6 +85,8 @@ a.toolbar-button span.text {
     padding: 3px;
     text-shadow: 1px 1px 0 white;
     color: #333;
+    line-height: 16px;
+    vertical-align: middle;
 }
 
 /* Setting button */
@@ -184,10 +186,8 @@ div.my-tablegrid-column-move-bottom {
     background: url(images/col-move-bottom.gif) center no-repeat transparent;
     visibility: hidden
 }
-/********************************
- * Body definition
- ********************************/
 
+ /* Body definition */
 div.my-tablegrid-body {
     border: solid 1px #ccc;
     border-top: solid 1px #eee;
@@ -287,29 +287,18 @@ input.mtgInputRadio {
     height: 12px;
 }
 
-input.mtgInputText {
+input.my-tablegrid-textfield {
+    position: relative;
     font-size: 11px;
+    vertical-align: top;
+    height: 16px;
     background-color: white;
     outline: none;
     padding: 2px 3px;
-    height: 16px;
     border: 1px solid #609;
 }
 
-div.mtgComboBoxBtn {
-    position: absolute;
-    top: 2px;
-    right: 0;
-    background: url(images/cbb.png) no-repeat;
-    border: 0;
-    border-left: 2px solid  #609;
-    width: 16px;
-    height: 20px;
-    padding: 0;
-    margin: 0;
-}
-
-div.mtgBrowseBtn {
+div.mtgBrowseBtn { /*TODO soon must be removed*/
     position: absolute;
     top: 0;
     right : 0;
@@ -390,9 +379,7 @@ span.sort-descending-icon {
     height: 16px;
 }
 
-/***********************************************
- * Pager Definition
- ***********************************************/
+/* Pager Definition */
 div.my-tablegrid-pager {
     background-color: #eee;
     border-left: solid 1px #ccc;
