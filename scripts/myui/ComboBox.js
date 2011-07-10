@@ -70,9 +70,9 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
 
     _keyPress : function(event) {
         if (event.keyCode == Event.KEY_DOWN && !this.active) {
+            event.stop();
             this.changed = false;
             this.showAll();
-            event.stop();
         }
     },
 

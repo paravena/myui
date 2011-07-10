@@ -161,25 +161,6 @@ MY.DatePicker = Class.create(MY.TextField, {
         this._calendarDiv.style.left = left_px;
         this._calendarDiv.style.top = top_px;
         this._calendarDiv.setStyle({visibility: ''});
-
-        // draw an iframe behind the calendar -- ugly hack to make IE 6 happy
-        /*
-        if (navigator.appName == 'Microsoft Internet Explorer') {
-            this.iframe = $(document.body).build('iframe',
-                {
-                    src: 'javascript:false',
-                    className: 'ie6_blocker'
-                },
-                {
-                    left: left_px,
-                    top: top_px,
-                    height: c_height.toString() + 'px',
-                    width: c_width.toString() + 'px',
-                    border: '0px'
-                }
-            );
-        }
-        */
     },
 
     _initHeaderDiv : function() {

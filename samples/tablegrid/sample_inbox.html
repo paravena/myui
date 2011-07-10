@@ -1,0 +1,344 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+		"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>TableGrid Sample</title>
+        <link type="text/css" href="../../css/main.css" rel="stylesheet">
+		<script type="text/javascript" src="../../scripts/prototype/1.6.1/prototype.js"></script>
+		<script type="text/javascript" src="../../scripts/scriptaculous/scriptaculous.js"></script>
+		<script type="text/javascript" src="../../scripts/myui/myui.js"></script>
+	</head>
+	<script type="text/javascript">
+		var repList = [
+			{value: 'zach', text: 'Zach'},
+			{value: 'claire', text: 'Claire'},
+			{value: 'ann', text: 'Ann'}
+		];
+		
+	var tableModel = {
+		options : {
+			title: 'INBOX: john',
+			pager: {
+				total: 200,
+				pages: 0,
+				currentPage: 1,
+				from: 1,
+				to: 100
+			},
+			rowClass : function(rowIdx) {
+				var className = '';
+				if (rowIdx % 2 == 0) {
+					className = 'hightlight';
+				}
+				return className;
+			},
+            toolbar : {
+                elements: [MY.TableGrid.ADD_BTN, MY.TableGrid.DEL_BTN, MY.TableGrid.SAVE_BTN],
+                onSave: function() {
+                    var modifiedRows = tableGrid1.getModifiedRows();
+                    var temp = '';
+                    for (var i = 0; i < modifiedRows.length; i++) {
+                        for (var p in modifiedRows[i]) {
+                            temp += p + '=' + modifiedRows[i][p] + '&';
+                        }
+                    }
+                    alert(temp);
+                    new Ajax.Request('./save.php?'+temp, {
+                        onComplete: function(transport){
+                            tableGrid1.clear();
+                            tableGrid1.refresh();
+                        }
+                    });
+                },
+                onAdd: function() {
+                    alert('on add handler');
+                },
+                onDelete: function() {
+                    alert('on delete handler');
+                }
+            }
+		},
+		columnModel : [
+			{
+				id : 'id',
+				title : '#',
+				width : 30,
+                editor : new MY.TableGrid.CellCheckbox({
+                    selectable: true
+                }),
+                sortable : false
+			},
+			{
+				id : 'from_name',
+				title : 'From',
+				width : 140,
+				editable: true,
+                editor : new MY.TextField({
+                    validate : function (value, errors) {
+                        errors.push('A weird error in this field :-)');
+                        return false;
+                    }
+                })
+			},
+			{
+				id : 'subject',
+				title : 'Subject',
+				width : 205,
+				editable: true
+			},
+			{
+				id : 'received_date',
+				title : 'Date',
+				width : 100,
+                editable: true,
+                editor: new MY.DatePicker({
+                    format : 'dd/MM/yy',
+                    validate : function(value, errors) {
+                        if (value != null && value.isAfter(new Date())) {
+                            errors.push('Selected date is after current date');
+                            return false;
+                        }
+                        return true;
+                    }
+                })
+			},
+			{
+				id: 'comments',
+				title: 'Comments',
+				width: 100,
+				editable: true
+			},
+			{
+				id: 'assigned_to',
+				title: 'Assigned To',
+				width: 100,
+				editable: true,
+				editor: new MY.ComboBox({
+                    items: repList,
+                    afterUpdate : function(input, selectedItem) {
+                        alert('after update is called');
+                    },
+                    validate : function(value, errors) {
+                        if (value == 'Zach') {
+                            errors.push('Invalid value');
+                            return false;
+                        }
+                        return true;
+                    }
+				})
+			}
+		],
+		rows : [
+			[1,'jim@theshadestore.com', '8990280', '11/05/09', 'test of how long an edit box can be...i hope really long.',''],
+			[2,'jim@theshadestore.com', 'Re: Order # 8881804', '11/06/11', 'test of how long an edit box can be...i hope really long.','zach'],
+			[3,'jim@theshadestore.com', 'RE: 8951062/ 4372288', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[4,'jim@theshadestore.com', 'RE: 7920610 / 4297576', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[5,'jim@theshadestore.com', 'Re: segal GBR shade', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[6,'jim@theshadestore.com', 'RE: 6654030', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[7,'jim@theshadestore.com', 'Re: Fwd: Faulty Shade', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[8,'ann@theshadestore.com', 'Re: IN BIN 11/5', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[9,'support@theshadestore.com', 'Re: Frances Herrera -- 9152309', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[10,'jim@theshadestore.com', 'RE: Order # 2987393', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[11,'jim@theshadestore.com', '1613778', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[12,'support@theshadestore.com', 'RE: 3024821/Siraj Mehta', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[13,'jim@theshadestore.com', '8805671', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[14,'jim@theshadestore.com', 'RE: 8227324', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[15,'support@theshadestore.com', 'Re: upset customer', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[16,'support@theshadestore.com', 'URGENT STATUS! Re: upset customer', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[17,'jim@theshadestore.com', 'RE: 8951062 / 4372288', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[18,'jim@theshadestore.com', 'Re: Order # 8821972', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[19,'support@theshadestore.com', 'Re: # 9249215 Stephaine Skiptunis', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[20,'support@theshadestore.com', '8260640 Re: Customer service issue', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[21,'ann@theshadestore.com', 'RE: Beggs quote: 8954877 Large swatch request', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[22,'jim@theshadestore.com', 'Re: 8686948', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[23,'ann@theshadestore.com', 'RE: The Shade Store~~3171208~~Fung', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[24,'ann@theshadestore.com', 'Re: Order # 9056045', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[25,'jim@theshadestore.com', 'Re: 7920610 work ticket/rga needed', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[26,'ann@theshadestore.com', 'RE: Order # 1248700~~3606471', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[27,'jim@theshadestore.com', 'RE: 8743394 / 4351404', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[28,'jim@theshadestore.com', 'Re: Drapes?', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[29,'jim@theshadestore.com', '3283605', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[30,'jim@theshadestore.com', 'Re: Order # 8881804', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[31,'jim@theshadestore.com', 'Re: Order # 8703176', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[32,'support@theshadestore.com', 'Re: Work Ticket #9042842 Now Activated', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[33,'support@theshadestore.com', 'Re: 3024821/Siraj Mehta', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[34,'jim@theshadestore.com', 'RE: The Shade Store Quote 8968110', '11/06/11', 'test of how long an edit box can be...i hope really long.',''],
+			[35,'adrienne@theshadestore.com', 'How&#039;s your window treatment project going?', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[36,'adrienne@theshadestore.com', 'How&#039;s your window treatment project going?', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[37,'adrienne@theshadestore.com', 'How&#039;s your window treatment project going?', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[38,'adrienne@theshadestore.com', 'How&#039;s your window treatment project going?', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[39,'jim@theshadestore.com', 'Re: Order # 8686948', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[40,'claire@theshadestore.com', 'RE: 8894224     - (3) UPS Return labels in one file attachment', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[41,'ann@theshadestore.com', 'Re: Konikowski', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[42,'support@theshadestore.com', 'Re: Konikowski', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[43,'jim@theshadestore.com', 'RE: GILBERTO 2561716', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[44,'support@theshadestore.com', 'Re: Irene Moore #4377144', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[45,'support@theshadestore.com', 'Re: Karen Block #7789346', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[46,'support@theshadestore.com', 'Re: pruzan/wright pulls', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[47,'support@theshadestore.com', 'Re: FW: Question about shades -- 8844780', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[48,'jim@theshadestore.com', 'Re: Order # 8620791', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[49,'jim@theshadestore.com', 'Re: FW: The Shade Store Quote 8968110', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[50,'jim@theshadestore.com', 'Re: Order # 8620791', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[51,'support@theshadestore.com', 'Re: FW: The Shade Store Quote 8968110', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[52,'support@theshadestore.com', 'RE: Pruzan/Wright -- 8913218', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[53,'jim@theshadestore.com', 'RE: 195669 shade repair', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[54,'jim@theshadestore.com', 'Re: Order # 8659121', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[55,'jim@theshadestore.com', 'RE: 7727707 / 4263581', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[56,'jim@theshadestore.com', 'RE: 4347921', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[57,'ann@theshadestore.com', 'Re: checking in/order # 8738944', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[58,'ann@theshadestore.com', 'RE: Order # 9159265', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[59,'ann@theshadestore.com', 'Re: 8596668/FW: UPS Label Delivery/ The shade Store', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[60,'jim@theshadestore.com', 'Re: shade 2', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[61,'jim@theshadestore.com', 'Re: Order # 8913218', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[62,'jim@theshadestore.com', 'Re: Order # 7169598', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[63,'adrienne@theshadestore.com', 'Quote Follow Up', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[64,'adrienne@theshadestore.com', 'Quote Follow Up', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[65,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[66,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[67,'adrienne@theshadestore.com', 'Quote Follow Up', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[68,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[69,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[70,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[71,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[72,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[73,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[74,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[75,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[76,'adrienne@theshadestore.com', 'Quote Follow Up', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[77,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[78,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[79,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[80,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[81,'adrienne@theshadestore.com', 'Quote Follow Up', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[82,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[83,'adrienne@theshadestore.com', 'Quote Follow Up', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[84,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[85,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[86,'adrienne@theshadestore.com', 'Greater Savings - Quote Reduction', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[87,'ann@theshadestore.com', 'Re: FW: Samples; trade application', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[88,'support@theshadestore.com', 'Re: Prestige WIndow FAshions-backorder', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[89,'jim@theshadestore.com', 'Re: Issues with Order # 8560640 &amp; #', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[90,'support@theshadestore.com', 'Re: FW: Shade pricing', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[91,'support@theshadestore.com', 'Re: 2987393 -- Kamp -- Stain', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[92,'support@theshadestore.com', 'Re: The Shade Store Order #4581212 -Replacement chain', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[93,'support@theshadestore.com', 'Re: Prestige Window Fashions-Backorders', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[94,'jim@theshadestore.com', 'Re: Order # 8659121', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[95,'jim@theshadestore.com', 'RE: 7944630', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[96,'jim@theshadestore.com', 'Re: Order # 8664904', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[97,'support@theshadestore.com', 'Re: The Shade Store Order #9075164', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[98,'jim@theshadestore.com', 'Re: order#7727707 ', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[99,'support@theshadestore.com', 'Re: Kramer -- 8791938', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[100,'claire@theshadestore.com', '8055268      To: John     Re: Expect a UPS Return label via email in the next hour', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[101,'support@theshadestore.com', 'Re: FW: FW: Order # 8913218//Jennifer Wright', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[102,'support@theshadestore.com', 'RE: Benson -- 9181246', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[103,'support@theshadestore.com', 'Re: FW: The Shade Store Quote 7347801', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[104,'jim@theshadestore.com', 'Re: URGENT!!!!! RE: The Shade Store Order #9231724', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[105,'support@theshadestore.com', 'Re: Peter Grace #8027393', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[106,'support@theshadestore.com', 'Re: FW: # 8117123 s/m rella fogilia', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[107,'support@theshadestore.com', 'URGENT!!!!! RE: The Shade Store Order #9231724', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[108,'support@theshadestore.com', 'Re: Tabs', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[109,'jim@theshadestore.com', 'RE: 8620791 / 4356801', '11/04/09', 'test of how long an edit box can be...i hope really long.',''],
+			[110,'jim@theshadestore.com', 'RE: Order # 8727097', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[111,'jim@theshadestore.com', 'RE: 8897122 / 4377703', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[112,'ann@theshadestore.com', 'RE: 9152309 -- Herrera', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[113,'support@theshadestore.com', 'Re: FW: The Shade Store Order #4347921', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[114,'ann@theshadestore.com', 'Re: FW: order 7931896', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[115,'ann@theshadestore.com', 'RE: 9152309 -- Herrera', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[116,'ann@theshadestore.com', 'RE: Order # 8731768_Marc Melving_shipping info', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[117,'claire@theshadestore.com', '8242711    To: Harper    Re: Drapery has been cancelled and a credit request has been entered ', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[118,'jim@theshadestore.com', 'RE: 8743394 / 4351404', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[119,'support@theshadestore.com', 'URGENT Re: Email sent ', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[120,'ann@theshadestore.com', 'RE: Order # 5748406', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[121,'ann@theshadestore.com', 'Re: 9152309 -- Herrera', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[122,'claire@theshadestore.com', 'Re: 8242711     To: Adam       Re: Client  wishes to continue with cancellation of B/O', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[123,'ann@theshadestore.com', 'RE: Order # 3171208', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[124,'ann@theshadestore.com', 'Re: FW: 7931896~~4295423', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[125,'ann@theshadestore.com', 'Re: Order # 8998070', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[126,'ann@theshadestore.com', 'RE: order 9070002', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[127,'jim@theshadestore.com', 'RE: 195669 shade repair', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[128,'jim@theshadestore.com', 'RE: 8897122 / 4377703', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[129,'jim@theshadestore.com', 'Re: Order # 2561716', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[130,'ann@theshadestore.com', 'Re: Order # 8667222', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[131,'ann@theshadestore.com', 'RE: The Shade Store~~3171208~~Fung', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[132,'claire@theshadestore.com', '8242711     To: Adam       Re: Client  wishes to continue with cancellation of B/O', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[133,'support@theshadestore.com', 'Re: 9152309 -- Herrera', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[134,'support@theshadestore.com', 'Re: 9152309 -- Herrera', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[135,'ann@theshadestore.com', 'RE: Order # 8769601', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[136,'support@theshadestore.com', 'Re: wrinkled shade/6922602', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[137,'ann@theshadestore.com', 'RE: ORDER 9219877: IMPORTANT STATUS UPDATES', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[138,'support@theshadestore.com', 'Re: FW: Help order 9106472', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[139,'jim@theshadestore.com', 'RE: 7129419', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[140,'support@theshadestore.com', 'RE: ORDER 9219877: IMPORTANT STATUS UPDATES', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[141,'ann@theshadestore.com', 'RE: Order # 9159265', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[142,'jim@theshadestore.com', 'RE: 8620791 / 4356801', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[143,'support@theshadestore.com', 'Re: FW: # 8769601', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[144,'support@theshadestore.com', 'Re: FW: The Shade Store - missed chat from mkhodges@gmail.com', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[145,'support@theshadestore.com', 'Re: # 9170106', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[146,'support@theshadestore.com', 'Re: Kramer -- 8791938', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[147,'jim@theshadestore.com', 'RE: 8620791 / 4356801', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[148,'support@theshadestore.com', 'Re: Tabs', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[149,'jim@theshadestore.com', 'RE: 7129419', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[150,'ann@theshadestore.com', 'RE: Order # 3171208', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[151,'jim@theshadestore.com', 'RE: 1556379', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[152,'jim@theshadestore.com', 'Re: 195669 shade repair', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[153,'jennifer@theshadestore.com', 'How&#039;s your window treatment project going?', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[154,'jim@theshadestore.com', 'RE: 9136775 / 4387516', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[155,'jennifer@theshadestore.com', 'How&#039;s your window treatment project going?', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[156,'jennifer@theshadestore.com', 'How&#039;s your window treatment project going?', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[157,'jennifer@theshadestore.com', 'How&#039;s your window treatment project going?', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[158,'jim@theshadestore.com', 'RE: 9136775 / 4387516', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[159,'ann@theshadestore.com', 'Re: Order # 8971492', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[160,'claire@theshadestore.com', '9085150   To: Nancie   Re: 2 boxes rec&#039;d ... You will be receiving a return label to send the one duplicated blind back ', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[161,'ann@theshadestore.com', 'Re: 7931896~~4295423', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[162,'ann@theshadestore.com', 'RE: URGENT! Re: # 8512761', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[163,'ann@theshadestore.com', 'Re: URGENT! Re: # 8512761', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[164,'ann@theshadestore.com', 'RE: The Shade Store Work Ticket 5755630 :Status Needed', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[165,'ann@theshadestore.com', 'Re: Order # 8667222', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[166,'support@theshadestore.com', 'Re: Work Ticket #9000699 Now Activated', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[167,'support@theshadestore.com', 'URGENT! Re: # 8512761', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[168,'jim@theshadestore.com', 'Re: Kane 7129419 - 1 of 3', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[169,'ann@theshadestore.com', 'Re: Order # 9111692', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[170,'support@theshadestore.com', 'RE: FW: 8409741/Tina Salerno', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[171,'support@theshadestore.com', 'Re: Lalita Souksamlane #6555483', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[172,'ann@theshadestore.com', 'Re: Work Ticket #9143672 Now Activated', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[173,'jim@theshadestore.com', 'RE: 1556379', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[174,'support@theshadestore.com', 'RE: Invoice/7596860', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[175,'jennifer@theshadestore.com', 'Quote Follow Up', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[176,'support@theshadestore.com', 'Re: Invoice/7596860', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[177,'support@theshadestore.com', 'Re:  Puckering of Roman Shades', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[178,'ann@theshadestore.com', 'RE: ref#  4380807  po# 8998070  s/m Morris Alfaks', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[179,'support@theshadestore.com', 'Re: Work Ticket# : Kathleen M Greenberg', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[180,'support@theshadestore.com', 'RE: My order #5143284 problem with two shades.', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[181,'support@theshadestore.com', 'Re: Woven wood question', '11/03/09', 'test of how long an edit box can be...i hope really long.',''],
+			[182,'ann@theshadestore.com', 'Re: Work Ticket #9143672 Now Activated', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[183,'ann@theshadestore.com', 'RE: Order # 6598136--RGA# 23090', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[184,'ann@theshadestore.com', 'RE: 6598136_Suzanne Goldstein', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[185,'ann@theshadestore.com', 'RE: Order # 9188632', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[186,'support@theshadestore.com', 'Order #9179859 - Material on Backorder', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[187,'ann@theshadestore.com', 'Re: ref#  4380807  po# 8998070  s/m Morris Alfaks', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[188,'ann@theshadestore.com', 'RE: Order # 6598136--RGA# 23090', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[189,'ann@theshadestore.com', 'Re: Work Ticket #9143672 Now Activated', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[190,'jim@theshadestore.com', 'Re: Order # 8686948', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[191,'ann@theshadestore.com', 'RE: Order # 6598136--RGA# 23090', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[192,'ann@theshadestore.com', 'RE: FW: 2439198/ your reference #  3875529', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[193,'jim@theshadestore.com', '834135', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[194,'jim@theshadestore.com', 'Re: Order # 8686948', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[195,'ann@theshadestore.com', 'The Shade Store~~3171208~~Fung', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[196,'ann@theshadestore.com', 'RE: Order # 9177220', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[197,'ann@theshadestore.com', 'Re: Work Ticket #9143672 Now Activated', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[198,'jim@theshadestore.com', 'RE: 8867493 / 4376065', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[199,'jim@theshadestore.com', 'RE: 8573542', '11/02/09', 'test of how long an edit box can be...i hope really long.',''],
+			[200,'claire@theshadestore.com', '2500685           To: Jay     Re: Here are the sizes ', '11/02/09', 'test of how long an edit box can be...i hope really long.','']
+		]
+	};	
+	var tableGrid = null;
+	Event.observe(document, 'dom:loaded', function() {
+		tableGrid = new MY.TableGrid(tableModel);
+		tableGrid.show('mytable');
+	});
+	</script>
+	<body style="margin:20px">
+        <h1>TableGrid Sample</h1>
+        <div id="mytable" style="position:relative; width: 90%; height: 350px;"></div>
+	</body>
+</html>

@@ -166,7 +166,7 @@ h1#logo {
 }
 
 div.samples {
-	position: absolute;
+	position: relative;
 	width: 880px;
 	height: 250px;
 	padding: 10px;

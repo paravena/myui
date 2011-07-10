@@ -70,16 +70,15 @@ MY.Autocompleter = Class.create(MY.TextField, {
                 function(element, update) {
                     update.style.position = 'absolute';
                     var d = element.getDimensions();
-                    var p = element.offsetParent.positionedOffset();
-                    if (Prototype.Browser.WebKit) p.top = element.offsetParent.offsetTop; // TODO remove this code asap
+                    var p = element.offsetParent.cumulativeOffset();
                     var vh = document.viewport.getHeight(); // view port height
                     var vst = document.viewport.getScrollOffsets().top; // view port scrolling top
                     var rh = vh + vst - p.top - d.height; // remaining height
                     var uh = (self.entryCount * 22) + 6;
-                    var offsetTop = element.offsetParent.cumulativeOffset().top - element.offsetParent.cumulativeScrollOffset().top;
+                    var offsetTop = element.offsetParent.cumulativeOffset().top;
                     var topPos = d.height + offsetTop + 2;
-                    var leftPos = element.offsetParent.cumulativeOffset().left - element.offsetParent.cumulativeScrollOffset().left;
-                    if (rh > (p.top - vst)) { // down
+                    var leftPos = element.offsetParent.cumulativeOffset().left;
+                    if (rh >= (p.top - vst)) { // down
                         if (uh > rh) uh = rh - 10;
                         update.setStyle({
                             top : topPos + 'px',
@@ -90,9 +89,9 @@ MY.Autocompleter = Class.create(MY.TextField, {
                     } else { // above
                         if (uh > (p.top - vst)) {
                             uh = p.top - vst - 10;
-                            topPos = -(uh + 8);
+                            topPos = p.top -(uh + 6);
                         } else if (uh > rh) {
-                            topPos = -(uh + 8);
+                            topPos = p.top -(uh + 6);
                         }
                         update.setStyle({
                             top : topPos + 'px',

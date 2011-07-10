@@ -553,7 +553,7 @@ MY.TableGrid = Class.create({
                 (editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox)) {
                 var element = $('mtgInput'+id + '_' + i + ',' + y);
                 var innerElement = $('mtgIC'+id + '_' + i + ',' + y);
-                element.onclick = (function(editor, element, innerElement) {
+                var elementClickHandler = (function(editor, element, innerElement) {
                     return function() {
                         if (editor.selectable == undefined || !editor.selectable) {
                             var coords = element.id.substring(element.id.indexOf('_') + 1, element.id.length).split(',');
@@ -569,6 +569,7 @@ MY.TableGrid = Class.create({
                             innerElement.addClassName('modified-cell');
                     };
                 })(editor, element, innerElement);
+                element.observe('click', elementClickHandler.bindAsEventListener(this));
             }
         }
     },
@@ -668,10 +669,10 @@ MY.TableGrid = Class.create({
             },500);
         });
 
-        $('mtgSM'+this._mtgId).select('input').each(function(checkbox, index) {
-            checkbox.onclick = function() {
+        $$('#mtgSM'+this._mtgId + ' input').each(function(checkbox, index) {
+            $(checkbox).observe('click', function() {
                 self._toggleColumnVisibility(index, checkbox.checked);
-            };
+            });
         });
     },
 
@@ -1052,11 +1053,11 @@ MY.TableGrid = Class.create({
                 aTemp[k++] = cm[c];
         }
         cm = this.columnModel = aTemp;
-        $('mtgHRT'+id).select('th').each(function(th, index){
+        $$('#mtgHRT'+id + ' th').each(function(th, index){
             if (index < cm.length) {
                 th.id = 'mtgHC'+id+'_'+index;
                 try {
-                    var ihc = th.down('div.mtgInnerHeaderCell');
+                    var ihc = th.down('div.my-tablegrid-inner-header-cell');
                     ihc.id = 'mtgIHC'+id+'_'+index;
                     ihc.down('span').id = 'mtgSortIcon'+id+'_'+index;
                     var hs = th.down('div.mtgHS');
@@ -1334,7 +1335,7 @@ MY.TableGrid = Class.create({
             var editor = null;
             var sortable = true;
             var hbHeight = null;
-            Event.observe(element, 'mousemove', function() {
+            element.observe('mousemove', function() {
                 var cm = self.columnModel;
                 if (!element.id) return;
                 selectedHCIndex = parseInt(element.id.substring(element.id.indexOf('_') + 1, element.id.length));
@@ -1354,14 +1355,13 @@ MY.TableGrid = Class.create({
                         });
                     }
 
-
-                    sortAscMenuItem.onclick = function() {
+                    sortAscMenuItem.observe('click', function() {
                         self._sortData(selectedHCIndex, 'ASC');
-                    };
+                    });
 
-                    sortDescMenuItem.onclick = function() {
+                    sortDescMenuItem.observe('click', function() {
                         self._sortData(selectedHCIndex, 'DESC');
-                    };
+                    });
                 }
             });
             // Sorting when click on header column
@@ -1389,7 +1389,7 @@ MY.TableGrid = Class.create({
                             || cm[selectedHCIndex].editor instanceof MY.TableGrid.CellCheckbox)) {
                     selectAllItem.down('input').checked = cm[selectedHCIndex].selectAllFlg;
                     selectAllItem.show();
-                    selectAllItem.onclick = function() { // onclick handler
+                    var selectAllHandler = function() { // onclick handler
                         var flag = cm[selectedHCIndex].selectAllFlg = $('mtgSelectAll' + id).checked;
                         var selectableFlg = false;
                         if (cm[selectedHCIndex].editor instanceof MY.TableGrid.CellCheckbox
@@ -1411,6 +1411,7 @@ MY.TableGrid = Class.create({
                         //if (cm[selectedHCIndex].editor instanceof MY.TableGrid.CellCheckbox // Maybe this is a mistake
                         //        && cm[selectedHCIndex].editor.onClickCallback) cm[selectedHCIndex].editor.onClickCallback();
                     };
+                    selectAllItem.observe('click', selectAllHandler.bindAsEventListener(this));
                 } else {
                     selectAllItem.hide();
                 }
