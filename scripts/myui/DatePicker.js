@@ -145,12 +145,12 @@ MY.DatePicker = Class.create(MY.TextField, {
         var c_dim = this._calendarDiv.getDimensions();
         var c_height = c_dim.height;
         //var c_width = c_dim.width;
-        var w_top = Utilities.getWindowScrollTop();
-        var w_height = Utilities.getWindowHeight();
+        var w_top = document.viewport.getScrollOffsets().top;
+        var w_height = document.viewport.getHeight();
         var e_dim = $(this.options.popupBy).cumulativeOffset();
         var s_dim = $(this.options.popupBy).cumulativeScrollOffset();
-        var e_top = e_dim.top - s_dim.top;
-        var e_left = e_dim.left - s_dim.left;
+        var e_top = e_dim.top;
+        var e_left = e_dim.left;
         var e_height = $(this.options.popupBy).getDimensions().height;
         var e_bottom = e_top + e_height;
 

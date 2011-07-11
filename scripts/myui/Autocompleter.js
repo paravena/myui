@@ -175,7 +175,7 @@ MY.Autocompleter = Class.create(MY.TextField, {
         this.options.decorate();
         this.container = $(this.id + '_container');
         $(document).observe('click', this.onBlur.bindAsEventListener(this));
-        this.element.observe('keydown', this.onKeyPress.bindAsEventListener(this));
+        this.element.observe('keydown', this._onKeyPress.bindAsEventListener(this));
     },
 
     show: function() {
@@ -256,7 +256,7 @@ MY.Autocompleter = Class.create(MY.TextField, {
         if (this.options.indicator) Element.hide(this.options.indicator);
     },
 
-    onKeyPress: function(event) {
+    _onKeyPress: function(event) {
         if (this.active) {
             switch (event.keyCode) {
                 case Event.KEY_TAB:
