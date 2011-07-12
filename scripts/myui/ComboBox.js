@@ -95,8 +95,8 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
             this.hasFocus = true;
             this.active = true;
             this.getAllChoices();
-            if (this.index >= 0)
-                this.getEntry(this.index).scrollIntoView(true);
+            //if (this.index >= 0)
+            //    this.getEntry(this.index).scrollIntoView(true);
         } else {
             this.options.onHide(this.element, this.update);
         }
