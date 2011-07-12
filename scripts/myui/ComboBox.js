@@ -18,7 +18,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -80,7 +80,10 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
         $super(input);
         this.element.observe('keydown', this._keyPress.bindAsEventListener(this));
     },
-    
+
+    /**
+     * Show all elements
+     */
     showAll : function() {
         if (!this.active) {
             if (!this.update) {
@@ -99,6 +102,9 @@ MY.ComboBox = Class.create(MY.Autocompleter, {
         }
     },
 
+    /**
+     * Retrieves all choices
+     */
     getAllChoices : function() {
         this.updateChoices(this.options.all(this));
     },

@@ -1,14 +1,16 @@
 <?php
     header('Content-type: application/json');
+    $rowsByPage = 10;
+    $page = 1;
+    if (isset($_REQUEST['page']))
+        $page = $_REQUEST['page'];
+    $sort = 'model';
+    if (isset($_REQUEST['sortColumn']))
+        $sort = $_REQUEST['sortColumn'];
+    $ascDescFlg = 'ASC';
+    if (isset($_REQUEST['ascDescFlg']))
+        $ascDescFlg = $_REQUEST['ascDescFlg'];
 
-    $rowsByPage = 100;
-    $page = $_REQUEST['page'];
-    if ($page == null) $page = 1;
-    $sort = $_REQUEST['sortColumn'];
-    if ($sort == null) $sort = 'model';
-    $ascDescFlg = $_REQUEST['ascDescFlg'];
-    if ($ascDescFlg == null) $ascDescFlg = 'ASC';
-    
     $sortColumn = 'manuf_name'; 
     if ($sort == 'year') 
         $sortColumn = 'model_year';

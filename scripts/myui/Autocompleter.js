@@ -18,7 +18,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -175,7 +175,7 @@ MY.Autocompleter = Class.create(MY.TextField, {
         this.options.decorate();
         this.container = $(this.id + '_container');
         $(document).observe('click', this.onBlur.bindAsEventListener(this));
-        this.element.observe('keydown', this._onKeyPress.bindAsEventListener(this));
+        $(document).observe('keydown', this._onKeyPress.bindAsEventListener(this));
     },
 
     show: function() {
@@ -273,12 +273,12 @@ MY.Autocompleter = Class.create(MY.TextField, {
                     return false;
                 case Event.KEY_UP:
                     this.markPrevious();
-                    this.renderList();
+                    this._renderList();
                     event.stop();
                     return false;
                 case Event.KEY_DOWN:
                     this.markNext();
-                    this.renderList();
+                    this._renderList();
                     event.stop();
                     return false;
             }
@@ -288,6 +288,7 @@ MY.Autocompleter = Class.create(MY.TextField, {
                    (Prototype.Browser.WebKit > 0 && event.keyCode == 0)) {
             return false;
         }
+
         this.changed = true;
         this.hasFocus = true;
         if (this.observer) clearTimeout(this.observer);
@@ -305,7 +306,7 @@ MY.Autocompleter = Class.create(MY.TextField, {
         var element = Event.findElement(event, 'LI');
         if (this.index != element.autocompleteIndex) {
             this.index = element.autocompleteIndex;
-            this.renderList();
+            this._renderList();
         }
     },
 
@@ -316,7 +317,7 @@ MY.Autocompleter = Class.create(MY.TextField, {
         this.hide();
     },
 
-    renderList: function() {
+    _renderList: function() {
         if (this.index == undefined) this.index = 0;
         if (this.entryCount > 0) {
             for (var i = 0; i < this.entryCount; i++)
@@ -422,7 +423,7 @@ MY.Autocompleter = Class.create(MY.TextField, {
                 this.selectEntry();
                 this.hide();
             } else {
-                this.renderList();
+                this._renderList();
             }
         }
     },
