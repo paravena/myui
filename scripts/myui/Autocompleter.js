@@ -340,7 +340,7 @@ MY.Autocompleter = Class.create(MY.TextField, {
             this.index--;
         else
             this.index = this.entryCount - 1;
-        this.getEntry(this.index).scrollIntoView(false);
+        //this.getEntry(this.index).scrollIntoView(false);
     },
 
     markNext: function() {
@@ -348,7 +348,7 @@ MY.Autocompleter = Class.create(MY.TextField, {
             this.index++;
         else
             this.index = 0;
-        this.getEntry(this.index).scrollIntoView(false);
+        //this.getEntry(this.index).scrollIntoView(false);
     },
 
     getEntry: function(index) {
