@@ -221,14 +221,9 @@ MY.TableGrid = Class.create({
             }
         }
         // Adding scrolling handler
-        Event.observe($('bodyDiv' + id), 'scroll', function() {
-            self._syncScroll();
-        });
+        Event.observe(this.bodyDiv, 'scroll', this._syncScroll.bindAsEventListener(this));
         // Adding resize handler
-        Event.observe(window, 'resize', function() {
-            self.resize();
-        });
-
+        Event.observe(window, 'resize', this.resize.bindAsEventListener(this));
     },
 
     /**
@@ -1624,68 +1619,58 @@ MY.TableGrid = Class.create({
 
     _addPagerBehavior : function() {
         var self = this;
+        var id = this._mtgId;
         if (!self.pager.pages) return;
         var currentPage = self.pager.currentPage;
         var pages = self.pager.pages;
         var total = self.pager.total;
         if (total > 0) {
             if (currentPage > 1) {
-                $('mtgFirst'+this._mtgId).down('div').className = 'first-page';
-                $('mtgFirst'+this._mtgId).onclick = function() {
+                $('mtgFirst'+id).down('div').className = 'first-page';
+                $('mtgFirst'+id).observe('click', function() {
                     self._retrieveDataFromUrl.call(self, 1);
-                };
+                });
             } else {
-                $('mtgFirst'+this._mtgId).down('div').className = 'first-page-disabled';
+                $('mtgFirst'+id).down('div').className = 'first-page-disabled';
             }
-
 
             if (currentPage > 0 && currentPage < pages) {
-                $('mtgNext'+this._mtgId).down('div').className = 'next-page';
-                $('mtgNext'+this._mtgId).onclick = function() {
+                $('mtgNext'+id).down('div').className = 'next-page';
+                $('mtgNext'+id).observe('click', function() {
                     self._retrieveDataFromUrl.call(self, currentPage + 1);
-                };
+                });
             } else {
-                $('mtgNext'+this._mtgId).down('div').className = 'next-page-disabled';
+                $('mtgNext'+id).down('div').className = 'next-page-disabled';
             }
-
 
             if (currentPage > 1 && currentPage <= pages) {
-                $('mtgPrev'+this._mtgId).down('div').className = 'previous-page';
-                $('mtgPrev'+this._mtgId).onclick = function() {
+                $('mtgPrev'+id).down('div').className = 'previous-page';
+                $('mtgPrev'+id).observe('click', function() {
                     self._retrieveDataFromUrl.call(self, currentPage - 1);
-                };
+                });
             } else {
-                $('mtgPrev'+this._mtgId).down('div').className = 'previous-page-disabled';
+                $('mtgPrev'+id).down('div').className = 'previous-page-disabled';
             }
 
-
             if (currentPage < pages) {
-                $('mtgLast'+this._mtgId).down('div').className = 'last-page';
-                $('mtgLast'+this._mtgId).onclick = function() {
+                $('mtgLast'+id).down('div').className = 'last-page';
+                $('mtgLast'+id).observe('click', function() {
                     self._retrieveDataFromUrl.call(self, self.pager.pages);
-                };
+                });
             } else {
-                $('mtgLast'+this._mtgId).down('div').className = 'last-page-disabled';
+                $('mtgLast'+id).down('div').className = 'last-page-disabled';
             }
 
             var keyHandler = function(event) {
                 if (event.keyCode == Event.KEY_RETURN) {
-                    var pageNumber = $('mtgPageInput'+self._mtgId).value;
+                    var pageNumber = $('mtgPageInput'+id).value;
                     if (pageNumber > pages) pageNumber = pages;
                     if (pageNumber < 1) pageNumber = '1';
-                    $('mtgPageInput'+self._mtgId).value = pageNumber;
+                    $('mtgPageInput'+id).value = pageNumber;
                     self._retrieveDataFromUrl.call(self, pageNumber);
                 }
             };
-            if (Prototype.Browser.Gecko || Prototype.Browser.Opera ) {
-                Event.observe($('mtgPageInput'+this._mtgId), 'keypress', function(event) {
-                    keyHandler(event);
-                });
-            } else {
-                Event.observe($('mtgPageInput'+this._mtgId), 'keydown', function(event) {
-                    keyHandler(event);
-                });
-            }
+            $('mtgPageInput'+id).observe('keydown', keyHandler.bindAsEventListener(this));
         }
     },
 

@@ -245,7 +245,7 @@ MY.Autocompleter = Class.create(MY.TextField, {
             this.active = false;
             this.hasFocus = false;
             this.update = null;
-         }
+        }
     },
 
     startIndicator: function() {
@@ -267,31 +267,32 @@ MY.Autocompleter = Class.create(MY.TextField, {
                     this.hide();
                     this.active = false;
                     event.stop();
-                    return;
+                    return false;
                 case Event.KEY_LEFT:
                 case Event.KEY_RIGHT:
-                    return;
+                    return false;
                 case Event.KEY_UP:
                     this.markPrevious();
                     this.renderList();
                     event.stop();
-                    return;
+                    return false;
                 case Event.KEY_DOWN:
                     this.markNext();
                     this.renderList();
                     event.stop();
-                    return;
+                    return false;
             }
         } else if (event.keyCode == Event.KEY_TAB ||
                    event.keyCode == Event.KEY_RETURN ||
                    event.keyCode == Event.KEY_DOWN ||
                    (Prototype.Browser.WebKit > 0 && event.keyCode == 0)) {
-            return;
+            return false;
         }
         this.changed = true;
         this.hasFocus = true;
         if (this.observer) clearTimeout(this.observer);
         this.observer = setTimeout(this.onObserverEvent.bind(this), this.options.frequency * 1000);
+        return false;
     },
 
     activate: function() {
