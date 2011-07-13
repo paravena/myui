@@ -175,10 +175,10 @@ MY.Autocompleter = Class.create(MY.TextField, {
         this.options.decorate();
         this.container = $(this.id + '_container');
         $(document).observe('click', this.onBlur.bindAsEventListener(this));
-        $(document).observe('keydown', this._onKeyPress.bindAsEventListener(this));
+        this.element.observe('keydown', this._onKeyPress.bindAsEventListener(this));
     },
 
-    show: function() {
+    show : function() {
         this.options.onShow(this.element, this.update);
     },
 
@@ -237,7 +237,7 @@ MY.Autocompleter = Class.create(MY.TextField, {
         container.setStyle({width : width + 'px', height: height + 'px'});
     },
 
-    hide: function() {
+    hide : function() {
         this.stopIndicator();
         //if (Element.getStyle(this.update, 'display') != 'none') this.options.onHide(this.element, this.update);
         if (this.update) {
@@ -248,11 +248,11 @@ MY.Autocompleter = Class.create(MY.TextField, {
         }
     },
 
-    startIndicator: function() {
+    startIndicator : function() {
         if (this.options.indicator) Element.show(this.options.indicator);
     },
 
-    stopIndicator: function() {
+    stopIndicator : function() {
         if (this.options.indicator) Element.hide(this.options.indicator);
     },
 
@@ -296,13 +296,13 @@ MY.Autocompleter = Class.create(MY.TextField, {
         return false;
     },
 
-    activate: function() {
+    activate : function() {
         this.changed = false;
         this.hasFocus = true;
         this.getUpdatedChoices();
     },
 
-    onHover: function(event) {
+    onHover : function(event) {
         var element = Event.findElement(event, 'LI');
         if (this.index != element.autocompleteIndex) {
             this.index = element.autocompleteIndex;
@@ -310,21 +310,21 @@ MY.Autocompleter = Class.create(MY.TextField, {
         }
     },
 
-    onClick: function(event) {
+    onClick : function(event) {
         var element = Event.findElement(event, 'LI');
         this.index = element.autocompleteIndex;
         this.selectEntry();
         this.hide();
     },
 
-    _renderList: function() {
+    _renderList : function() {
         if (this.index == undefined) this.index = 0;
         if (this.entryCount > 0) {
             for (var i = 0; i < this.entryCount; i++)
                 if (this.index == i)
-                    Element.addClassName(this.getEntry(i), "selected");
+                    Element.addClassName(this._getEntry(i), "selected");
                 else
-                    Element.removeClassName(this.getEntry(i), "selected");
+                    Element.removeClassName(this._getEntry(i), "selected");
             if (this.hasFocus) {
                 this.show();
                 this.active = true;
@@ -335,40 +335,48 @@ MY.Autocompleter = Class.create(MY.TextField, {
         }
     },
 
-    markPrevious: function() {
+    markPrevious : function() {
         if (this.index > 0)
             this.index--;
         else
             this.index = this.entryCount - 1;
-        //this.getEntry(this.index).scrollIntoView(false);
+        this._syncScroll(this._getEntry(this.index), false);
     },
 
-    markNext: function() {
+    markNext : function() {
         if (this.index < this.entryCount - 1)
             this.index++;
         else
             this.index = 0;
-        //this.getEntry(this.index).scrollIntoView(false);
+        this._syncScroll(this._getEntry(this.index), true);
     },
 
-    getEntry: function(index) {
+    _getEntry : function(index) {
         return this.update.firstChild.childNodes[index];
     },
 
-    getCurrentEntry: function() {
-        return this.getEntry(this.index);
+    _syncScroll : function(entry, bottomFlg) {
+        var updateHeight = this.update.getDimensions().height;
+        if (!bottomFlg) {
+            this.update.scrollTop = entry.offsetTop;
+        } else {
+            this.update.scrollTop = entry.offsetTop - (updateHeight - entry.getDimensions().height - 5);
+        }
     },
 
-    selectEntry: function() {
+    getCurrentEntry : function() {
+        return this._getEntry(this.index);
+    },
+
+    selectEntry : function() {
         this.updateElement(this.getCurrentEntry());
     },
 
-    getValue: function() {
+    getValue : function() {
         return this.oldElementValue;
     },
 
-
-    updateElement: function(selectedElement) {
+    updateElement : function(selectedElement) {
         // if an updateElement method is provided
         if (this.options.updateElement) {
             this.options.updateElement(selectedElement);
@@ -401,7 +409,7 @@ MY.Autocompleter = Class.create(MY.TextField, {
             this.options.afterUpdate(this.element, selectedElement);
     },
 
-    updateChoices: function(choices) {
+    updateChoices : function(choices) {
         if (!this.changed && this.hasFocus) {
             this.update.innerHTML = choices;
             Element.cleanWhitespace(this.update);
@@ -409,7 +417,7 @@ MY.Autocompleter = Class.create(MY.TextField, {
             if (this.update.firstChild && this.update.down().childNodes) {
                 this.entryCount = this.update.down().childNodes.length;
                 for (var i = 0; i < this.entryCount; i++) {
-                    var entry = this.getEntry(i);
+                    var entry = this._getEntry(i);
                     entry.autocompleteIndex = i;
                     this.addObservers(entry);
                 }
@@ -428,12 +436,12 @@ MY.Autocompleter = Class.create(MY.TextField, {
         }
     },
 
-    addObservers: function(element) {
+    addObservers : function(element) {
         $(element).observe('mouseover', this.onHover.bindAsEventListener(this));
         $(element).observe('click', this.onClick.bindAsEventListener(this));
     },
 
-    onObserverEvent: function() {
+    onObserverEvent : function() {
         this.changed = false;
         this.tokenBounds = null;
         if (this.getToken().length >= this.options.minChars) {
@@ -445,12 +453,12 @@ MY.Autocompleter = Class.create(MY.TextField, {
         this.oldElementValue = this.element.value;
     },
 
-    getToken: function() {
+    getToken : function() {
         var bounds = this.getTokenBounds();
         return this.element.value.substring(bounds[0], bounds[1]).strip();
     },
 
-    getTokenBounds: function() {
+    getTokenBounds : function() {
         if (this.tokenBounds != null) return this.tokenBounds;
         var value = this.element.value;
         if (value.strip().empty()) return [-1, 0];
