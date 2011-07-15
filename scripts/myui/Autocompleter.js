@@ -76,12 +76,15 @@ MY.Autocompleter = Class.create(MY.TextField, {
                     var rh = vh + vst - p.top - d.height; // remaining height
                     var uh = (self.entryCount * 22) + 6;
                     var offsetTop = element.cumulativeOffset().top;
+                    var offsetLeft = element.cumulativeOffset().left;
+                    var scrollTop = 0;
                     if (self.tableGrid)
-                        offsetTop = offsetTop - self.tableGrid.bodyDiv.scrollTop;
-                    var topPos = d.height + offsetTop + 2;
-                    var leftPos = element.offsetParent.cumulativeOffset().left;
+                        scrollTop = self.tableGrid.bodyDiv.scrollTop;
+                    var topPos = d.height + offsetTop - scrollTop + 2;
+                    var scrollLeft = 0;
                     if (self.tableGrid)
-                        leftPos = leftPos - self.tableGrid.bodyDiv.scrollLeft;
+                        scrollLeft = self.tableGrid.bodyDiv.scrollLeft;
+                    var leftPos = offsetLeft - scrollLeft;
                     if (rh >= (p.top - vst)) { // down
                         if (uh > rh) uh = rh - 10;
                         update.setStyle({
@@ -93,9 +96,9 @@ MY.Autocompleter = Class.create(MY.TextField, {
                     } else { // above
                         if (uh > (p.top - vst)) {
                             uh = p.top - vst - 10;
-                            topPos = p.top -(uh + 6);
+                            topPos = p.top - (uh + scrollTop + 4);
                         } else if (uh > rh) {
-                            topPos = p.top -(uh + 6);
+                            topPos = p.top - (uh + scrollTop + 4);
                         }
                         update.setStyle({
                             top : topPos + 'px',
