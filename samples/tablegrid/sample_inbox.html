@@ -43,18 +43,12 @@
                         }
                     }
                     alert(temp);
-                    new Ajax.Request('./save.php?'+temp, {
-                        onComplete: function(transport){
-                            tableGrid1.clear();
-                            tableGrid1.refresh();
-                        }
-                    });
                 },
                 onAdd: function() {
-                    alert('on add handler');
+
                 },
                 onDelete: function() {
-                    alert('on delete handler');
+                    
                 }
             }
 		},
@@ -115,9 +109,6 @@
 				editable: true,
 				editor: new MY.ComboBox({
                     items: repList,
-                    afterUpdate : function(input, selectedItem) {
-                        alert('after update is called');
-                    },
                     validate : function(value, errors) {
                         if (value == 'Zach') {
                             errors.push('Invalid value');

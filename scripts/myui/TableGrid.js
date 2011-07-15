@@ -1198,6 +1198,7 @@ MY.TableGrid = Class.create({
                 width: (width - 8) + 'px'
             });
             innerElement.insert(input);
+            editor.setTableGrid(this);
             editor.render(input);
             if (editor.validate) editor.validate();
             input.focus();

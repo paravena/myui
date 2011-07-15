@@ -70,14 +70,18 @@ MY.Autocompleter = Class.create(MY.TextField, {
                 function(element, update) {
                     update.style.position = 'absolute';
                     var d = element.getDimensions();
-                    var p = element.offsetParent.cumulativeOffset();
+                    var p = element.cumulativeOffset();
                     var vh = document.viewport.getHeight(); // view port height
                     var vst = document.viewport.getScrollOffsets().top; // view port scrolling top
                     var rh = vh + vst - p.top - d.height; // remaining height
                     var uh = (self.entryCount * 22) + 6;
-                    var offsetTop = element.offsetParent.cumulativeOffset().top;
+                    var offsetTop = element.cumulativeOffset().top;
+                    if (self.tableGrid)
+                        offsetTop = offsetTop - self.tableGrid.bodyDiv.scrollTop;
                     var topPos = d.height + offsetTop + 2;
                     var leftPos = element.offsetParent.cumulativeOffset().left;
+                    if (self.tableGrid)
+                        leftPos = leftPos - self.tableGrid.bodyDiv.scrollLeft;
                     if (rh >= (p.top - vst)) { // down
                         if (uh > rh) uh = rh - 10;
                         update.setStyle({
@@ -357,6 +361,9 @@ MY.Autocompleter = Class.create(MY.TextField, {
 
     _syncScroll : function(entry, bottomFlg) {
         var updateHeight = this.update.getDimensions().height;
+        var scrollTop = this.update.scrollTop;
+        if (entry.offsetTop > scrollTop && entry.offsetTop < (scrollTop + updateHeight - 10))
+            return;
         if (!bottomFlg) {
             this.update.scrollTop = entry.offsetTop;
         } else {

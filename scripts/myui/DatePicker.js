@@ -148,9 +148,12 @@ MY.DatePicker = Class.create(MY.TextField, {
         var w_top = document.viewport.getScrollOffsets().top;
         var w_height = document.viewport.getHeight();
         var e_dim = $(this.options.popupBy).cumulativeOffset();
-        var s_dim = $(this.options.popupBy).cumulativeScrollOffset();
         var e_top = e_dim.top;
+        if (this.tableGrid)
+            e_top = e_top - this.tableGrid.bodyDiv.scrollTop;
         var e_left = e_dim.left;
+        if (this.tableGrid)
+            e_left = e_left - this.tableGrid.bodyDiv.scrollLeft;
         var e_height = $(this.options.popupBy).getDimensions().height;
         var e_bottom = e_top + e_height;
 

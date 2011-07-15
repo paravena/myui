@@ -36,9 +36,14 @@ MY.TextField = Class.create({
     },
 
     baseInitialize : function(options) {
+        this.tableGrid = undefined;
         this.options = $H({}).merge(options || {}).toObject();
     },
 
+    /**
+     * Renders text field element
+     * @param input input element
+     */
     render : function(input) {
         this.input = $(input);
         this.id = this.input.id;
@@ -58,6 +63,10 @@ MY.TextField = Class.create({
         this.input.observe('blur', this.onBlurHandler);
     },
 
+    /**
+     * Decorates text field
+     * @param element input element
+     */
     decorate : function(element) {
         if (this.tabIndex) element.setAttribute('tabIndex', this.tabIndex);
         if (this.initialText) element.value = this.initialText;
@@ -70,6 +79,9 @@ MY.TextField = Class.create({
         this.container.setStyle({width : width + 'px', height: height + 'px'});
     },
 
+    /**
+     * Validates text field
+     */
     validate : function() {
         var input = this.input;
         var result = true;
@@ -108,13 +120,28 @@ MY.TextField = Class.create({
         return result;
     },
 
+    /**
+     * Reset text field status removing error
+     * signal and tooltip
+     */
     reset : function() {
         if (this.input) this.input.removeClassName('my-textfield-input-error');
         if (this.tooltip) this.tooltip.remove();
         if (this.onBlurHandler) Event.stopObserving(this.input, 'blur', this.onBlurHandler);
     },
 
+    /**
+     * Retrieves value
+     */
     getValue : function() {
         return this.input.value;
+    },
+
+    /**
+     * Set TableGrid object when text field is embedded inside one
+     * @param tableGrid tableGrid object
+     */
+    setTableGrid: function(tableGrid) {
+        this.tableGrid = tableGrid;
     }
 });
