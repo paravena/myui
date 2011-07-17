@@ -51,7 +51,8 @@ MY.BrowseInput = Class.create(MY.TextField, {
 		this.onClick = options.onClick || null;
 	},
 
-	render : function(input) {
+	render : function($super, input) {
+        $super(input);
         this.targetElement = input;
         if (this.targetElement) this.decorate(this.targetElement);
 	},
