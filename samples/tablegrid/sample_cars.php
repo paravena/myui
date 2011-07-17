@@ -26,12 +26,16 @@
         options : {
             width: '640px',
             title: 'JAW Motors Inventory',
-            addSettingBehavior : false,
             pager: {
                 pageParameter : 'page'
             },
-            onCellBlur : function(element, value, x, y, id) {
-                //alert(value);            
+            addSettingBehavior : false,
+            rowClass : function(rowIdx) {
+                var className = '';
+                if (rowIdx % 2 == 0) {
+                    className = 'hightlight';
+                }
+                return className;
             },
             toolbar : {
                 elements: [MY.TableGrid.ADD_BTN, MY.TableGrid.DEL_BTN, MY.TableGrid.SAVE_BTN],
@@ -51,13 +55,6 @@
                 onDelete: function() {
                     alert('on delete handler');
                 }
-            },
-            rowClass : function(rowIdx) {
-                var className = '';
-                if (rowIdx % 2 == 0) {
-                    className = 'hightlight';
-                }
-                return className;
             }
         },
         columnModel : [
@@ -66,26 +63,24 @@
                 title : 'Id',
                 width : 30,
                 editable: true,
-                sortable: false,
-                editor: new MY.TableGrid.CellCheckbox({
-                    selectable : true
-                })
+                editor: 'checkbox',
+                sortable: false
             },
             {
-                id: 'generalInfo',
-                title: 'General Info',
-                children : [
+                 id: 'generalInfo',
+                 title: 'General Info',
+                 children: [
                     {
-                        id : 'manufacturer',
-                        title : 'Manufacturer',
-                        width : 140,
-                        sortable: true,
-                        editable: true
+                         id : 'manufacturer',
+                         title : 'Manufacturer',
+                         width : 140,
+                         editable: true,
+                         sortable: false
                     },
                     {
                         id : 'model',
                         title : 'Model',
-                        width : 90,
+                        width : 120,
                         editable: true
                     },
                     {
@@ -94,14 +89,12 @@
                         width : 60,
                         editable: true,
                         editor: new MY.TextField({
-                            validate : function(value, errors) {
-                                if (parseInt(value) < 1900)
-                                    errors.push('less than 1900');
-                                return parseInt(value) > 1900;
-                            }
+                              validate : function(value, errors){
+                                   return parseInt(value) > 1900;
+                              }
                         })
-                    }
-                ]
+                     }
+                 ]
             },
             {
                 id : 'price',
@@ -111,74 +104,25 @@
                 editable: true
             },
             {
+                id : 'dateAcquired',
+                title : 'Date acquired',
+                width : 120,
+                editable: true,
+                editor: new MY.DatePicker({})
+            },
+            {
                 id : 'origCountry',
                 title : 'Origin Country',
                 width : 100,
                 editable: true,
                 editor: new MY.ComboBox({
-                    items: countryList,
-                    listId: 'list'
-                }),
-                renderer: function(value, list) {
-                    var result = value;
-                    for (var i = 0; i < list.length; i++) {
-                        if (list[i].value == value) result = list[i].text;
-                    }
-                    return result;
-                }
-            },
-            {
-                id : 'used',
-                title : 'Used',
-                width : 50,
-                editable: true,
-                align: 'center',
-                editor: new MY.TableGrid.CellCheckbox({
-                    getValueOf: function(value) {
-                        var result = 'No';
-                        if (value) result = 'Yes';
-                        return result;
-                    },
-                    onClick: function(value, checked, element) {
-                        alert('hola ' + value + ' ' + checked  + ' ' + element);
-                    }
+                    items: countryList
                 })
-            },
-            {
-                id : 'expirationDt',
-                title : 'Expiration Date',
-                width : 100,
-                editable: true,
-                editor: new MY.DatePicker({
-                    validate : function (value, input) {
-                        return true;      
-                    }
-                })
-            },
-            {
-                id : 'browseId',
-                title : 'Select client',
-                width : 100,
-                editable: true,
-                editor: new MY.BrowseInput({
-                    onClick : function() {
-                        alert('on click event');
-                    },
-                    afterUpdate : function() {
-                        alert('after update event');
-                    },
-                    validate: function(value, errors) {
-                        if (value == '1') {
-                            errors.push('Invalid value');
-                            return false;
-                        }
-                        return true;
-                    }
-                })                
             }
         ],
         url: 'get_all_cars.php'
     };
+
 
     var tableGrid1 = null;
     window.onload = function() {
