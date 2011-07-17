@@ -44,12 +44,6 @@
                         }
                     }
                     alert(temp);
-                    new Ajax.Request('./save.php?'+temp, {
-                        onComplete: function(transport){
-                            tableGrid1.clear();
-                            tableGrid1.refresh();
-                        }
-                    });
                 },
                 onAdd: function() {
                     alert('on add handler');
@@ -166,12 +160,19 @@
                 title : 'Select client',
                 width : 100,
                 editable: true,
-                editor: new MY.TableGrid.BrowseInput({
+                editor: new MY.BrowseInput({
                     onClick : function() {
                         alert('on click event');
                     },
                     afterUpdate : function() {
                         alert('after update event');
+                    },
+                    validate: function(value, errors) {
+                        if (value == '1') {
+                            errors.push('Invalid value');
+                            return false;
+                        }
+                        return true;
                     }
                 })                
             }

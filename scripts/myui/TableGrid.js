@@ -1305,7 +1305,7 @@ MY.TableGrid = Class.create({
             this.newRowsAdded[Math.abs(y)-1][columnId] = value;
         }
 
-        if ((editor instanceof MY.TableGrid.BrowseInput || editor instanceof MY.TextField || editor instanceof MY.DatePicker) && editor.afterUpdateCallback) {
+        if ((editor instanceof MY.BrowseInput || editor instanceof MY.TextField || editor instanceof MY.DatePicker) && editor.afterUpdateCallback) {
             editor.afterUpdateCallback(element, value);
         }
         keys._bInputFocused = false;
@@ -1638,7 +1638,7 @@ MY.TableGrid = Class.create({
             if (currentPage > 0 && currentPage < pages) {
                 $('mtgNext'+id).down('div').className = 'next-page';
                 $('mtgNext'+id).observe('click', function() {
-                    self._retrieveDataFromUrl.call(self, currentPage + 1);
+                    self._retrieveDataFromUrl.call(self, parseInt(currentPage) + 1);
                 });
             } else {
                 $('mtgNext'+id).down('div').className = 'next-page-disabled';
@@ -1647,7 +1647,7 @@ MY.TableGrid = Class.create({
             if (currentPage > 1 && currentPage <= pages) {
                 $('mtgPrev'+id).down('div').className = 'previous-page';
                 $('mtgPrev'+id).observe('click', function() {
-                    self._retrieveDataFromUrl.call(self, currentPage - 1);
+                    self._retrieveDataFromUrl.call(self, parseInt(currentPage) - 1);
                 });
             } else {
                 $('mtgPrev'+id).down('div').className = 'previous-page-disabled';

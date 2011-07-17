@@ -1,10 +1,10 @@
 /**
- * MyTableGrid, version 1.1.0
+ * MYUI, version 1.0
  *
  * Dual licensed under the MIT and GPL licenses.
  *
  * Copyright 2009 Pablo Aravena, all rights reserved.
- * http://pabloaravena.info/myui
+ * http://pabloaravena.info
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,7 +18,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -44,12 +44,11 @@ MY.TableGrid.CellRadioButton = Class.create({
 	}
 });
 
-MY.TableGrid.BrowseInput = Class.create({
+MY.BrowseInput = Class.create(MY.TextField, {
 	initialize : function(options) {
-		options = options || {};
+		this.baseInitialize(options);
 		this.afterUpdate = options.afterUpdate || null;
 		this.onClick = options.onClick || null;
-        this.validate = options.validate || null;
 	},
 
 	render : function(input) {
@@ -64,11 +63,10 @@ MY.TableGrid.BrowseInput = Class.create({
         Element.wrap(element, 'div'); // auto complete container
         element.setStyle({width : (width - 29)+'px'});
         var container = element.up();
-        container.addClassName('my-autocompleter');
         container.id = this.id + '_container';
         container.setStyle({width : width + 'px', height: height + 'px'});
         var browseBtn = new Element('div');
-        browseBtn.addClassName('mtgBrowseBtn gradient');
+        browseBtn.addClassName('my-tablegrid-browse-button');
         container.insert(browseBtn);
         var onClickFlg = false;
         browseBtn.observe('click', function(event){

@@ -298,11 +298,11 @@ input.my-tablegrid-textfield {
     border: 1px solid #609;
 }
 
-div.mtgBrowseBtn { /*TODO soon must be removed*/
+div.my-tablegrid-browse-button {
     position: absolute;
     top: 0;
     right : 0;
-    background: #fff url(images/magb.png) no-repeat 1px 1px;
+    background: #ccc url(images/magb.png) no-repeat 1px 1px;
     width: 20px;
     height: 22px;
     margin: 0;
