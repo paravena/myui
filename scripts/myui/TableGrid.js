@@ -1720,7 +1720,7 @@ MY.TableGrid = Class.create({
         }
 
         this.bodyHeight = this.tableHeight - this.headerHeight - 3;
-        if (this.options.title) this.bodyHeight = this.bodyHeight - this.headerHeight - 1;
+        if (this.options.title) this.bodyHeight = this.bodyHeight - this.titleHeight - 1;
         this.overlayDiv.setStyle({
             height: (this.bodyHeight + 4) + 'px'
         });
@@ -1733,9 +1733,9 @@ MY.TableGrid = Class.create({
         });
 
         if (this.options.pager) {
-            var topPos = this.bodyHeight + this.headerHeight + 2;
-            if (this.options.title) topPos += this.headerHeight;
-            if (this.options.toolbar) topPos += this.headerHeight;
+            var topPos = this.bodyHeight + this.headerHeight +  5;
+            if (this.options.title) topPos += this.titleHeight;
+            if (this.options.toolbar) topPos += this.toolbarHeight;
             this.pagerDiv.setStyle({
                 top: topPos + 'px',
                 width: (this.tableWidth - 4) + 'px'
