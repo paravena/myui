@@ -48,6 +48,7 @@ MY.TextField = Class.create({
         this.input = $(input);
         this.id = this.input.id;
         this.name = this.options.name || this.input;
+        this.align = this.options.align || 'left';
         this.tabIndex = this.options.tabIndex || null;
         this.initialText = this.options.initialText || null;
         this.required = this.options.required || false;
@@ -55,6 +56,8 @@ MY.TextField = Class.create({
         this.tooltip = null;
         if (this.initialText) this.input.value = this.initialText;
         this.reset();
+        if (this.options.type == 'number') this.align = 'right';
+        this.input.setStyle({textAlign : this.align});
         this.input.observe('focus', function() {
             if (this.initialText != null && this.input.value == this.initialText.strip()) this.input.value = '';
         }.bind(this));
