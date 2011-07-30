@@ -1,7 +1,7 @@
 <?php
     header('Content-type: application/json');
 
-    $rowsByPage = 100;
+    $rowsByPage = 10;
     $page = 1;
     if (isset($_REQUEST['page']))
         $page = $_REQUEST['page'];
@@ -69,26 +69,26 @@
                  'limit ' . $from . ',' . $to;
     
         $result = mysql_query($query);
-        $rows = array();
         $idx = 0;
         $json_result = '[';
         while($row = mysql_fetch_array($result)) {
-            $json_result .= '[\''.$row['car_id'] .'\',\''. $row['manuf_name'].'\',\''. $row['model_name'].'\',\''. $row['model_year'].'\',\''. $row['car_ask_price'].'\'],';
+            if ($idx > 0) $json_result .= ',';
+            $json_result .= '["'.$row['car_id'] .'","'. $row['manuf_name'].'","'. $row['model_name'].'","'. $row['model_year'].'","'. $row['car_ask_price'].'","07/22/2011","US"]';
+            $idx++;
         }
-        preg_replace("/\,$/", '', $json_result);
         $json_result .= ']';
     } 
     mysql_close($con);
 ?>
 {
-    options: {
-        pager: {
-            currentPage: <?php echo $page?>,
-            total: <?php echo $count?>,
-            from: <?php echo ($from + 1)?>,
-            to: <?php echo ($to + 1)?>,
-            pages: <?php echo $numberOfPages?>
+    "options": {
+        "pager": {
+            "currentPage": "<?php echo $page?>",
+            "total": "<?php echo $count?>",
+            "from": "<?php echo ($from + 1)?>",
+            "to": "<?php echo ($to + 1)?>",
+            "pages": "<?php echo $numberOfPages?>"
         }
     },
-    rows : <?php echo $json_result; ?>
+    "rows" : <?php echo $json_result; ?>
 }
