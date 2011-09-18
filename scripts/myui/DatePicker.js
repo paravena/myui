@@ -103,32 +103,32 @@ MY.DatePicker = Class.create(MY.TextField, {
     },
 
     _initCalendarDiv : function() {
+        var idx = 0;
+        var html = [];
         var parent = null;
-        var style = null;
+        var style = '';
         if (this.options.embedded) {
             parent = this.targetElement.parentNode;
-            style = {};
         } else {
             parent = document.body;
-            style = { position:'absolute', visibility: 'hidden', left:0, top:0 };
+            style = 'position: absolute; visibility: hidden; left:0; top:0';
         }
-        this._calendarDiv = new Element('div', {className: 'my-datepicker shadow'}).setStyle(style);
-        // create the divs
-        this._topDiv = new Element('div', {className: 'my-datepicker-top'}).setStyle({clear:'left'});
-        this._headerDiv = new Element('div', {className: 'my-datepicker-header'}).setStyle({clear:'left'});
-        this._bodyDiv = new Element('div', {className: 'my-datepicker-body'}).setStyle({clear:'left'});
-        this._buttonsDiv = new Element('div', {className: 'my-datepicker-buttons'}).setStyle({clear:'left'});
-        this._footerDiv = new Element('div', {className: 'my-datepicker-footer'}).setStyle({clear:'left'});
-        this._bottomDiv = new Element('div', {className: 'my-datepicker-bottom'}).setStyle({clear:'left'});
 
-        this._calendarDiv.insert(this._topDiv);
-        this._calendarDiv.insert(this._headerDiv);
-        this._calendarDiv.insert(this._bodyDiv);
-        this._calendarDiv.insert(this._buttonsDiv);
-        this._calendarDiv.insert(this._footerDiv);
-        this._calendarDiv.insert(this._bottomDiv);
+        html[idx++] = '<div id="my-datepicker-div'+this._mdpId+'" class="my-datepicker shadow" style="'+style+'">';
+        html[idx++] = '    <div class="my-datepicker-top" style="clear:left"></div>';
+        html[idx++] = '    <div class="my-datepicker-header" style="clear:left"></div>';
+        html[idx++] = '    <div class="my-datepicker-body" style="clear:left"></div>';
+        html[idx++] = '    <div class="my-datepicker-buttons" style="clear:left"></div>';
+        html[idx++] = '    <div class="my-datepicker-footer" style="clear:left"></div>';
+        html[idx++] = '    <div class="my-datepicker-bottom" style="clear:left"></div>';
+        html[idx++] = '</div>';
 
-        $(parent).insert(this._calendarDiv);
+        $(parent).insert(html.join(''));
+        this._calendarDiv = $('my-datepicker-div'+this._mdpId);
+        this._headerDiv = this._calendarDiv.select('.my-datepicker-header')[0];
+        this._bodyDiv = this._calendarDiv.select('.my-datepicker-body')[0];
+        this._buttonsDiv = this._calendarDiv.select('.my-datepicker-buttons')[0];
+        this._footerDiv = this._calendarDiv.select('.my-datepicker-footer')[0];
 
         this._initHeaderDiv();
         this._initButtonsDiv();
