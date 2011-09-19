@@ -8,7 +8,7 @@ Date.MONTH_ABBREVIATIONS = $w('Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec')
 Date.DAY_NAMES = $w('Sunday Monday Tuesday Wednesday Thursday Friday Saturday Sun Mon Tue Wed Thu Fri Sat');
 Date.DAY_ABBREVIATIONS = $w('Sun Mon Tue Wed Thu Fri Sat');
 Date.ONE_DAY = 24 * 60 * 60 * 1000;
-Date.WEEK_DAYS = $w('S M T W T F S');
+Date.WEEK_DAYS = $w('Su Mo Tu We Th Fr Sa');
 Date.FIRST_DAY_OF_WEEK = 0;
 
 function LZ(x) {

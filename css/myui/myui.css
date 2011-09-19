@@ -33,3 +33,9 @@
     visibility: hidden;
     z-index: 20;
 }
+
+.all-round-corners {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}

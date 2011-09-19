@@ -4,10 +4,8 @@
     border: #609 1px solid;
     display: block;
     width: 180px;
+    padding: 3px;
     z-index: 1000;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
 }
 
 .my-datepicker-container {
@@ -22,19 +20,13 @@
     margin: 0;
 }
 
-/* this is a fun ie6 hack to get drop downs to stay behind the popup window.  This should always be just underneath .myDatePicker */
-iframe.ie6_blocker {
-    position: absolute;
-    z-index: 999;
-}
-
 .my-datepicker thead th {
-    /* dow headings */
-    background: url(images/hrow.gif) repeat-x;
     font-weight: bold;
     height: 20px;
     font-size: 11px;
     color: black;
+    border-bottom: 2px #609 solid;
+    padding: 2px;
 }
 
 .my-datepicker .my-datepicker-buttons {
@@ -121,6 +113,11 @@ iframe.ie6_blocker {
     background-color: white;
     text-align: center;
     vertical-align: middle;
+    padding: 2px;
+}
+
+.my-datepicker-body tbody tr:first-child td {
+    border-top: 2px #fff solid;
 }
 
 .my-datepicker-body td.weekend {

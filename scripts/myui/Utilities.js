@@ -37,53 +37,32 @@ var Utilities = {
     }
 };
 
-Element.buildAndAppend = function(type, options, style) {
-    var newElement = $(document.createElement(type));
-    $H(options).each(function(pair) {
-        newElement[pair.key] = pair.value
-    });
-    if (style) newElement.setStyle(style);
-    return newElement;
-};
+var SelectBox = Class.create({
+    initialize: function(parentElement, values, htmlOptions, styleOptions) {
+        this.element = new Element('select', htmlOptions);
+        this.element.setStyle(styleOptions);
+        $(parentElement).insert(this.element);
 
-Element.addMethods({
-    purgeChildren: function(element) {
-        $A(element.childNodes).each(function(e) {
-            $(e).remove();
-        });
-    },
-    build: function(element, type, options, style) {
-        var newElement = Element.buildAndAppend(type, options, style);
-        element.appendChild(newElement);
-        return newElement;
-    }
-});
-
-var SelectBox = Class.create();
-
-SelectBox.prototype = {
-    initialize: function(parent_element, values, html_options, style_options) {
-        this.element = $(parent_element).build("select", html_options, style_options);
         this.populate(values);
     },
 
     populate: function(values) {
-        this.element.purgeChildren();
-        var that = this;
+        this.element.innerHTML = '';
+        var self = this;
         $A(values).each(function(pair) {
             if (typeof(pair) != "object") {
                 pair = [pair, pair]
             }
-            that.element.build("option", { value: pair[1], innerHTML: pair[0]})
+            self.element.insert(new Element('option', {value: pair[1]}).update(pair[0]));
         });
     },
 
     setValue: function(value) {
-        var e = this.element;
+        var se = this.element;
         var matched = false;
-        $R(0, e.options.length - 1).each(function(i) {
-            if (e.options[i].value == value.toString()) {
-                e.selectedIndex = i;
+        $R(0, se.options.length - 1).each(function(i) {
+            if (se.options[i].value == value.toString()) {
+                se.selectedIndex = i;
                 matched = true;
             }
         });
@@ -91,6 +70,6 @@ SelectBox.prototype = {
     },
 
     getValue: function() {
-        return $F(this.element)
+        return $F(this.element);
     }
-};
+});
