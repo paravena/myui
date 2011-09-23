@@ -176,22 +176,25 @@ MY.DatePicker = Class.create(MY.TextField, {
         headerDiv.insert(html.join(''));
         var nextMonthButton = headerDiv.select('.next')[0];
         var prevMonthButton = headerDiv.select('.prev')[0];
+
         nextMonthButton.observe('click', function() {
             this.navMonth(this.date.getMonth() + 1);
         }.bindAsEventListener(this));
+
         prevMonthButton.observe('click', function() {
             this.navMonth(this.date.getMonth() - 1);
         }.bindAsEventListener(this));
 
+        var self = this;
         if (this.options.changeMonth) {
             this.monthSelect = new SelectBox(headerDiv, $R(0, 11).map(function(m) {
                     return [Date.MONTH_NAMES[m], m]
                 }),
                 {
                     className: 'month',
-                    onchange: function () {
-                        this.navMonth(this.monthSelect.getValue())
-                    }.bindAsEventListener(this)
+                    onChange: function () {
+                        self.navMonth(self.monthSelect.getValue())
+                    }
                 });
         } else {
             headerDiv.insert(new Element('span', {className : 'my-datepicker-month-label'}));
@@ -201,10 +204,9 @@ MY.DatePicker = Class.create(MY.TextField, {
         if (this.options.changeYear) {
             this.yearSelect = new SelectBox(headerDiv, [], {
                     className: 'year',
-                    onchange: function () {
-                        alert('hola');
-                        this.navYear(this.yearSelect.getValue());
-                    }.bindAsEventListener(this)
+                    onChange: function () {
+                        self.navYear(self.yearSelect.getValue());
+                    }
                 });
             this._populateYearRange();
         } else {
@@ -249,20 +251,20 @@ MY.DatePicker = Class.create(MY.TextField, {
             var blankTime = $A(this.options.time == 'mixed' ? [[' - ', '']] : []);
             buttonsDiv.insert(new Element('span', {className: 'at-sign'}).update('@'));
             var t = new Date();
+            var self = this;
             this.hourSelect = new SelectBox(buttonsDiv,
                 blankTime.concat($R(0, 23).map(function(hour) {
                     t.setHours(hour);
                     return $A([t.getAMPMHour() + ' ' + t.getAMPM(), hour])
                 })),
                 {
-                    datePicker: this,
-                    onchange: function() {
-                        this.datePicker._updateSelectedDate({ hour: this.value });
+                    onChange: function() {
+                        self._updateSelectedDate({hour: self.hourSelect.getValue()});
                     },
                     className: 'hour'
                 });
             buttonsDiv.insert(new Element('span', {className: 'separator'}).update(':'));
-            var self = this;
+
             this.minuteSelect = new SelectBox(buttonsDiv,
                 blankTime.concat($R(0, 59).select(function(min) {
                     return (min % self.options.minuteInterval == 0)
@@ -270,9 +272,8 @@ MY.DatePicker = Class.create(MY.TextField, {
                     return $A([x.toPaddedString(2), x]);
                 })),
                 {
-                    datePicker: this,
-                    onchange: function() {
-                        this.datePicker._updateSelectedDate({minute: this.value })
+                    onChange: function() {
+                        self._updateSelectedDate({minute: self.minuteSelect.getValue()});
                     },
                     className: 'minute'
                 });
@@ -443,7 +444,10 @@ MY.DatePicker = Class.create(MY.TextField, {
     },
 
     dateString : function() {
-        return (this.selectionMade) ? this.selectedDate.format(this.format) : '&#160;';
+        if (this.useTimeFlg)
+            return (this.selectionMade) ? this.selectedDate.format(this.format + ' hh:mm') : '&#160;';
+        else
+            return (this.selectionMade) ? this.selectedDate.format(this.format) : '&#160;';
     },
 
     getValue : function() {
@@ -461,7 +465,6 @@ MY.DatePicker = Class.create(MY.TextField, {
         if (!this.validYear(this.date.getFullYear())) this.date.setYear((this.date.getFullYear() < this.yearRange().start) ? this.yearRange().start : this.yearRange().end);
         this.selectedDate = this.date;
         this.useTimeFlg = /[0-9]:[0-9]{2}/.exec(value) ? true : false;
-        //this.date.setDate(1);
     },
 
     _updateFooter : function(text) {
@@ -480,7 +483,10 @@ MY.DatePicker = Class.create(MY.TextField, {
 
     _updateSelectedDate : function(partsOrElement, via_click) {
         var parts = $H(partsOrElement);
-        if ((this.targetElement.disabled || this.targetElement.readOnly) && this.options.popup != 'force') return false;
+
+        if ((this.targetElement.disabled || this.targetElement.readOnly)
+                && this.options.popup != 'force') return false;
+
         if (parts.get('day')) {
             var selectedDate = this.selectedDate;
             for (var x = 0; x <= 3; x++) selectedDate.setDate(parts.get('day'));
@@ -490,12 +496,19 @@ MY.DatePicker = Class.create(MY.TextField, {
             this.selectionMade = true;
         }
 
-        if (!isNaN(parts.get('hour'))) this.selectedDate.setHours(parts.get('hour'));
-        if (!isNaN(parts.get('minute'))) this.selectedDate.setMinutes(Utilities.floorToInterval(parts.get('minute'), this.options.minuteInterval));
-        if (parts.get('hour') === '' || parts.get('minute') === '')
+        if (!isNaN(parts.get('hour'))) {
+            this.selectedDate.setHours(parts.get('hour'));
+        }
+
+        if (!isNaN(parts.get('minute'))) {
+            this.selectedDate.setMinutes(Utilities.floorToInterval(parts.get('minute'), this.options.minuteInterval));
+        }
+
+        if (parts.get('hour') === '' || parts.get('minute') === '') {
             this.setUseTime(false);
-        else if (!isNaN(parts.get('hour')) || !isNaN(parts.get('minute')))
+        } else if (!isNaN(parts.get('hour')) || !isNaN(parts.get('minute'))) {
             this.setUseTime(true);
+        }
 
         this._updateFooter();
         this._setSelectedClass();
@@ -583,11 +596,7 @@ MY.DatePicker = Class.create(MY.TextField, {
         this._calendarDiv.remove();
         this.keys.stop();
         this.keys = null;
-//        setTimeout(function() { // hack: A delay required by IE
-//            self.visibleFlg = false;
-//        }, 0.5);
         self.visibleFlg = false;
-        //if (this.iframe) this.iframe.remove();
         if (this.targetElement.type != 'hidden' && ! this.targetElement.disabled) this.targetElement.focus();
         this._callback('afterClose');
     },

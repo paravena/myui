@@ -42,8 +42,10 @@ var SelectBox = Class.create({
         this.element = new Element('select', htmlOptions);
         this.element.setStyle(styleOptions);
         $(parentElement).insert(this.element);
-
         this.populate(values);
+        if (htmlOptions.onChange) {
+            this.element.observe('change', htmlOptions.onChange.bindAsEventListener(this));
+        }
     },
 
     populate: function(values) {
