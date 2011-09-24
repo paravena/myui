@@ -47,8 +47,10 @@ MY.DatePicker = Class.create(MY.TextField, {
             changeYear: false,
             validate: null
         }).merge(options || {}).toObject();
-        this.useTimeFlg = this.options.time;
+        this.useTimeFlg = this.options.time == 'mixed';
         this.format = this.options.format;
+        if (this.useTimeFlg)
+            this.format += ' hh:mm';
         if (this.targetElement) this.render(this.targetElement);
     },
 
@@ -56,7 +58,6 @@ MY.DatePicker = Class.create(MY.TextField, {
         $super(input);
         this.targetElement = $(input);
         if (this.targetElement.tagName != 'INPUT') this.targetElement = this.targetElement.down('INPUT');
-        this.targetElement.datePicker = this;
         this.options.popupBy = this.targetElement;
         this.options.onchange = this.targetElement.onchange;
         if (!this.options.embedded) {
@@ -132,7 +133,9 @@ MY.DatePicker = Class.create(MY.TextField, {
         this._footerDiv = this._calendarDiv.select('.my-datepicker-footer')[0];
 
         this._initHeaderDiv();
+        this._initHeaderDivBehavior();
         this._initButtonsDiv();
+        this._initButtonDivBehavior();
         this._initCalendarGrid();
         this._updateFooter('&#160;');
 
@@ -169,11 +172,36 @@ MY.DatePicker = Class.create(MY.TextField, {
 
     _initHeaderDiv : function() {
         var headerDiv = this._headerDiv;
-        var idx = 0;
-        var html = [];
+        var idx = 0, html = [];
         html[idx++] = '<a href="#" class="next">&nbsp;</a>';
         html[idx++] = '<a href="#" class="prev">&nbsp;</a>';
+
+        if (this.options.changeMonth) {
+            html[idx++] = '<select class="month">';
+            $R(0, 11).each(function(month) {
+                html[idx++] =  '<option value="'+month+'">'+Date.MONTH_NAMES[month]+'</option>';
+            }),
+            html[idx++] = '</select>';
+        } else {
+            headerDiv.insert(new Element('span', {className : 'my-datepicker-month-label'}));
+            this.monthLabel = headerDiv.select('.my-datepicker-month-label')[0];
+        }
+
+        if (this.options.changeYear) {
+            html[idx++] = '<select class="year">';
+            this.yearRange().each(function(year){
+                html[idx++] = '<option value="'+year+'">'+year+'</option>';
+            });
+            html[idx++] = '</select>';
+        } else {
+            headerDiv.insert(new Element('span', {className : 'my-datepicker-year-label'}));
+            this.yearLabel = headerDiv.select('.my-datepicker-year-label')[0];
+        }
         headerDiv.insert(html.join(''));
+    },
+
+    _initHeaderDivBehavior : function() {
+        var headerDiv = this._headerDiv;
         var nextMonthButton = headerDiv.select('.next')[0];
         var prevMonthButton = headerDiv.select('.prev')[0];
 
@@ -185,33 +213,18 @@ MY.DatePicker = Class.create(MY.TextField, {
             this.navMonth(this.date.getMonth() - 1);
         }.bindAsEventListener(this));
 
-        var self = this;
-        if (this.options.changeMonth) {
-            this.monthSelect = new SelectBox(headerDiv, $R(0, 11).map(function(m) {
-                    return [Date.MONTH_NAMES[m], m]
-                }),
-                {
-                    className: 'month',
-                    onChange: function () {
-                        self.navMonth(self.monthSelect.getValue())
-                    }
-                });
-        } else {
-            headerDiv.insert(new Element('span', {className : 'my-datepicker-month-label'}));
-            this.monthLabel = headerDiv.select('.my-datepicker-month-label')[0];
+        this.monthSelect = headerDiv.select('.month')[0];
+        if (this.monthSelect) {
+            this.monthSelect.observe('change', function() {
+                this.navMonth($F(this.monthSelect));
+            }.bindAsEventListener(this));
         }
 
-        if (this.options.changeYear) {
-            this.yearSelect = new SelectBox(headerDiv, [], {
-                    className: 'year',
-                    onChange: function () {
-                        self.navYear(self.yearSelect.getValue());
-                    }
-                });
-            this._populateYearRange();
-        } else {
-            headerDiv.insert(new Element('span', {className : 'my-datepicker-year-label'}));
-            this.yearLabel = headerDiv.select('.my-datepicker-year-label')[0];
+        this.yearSelect = headerDiv.select('.year')[0];
+        if (this.yearSelect) {
+            this.monthSelect.observe('change', function() {
+                this.navYear($F(this.yearSelect));
+            }.bindAsEventListener(this));
         }
     },
 
@@ -247,80 +260,105 @@ MY.DatePicker = Class.create(MY.TextField, {
 
     _initButtonsDiv : function() {
         var buttonsDiv = this._buttonsDiv;
+        var idx = 0, html = [];
         if (this.options.time) {
-            var blankTime = $A(this.options.time == 'mixed' ? [[' - ', '']] : []);
-            buttonsDiv.insert(new Element('span', {className: 'at-sign'}).update('@'));
-            var t = new Date();
+            var timeItems = $A(this.options.time == 'mixed' ? [[' - ', '']] : []);
+            html[idx++] = '<span class="at-sign">@</span>';
+            var currentTime = new Date();
             var self = this;
-            this.hourSelect = new SelectBox(buttonsDiv,
-                blankTime.concat($R(0, 23).map(function(hour) {
-                    t.setHours(hour);
-                    return $A([t.getAMPMHour() + ' ' + t.getAMPM(), hour])
-                })),
-                {
-                    onChange: function() {
-                        self._updateSelectedDate({hour: self.hourSelect.getValue()});
-                    },
-                    className: 'hour'
+            html[idx++] = '<select class="hour">';
+            timeItems.concat($R(0, 23).map(function(hour) {
+                    currentTime.setHours(hour);
+                    return $A([currentTime.getAMPMHour() + ' ' + currentTime.getAMPM(), hour])
+                })).each(function(hour) {
+                    html[idx++] = '<option value="'+hour[1]+'">'+hour[0]+'</option>';
                 });
-            buttonsDiv.insert(new Element('span', {className: 'separator'}).update(':'));
-
-            this.minuteSelect = new SelectBox(buttonsDiv,
-                blankTime.concat($R(0, 59).select(function(min) {
+            html[idx++] = '</select>';
+            html[idx++] = '<span class="separator">:</span>';
+            html[idx++] = '<select class="minute">';
+            timeItems.concat($R(0, 59).select(function(min) {
                     return (min % self.options.minuteInterval == 0)
                 }).map(function(x) {
                     return $A([x.toPaddedString(2), x]);
-                })),
-                {
-                    onChange: function() {
-                        self._updateSelectedDate({minute: self.minuteSelect.getValue()});
-                    },
-                    className: 'minute'
+                })).each(function(min) {
+                    html[idx++] = '<option value="'+min[1]+'">'+min[0]+'</option>';
                 });
+            html[idx++] = '</select>';
         } else if (!this.options.buttons) {
-            buttonsDiv.remove();
+            buttonsDiv.remove(); //TODO review this condition
         }
 
         if (this.options.buttons) {
-            buttonsDiv.insert(new Element('span').update('&nbsp;'));
+            html[idx++] = '<span>&nbsp;</span>';
             if (this.options.time == 'mixed' || !this.options.time) {
-                buttonsDiv.insert(new Element('a', {href: '#', className: 'today-button'}).update(i18n.getMessage('label.today')));
-                var todayButton = buttonsDiv.select('.today-button')[0];
-                todayButton.observe('click', function() {
-                    this.today(false);
-                }.bindAsEventListener(this));
+                html[idx++] = '<a href="#" class="today-button">'+i18n.getMessage('label.today')+'</a>';
             }
 
             if (this.options.time == 'mixed') {
-                buttonsDiv.insert(new Element('span', {className: 'button-separator'}).update('&nbsp;|&nbsp;'));
+                html[idx++] = '<span class="button-separator">&nbsp;|&nbsp;</span>';
             }
 
             if (this.options.time) {
-                buttonsDiv.insert(new Element('a', {href: '#', className: 'now-button'}).update(i18n.getMessage('label.now')));
-                var nowButton = buttonsDiv.select('.now-button')[0];
-                nowButton.observe('click', function() {
-                    this.today(true);
-                }.bindAsEventListener(this));
+                html[idx++] = '<a href="#" class="now-button">'+i18n.getMessage('label.now')+'</a>';
             }
 
             if (!this.options.embedded && !this._closeOnClick()) {
-                buttonsDiv.insert(new Element('span', {className: 'button-separator'}).update('&nbsp;|&nbsp;'));
-                buttonsDiv.insert(new Element('a', {href: '#', className: 'close-button'}).update(i18n.getMessage('label.ok')));
-                var closeButton = buttonsDiv.select('.close-button')[0];
-                closeButton.observe('click', function() {
-                    this._close();
-                }.bindAsEventListener(this));
+                html[idx++] = '<span class="button-separator">&nbsp;|&nbsp;</span>';
+                html[idx++] = '<a href="#" class="close-button">'+i18n.getMessage('label.ok')+'</a>';
             }
 
             if (this.options.clearButton) {
-                buttonsDiv.insert(new Element('span', {className: 'button-separator'}).update('&nbsp;|&nbsp;'));
-                buttonsDiv.insert(new Element('a', {href: '#', className: 'clear-button'}).update(i18n.getMessage('label.clear')));
-                var clearButton = buttonsDiv.select('.clear-button')[0];
-                clearButton.observe('click', function() {
-                    this.clearDate();
-                    if (!this.options.embedded) this._close();
-                }.bindAsEventListener(this));
+                html[idx++] = '<span class="button-separator">&nbsp;|&nbsp;</span>';
+                html[idx++] = '<a href="#" class="clear-button">'+i18n.getMessage('label.clear')+'</a>';
             }
+            buttonsDiv.insert(html.join(''));
+        }
+    },
+
+    _initButtonDivBehavior : function() {
+        var buttonsDiv = this._buttonsDiv;
+        this.hourSelect = buttonsDiv.select('.hour')[0];
+        this.minuteSelect = buttonsDiv.select('.minute')[0];
+
+        if (this.hourSelect) {
+            this.hourSelect.observe('change', function() {
+                this._updateSelectedDate({hour: $F(this.hourSelect)});
+            }.bindAsEventListener(this));
+        }
+
+        if (this.minuteSelect) {
+            this.minuteSelect.observe('change', function() {
+               this._updateSelectedDate({minute: $F(this.minuteSelect)});
+            }.bindAsEventListener(this));
+        }
+
+        var todayButton = buttonsDiv.select('.today-button')[0];
+        if (todayButton) {
+            todayButton.observe('click', function() {
+                this.today(false);
+            }.bindAsEventListener(this));
+        }
+
+        var nowButton = buttonsDiv.select('.now-button')[0];
+        if (nowButton) {
+            nowButton.observe('click', function() {
+                this.today(true);
+            }.bindAsEventListener(this));
+        }
+
+        var closeButton = buttonsDiv.select('.close-button')[0];
+        if (closeButton) {
+            closeButton.observe('click', function() {
+                this._close();
+            }.bindAsEventListener(this));
+        }
+
+        var clearButton = buttonsDiv.select('.clear-button')[0];
+        if (clearButton) {
+            clearButton.observe('click', function() {
+                this.clearDate();
+                if (!this.options.embedded) this._close();
+            }.bindAsEventListener(this));
         }
     },
 
@@ -368,33 +406,43 @@ MY.DatePicker = Class.create(MY.TextField, {
         var month = this.date.getMonth();
         var year = this.date.getFullYear();
         if (this.options.changeMonth) {
-            this.monthSelect.setValue(month, false);
+            this._setSelectBoxValue(this.monthSelect, month);
         } else {
             this.monthLabel.update(Date.MONTH_NAMES[month]);
         }
 
         if (this.options.changeYear) {
-            var e = this.yearSelect.element;
-            if (this.flexibleYearRange() && (!(this.yearSelect.setValue(year, false)) ||
-                    e.selectedIndex <= 1 || e.selectedIndex >= e.options.length - 2 )) {
-                this._populateYearRange();
+            if (this.flexibleYearRange() && (!this._setSelectBoxValue(this.yearSelect, year) ||
+                    this.yearSelect.selectedIndex <= 1 ||
+                    this.yearSelect.selectedIndex >= this.yearSelect.options.length - 2 )) {
+                var idx = 0, html = [];
+                this.yearRange().each(function(year){
+                    html[idx++] = '<option value="'+year+'">'+year+'</option>';
+                });
+                this.yearSelect.replace(html.join(''));
             }
-            this.yearSelect.setValue(year);
+            this._setSelectBoxValue(this.yearSelect, year)
         } else {
             this.yearLabel.update('&nbsp' + year.toString());
         }
     },
 
-    _populateYearRange : function() {
-        this.yearSelect.populate(this.yearRange().toArray());
-    },
-
     yearRange : function() {
         if (!this.flexibleYearRange())
             return $R(this.options.yearRange[0], this.options.yearRange[1]);
+        var currentYear = this.date.getFullYear();
+        return $R(currentYear - this.options.yearRange, currentYear + this.options.yearRange);
+    },
 
-        var y = this.date.getFullYear();
-        return $R(y - this.options.yearRange, y + this.options.yearRange);
+    _setSelectBoxValue: function(selectElement, value) {
+        var matched = false;
+        $R(0, selectElement.options.length - 1).each(function(i) {
+            if (selectElement.options[i].value == value.toString()) {
+                selectElement.selectedIndex = i;
+                matched = true;
+            }
+        });
+        return matched;
     },
 
     flexibleYearRange : function() {
@@ -438,16 +486,8 @@ MY.DatePicker = Class.create(MY.TextField, {
         }
     },
 
-    reparse : function() {
-        this._parseDate();
-        this._refresh();
-    },
-
     dateString : function() {
-        if (this.useTimeFlg)
-            return (this.selectionMade) ? this.selectedDate.format(this.format + ' hh:mm') : '&#160;';
-        else
-            return (this.selectionMade) ? this.selectedDate.format(this.format) : '&#160;';
+        return (this.selectionMade) ? this.selectedDate.format(this.format) : '&#160;';
     },
 
     getValue : function() {
@@ -462,9 +502,10 @@ MY.DatePicker = Class.create(MY.TextField, {
         this.selectionMade = (value != '');
         this.date = value == '' ? NaN : Date.parseString(this.options.date || value, this.format);
         if (isNaN(this.date) || this.date == null) this.date = new Date();
-        if (!this.validYear(this.date.getFullYear())) this.date.setYear((this.date.getFullYear() < this.yearRange().start) ? this.yearRange().start : this.yearRange().end);
+        if (!this.validYear(this.date.getFullYear()))
+            this.date.setYear((this.date.getFullYear() < this.yearRange().start) ? this.yearRange().start : this.yearRange().end);
         this.selectedDate = this.date;
-        this.useTimeFlg = /[0-9]:[0-9]{2}/.exec(value) ? true : false;
+        //this.useTimeFlg = /[0-9]:[0-9]{2}/.exec(value) ? true : false;
     },
 
     _updateFooter : function(text) {
@@ -481,7 +522,7 @@ MY.DatePicker = Class.create(MY.TextField, {
         if (lastValue != this.targetElement.value) this._callback('onchange');
     },
 
-    _updateSelectedDate : function(partsOrElement, via_click) {
+    _updateSelectedDate : function(partsOrElement, viaClickFlg) {
         var parts = $H(partsOrElement);
 
         if ((this.targetElement.disabled || this.targetElement.readOnly)
@@ -525,7 +566,7 @@ MY.DatePicker = Class.create(MY.TextField, {
         if (this.options.afterUpdate)
             this.options.afterUpdate(this.targetElement, selectedDate);
 
-        if (via_click && !this.options.embedded) {
+        if (viaClickFlg && !this.options.embedded) {
             if ((new Date() - this.lastClickAt) < 333) this._close();
             this.lastClickAt = new Date();
         }
