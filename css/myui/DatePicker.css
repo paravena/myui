@@ -1,6 +1,7 @@
 .my-datepicker {
     font-family: Arial, Helvetica, sans-serif;
-    color: white;
+    color: #fff;
+    background-color: #fff;
     border: #609 1px solid;
     display: block;
     width: 180px;
@@ -25,20 +26,22 @@
     height: 20px;
     font-size: 11px;
     color: black;
+    background-color: #fff;
     border-bottom: 2px #609 solid;
     padding: 2px;
 }
 
 .my-datepicker .my-datepicker-buttons {
+    color: black;
     text-align: center;
     padding: 2px 0;
     vertical-align: middle;
-    background: url(images/hrow.gif) repeat-x;
+    background-color: #e6d7f5;
 }
 
 .my-datepicker .my-datepicker-footer {
     /* bottom line */
-    background-color: #ddd;
+    background-color: #e6d7f5;
     padding: 3px;
     font-size: 11px;
     text-align: center;
@@ -63,6 +66,10 @@
 }
 
 .my-datepicker-header select {
+    font-size: 11px;
+}
+
+.my-datepicker-buttons select {
     font-size: 11px;
 }
 
@@ -108,8 +115,6 @@
 .my-datepicker-body td {
     /* weekday */
     font-size: 11px;
-    width: 18px;
-    height: 18px;
     background-color: white;
     text-align: center;
     vertical-align: middle;
