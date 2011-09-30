@@ -43,6 +43,7 @@ MY.DatePicker = Class.create(MY.TextField, {
             minuteInterval: 5,
             changeMonth: false,
             changeYear: false,
+            numberOfMonths : 1,
             validate: null
         }).merge(options || {}).toObject();
         this.useTimeFlg = this.options.time == 'mixed';
@@ -228,23 +229,25 @@ MY.DatePicker = Class.create(MY.TextField, {
 
     _initCalendarGrid : function() {
         var bodyDiv = this._bodyDiv;
+        var numberOfMonths = this.options.numberOfMonths;
         this._calendarDayGrid = [];
-        var idx = 0;
-        var html = [];
+        var idx = 0, html = [], i = 0;
         html[idx++] = '<table cellpadding="0" cellspacing="0" width="100%">';
         html[idx++] = '<thead>';
         html[idx++] = '<tr>';
-        Date.WEEK_DAYS.each(function(weekday) {
-            html[idx++] = '<th>'+weekday+'</th>';
-        });
+        for (i = 0; i < numberOfMonths; i++) {
+            Date.WEEK_DAYS.each(function(weekday) {
+                html[idx++] = '<th>'+weekday+'</th>';
+            });
+        }
         html[idx++] = '</tr>';
         html[idx++] = '</thead>';
         html[idx++] = '<tbody>';
-        for (var i = 0; i < 6; i++) {
+        for (i = 0; i < 6; i++) {
             html[idx++] = '<tr class="row_' + i + '">';
-            for (var j = 0; j < 7; j++) {
+            for (var j = 0; j < 7 * numberOfMonths; j++) {
                 var className = 'day';
-                if (j == 0 || j == 6) className += ' weekend';
+                if ((j % 7 == 0) || ((j + 1) % 7 == 0)) className += ' weekend';
                 html[idx++] = '<td id="mdpC'+this._mdpId+'_'+j+','+i+'" class="'+className+'"><div></div></td>';
             }
             html[idx++] = '</tr>';
@@ -371,25 +374,25 @@ MY.DatePicker = Class.create(MY.TextField, {
         this.beginningDate = new Date(this.date).stripTime();
         this.beginningDate.setDate(1);
         this.beginningDate.setHours(12); // Prevent daylight savings time boundaries from showing a duplicate day
-        var pre_days = this.beginningDate.getDay(); // draw some days before the fact
-        if (pre_days < 3) pre_days += 7;
-        this.beginningDate.setDate(1 - pre_days + Date.FIRST_DAY_OF_WEEK);
-
-        var iterator = new Date(this.beginningDate);
+        var preDays = this.beginningDate.getDay(); // draw some days before the fact
+        if (preDays < 3) preDays += 7;
+        this.beginningDate.setDate(1 - preDays + Date.FIRST_DAY_OF_WEEK);
+        var numberOfMonths = this.numberOfMonths;
+        var currentDate = this.beginningDate;
         var today = new Date().stripTime();
         var this_month = this.date.getMonth();
 
         for (var cellIndex = 0; cellIndex < 42; cellIndex++) {
-            var day = iterator.getDate();
-            var month = iterator.getMonth();
+            var day = currentDate.getDate();
+            var month = currentDate.getMonth();
             var cell = this._calendarDayGrid[cellIndex];
             var div = cell.down(); // div element
-            div.innerHTML = day;
             if (month != this_month) div.className = 'other';
+            div.innerHTML = day;
             cell.day = day;
             cell.month = month;
-            cell.year = iterator.getFullYear();
-            iterator.setDate(day + 1);
+            cell.year = currentDate.getFullYear();
+            currentDate.setDate(day + 1);
         }
 
         if (this.todayCell) this.todayCell.removeClassName('today');
