@@ -232,7 +232,7 @@ MY.DatePicker = Class.create(MY.TextField, {
         var numberOfMonths = this.options.numberOfMonths;
         this._calendarDayGrid = [];
         var idx = 0, html = [], i = 0;
-        html[idx++] = '<table cellpadding="0" cellspacing="0" width="100%">';
+        html[idx++] = '<table border="0" cellpadding="0" cellspacing="0" width="100%">';
         html[idx++] = '<thead>';
         html[idx++] = '<tr>';
         for (i = 0; i < numberOfMonths; i++) {
@@ -248,6 +248,7 @@ MY.DatePicker = Class.create(MY.TextField, {
             for (var j = 0; j < 7 * numberOfMonths; j++) {
                 var className = 'day';
                 if ((j % 7 == 0) || ((j + 1) % 7 == 0)) className += ' weekend';
+                if (j > 0 && j % 7 == 0) className += ' new-month-separator';
                 html[idx++] = '<td id="mdpC'+this._mdpId+'_'+j+','+i+'" class="'+className+'"><div></div></td>';
             }
             html[idx++] = '</tr>';
@@ -371,36 +372,53 @@ MY.DatePicker = Class.create(MY.TextField, {
     },
 
     _refreshCalendarGrid : function () {
-        this.beginningDate = new Date(this.date).stripTime();
-        this.beginningDate.setDate(1);
-        this.beginningDate.setHours(12); // Prevent daylight savings time boundaries from showing a duplicate day
-        var preDays = this.beginningDate.getDay(); // draw some days before the fact
-        if (preDays < 3) preDays += 7;
-        this.beginningDate.setDate(1 - preDays + Date.FIRST_DAY_OF_WEEK);
-        var numberOfMonths = this.numberOfMonths;
-        var currentDate = this.beginningDate;
+        var numberOfMonths = this.options.numberOfMonths;
+        var beginningDate = this.date.stripTime();
+        var beginningMonth = this.date.getMonth();
         var today = new Date().stripTime();
-        var this_month = this.date.getMonth();
+        var self = this;
+        $R(1, numberOfMonths).each(function(m){
+            beginningDate.setDate(1);
+            beginningDate.setHours(12); // Prevent daylight savings time boundaries from showing a duplicate day
+            beginningDate.setMonth(beginningMonth);
+            var preDays = beginningDate.getDay(); // draw some days before the fact
+            if (preDays < 3) preDays += 7;
+            beginningDate.setDate(1 - preDays + Date.FIRST_DAY_OF_WEEK);
+            for (var i = 0; i < 42; i++) {
+                var day = beginningDate.getDate();
+                var month = beginningDate.getMonth();
+                var cell = self._getCellByIndex(i, m);
 
-        for (var cellIndex = 0; cellIndex < 42; cellIndex++) {
-            var day = currentDate.getDate();
-            var month = currentDate.getMonth();
-            var cell = this._calendarDayGrid[cellIndex];
-            var div = cell.down(); // div element
-            if (month != this_month) div.className = 'other';
-            div.innerHTML = day;
-            cell.day = day;
-            cell.month = month;
-            cell.year = currentDate.getFullYear();
-            currentDate.setDate(day + 1);
-        }
-
+                var div = cell.down(); // div element
+                if (month != beginningMonth) div.className = 'other';
+                div.innerHTML = day;
+                cell.day = day;
+                cell.month = month;
+                cell.year = beginningDate.getFullYear();
+                beginningDate.setDate(day + 1);
+            }
+            beginningMonth++;
+        });
+        // TODO review this code
         if (this.todayCell) this.todayCell.removeClassName('today');
-        var daysUntil = this.beginningDate.stripTime().daysDistance(today);
+        var daysUntil = beginningDate.stripTime().daysDistance(today);
         if ($R(0, 41).include(daysUntil)) {
             this.todayCell = this._calendarDayGrid[daysUntil];
             this.todayCell.addClassName('today');
         }
+    },
+
+    _getCellByIndex : function(index, monthIdx) {
+        var numberOfMonths = this.options.numberOfMonths;
+        var row = Math.floor(index / 7);
+        var offset = index;
+        if (monthIdx > 1) {
+            offset += (monthIdx - 1) * (row + 1) * 7;
+        }
+        if (numberOfMonths > 1 && row > 0) {
+            offset += (numberOfMonths - monthIdx) * row * 7;
+        }
+        return this._calendarDayGrid[offset];
     },
 
     _refreshMonthYear : function() {

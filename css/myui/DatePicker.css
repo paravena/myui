@@ -4,7 +4,6 @@
     background-color: #fff;
     border: #609 1px solid;
     display: block;
-    width: 180px;
     padding: 3px;
     z-index: 1000;
 }
@@ -23,7 +22,6 @@
 
 .my-datepicker thead th {
     font-weight: bold;
-    height: 20px;
     font-size: 11px;
     color: black;
     background-color: #fff;
@@ -121,10 +119,11 @@
     padding: 2px;
 }
 
+/*
 .my-datepicker-body tbody tr:first-child td {
     border-top: 2px #fff solid;
 }
-
+*/
 .my-datepicker-body td.weekend {
     /* weekend */
     background-color: white;
@@ -183,4 +182,8 @@
     margin: 0;
     border: solid #609 1px;
     border-left-style: none;
+}
+
+.new-month-separator {
+    border-left: solid #609 2px;
 }
