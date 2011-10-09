@@ -20,40 +20,12 @@
     margin: 0;
 }
 
-.my-datepicker thead th {
-    font-weight: bold;
-    font-size: 11px;
-    color: black;
-    background-color: #fff;
-    border-bottom: 2px #609 solid;
-    padding: 2px;
-}
-
-.my-datepicker .my-datepicker-buttons {
-    color: black;
-    text-align: center;
-    padding: 2px 0;
-    vertical-align: middle;
-    background-color: #e6d7f5;
-}
-
-.my-datepicker .my-datepicker-footer {
-    /* bottom line */
-    background-color: #e6d7f5;
-    padding: 3px;
-    font-size: 11px;
-    text-align: center;
-    color: black;
-}
-
-.my-datepicker table {
-    margin: 0;
-    padding: 0;
-}
-
+/*************************************************/
+/* DatePicker Header                             */
+/*************************************************/
 .my-datepicker-header {
     padding: 3px 0;
-    background-color: #ddd;
+    background-color: #e6d7f5;
     text-align: center;
 }
 
@@ -64,10 +36,6 @@
 }
 
 .my-datepicker-header select {
-    font-size: 11px;
-}
-
-.my-datepicker-buttons select {
     font-size: 11px;
 }
 
@@ -110,13 +78,24 @@
     margin-right: 3px;
 }
 
+/*************************************************/
+/* DatePicker Body                               */
+/*************************************************/
+.my-datepicker-body th {
+    font-weight: bold;
+    font-size: 11px;
+    color: black;
+    background-color: #fff;
+    border-bottom: 2px #696969 solid;
+    padding: 2px;
+}
+
 .my-datepicker-body td {
     /* weekday */
     font-size: 11px;
     background-color: white;
     text-align: center;
     vertical-align: middle;
-    padding: 2px;
 }
 
 /*
@@ -124,14 +103,17 @@
     border-top: 2px #fff solid;
 }
 */
+
 .my-datepicker-body td.weekend {
     /* weekend */
     background-color: white;
+    padding: 1px;
 }
 
 .my-datepicker-body td div {
     /* days */
     color: black;
+    padding: 2px 4px;
 }
 
 .my-datepicker-body td div.other {
@@ -147,9 +129,12 @@
     background-color: white;
 }
 
-.my-datepicker-body td.focus {
+.my-datepicker-body td.focus div {
     /* day under cursor */
     background-color: #90c;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
 }
 
 .my-datepicker-body td.focus div {
@@ -166,10 +151,33 @@
     color: #454545;
 }
 
+/*************************************************/
+/* DatePicker Buttons                            */
+/*************************************************/
+.my-datepicker-buttons {
+    color: black;
+    text-align: center;
+    padding: 2px 0;
+    vertical-align: middle;
+    background-color: #e6d7f5;
+}
+
+.my-datepicker-buttons select {
+    font-size: 11px;
+}
+
 .my-datepicker-buttons a {
     color: black;
     vertical-align: middle;
     font-size: 9px;
+}
+
+.my-datepicker-footer {
+    background-color: #e6d7f5;
+    padding: 3px;
+    font-size: 11px;
+    text-align: center;
+    color: black;
 }
 
 .my-datepicker-select-button {
@@ -185,5 +193,5 @@
 }
 
 .new-month-separator {
-    border-left: solid #609 2px;
+    border-left: solid dimgray 2px;
 }

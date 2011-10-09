@@ -171,6 +171,11 @@ MY.DatePicker = Class.create(MY.TextField, {
 
     _initHeaderDiv : function() {
         var headerDiv = this._headerDiv;
+        var numberOfMonths = this.options.numberOfMonths;
+        if (numberOfMonths > 1) {
+            this.options.changeMonth = false;
+            this.options.changeYear = false;
+        }
         var idx = 0, html = [];
         html[idx++] = '<a href="#" class="next">&nbsp;</a>';
         html[idx++] = '<a href="#" class="prev">&nbsp;</a>';
@@ -236,8 +241,12 @@ MY.DatePicker = Class.create(MY.TextField, {
         html[idx++] = '<thead>';
         html[idx++] = '<tr>';
         for (i = 0; i < numberOfMonths; i++) {
-            Date.WEEK_DAYS.each(function(weekday) {
-                html[idx++] = '<th>'+weekday+'</th>';
+            Date.WEEK_DAYS.each(function(weekday, index) {
+                if (i > 0 && index % 7 == 0) {
+                    html[idx++] = '<th class="new-month-separator">'+weekday+'</th>';
+                } else {
+                    html[idx++] = '<th>'+weekday+'</th>';
+                }
             });
         }
         html[idx++] = '</tr>';
@@ -377,7 +386,7 @@ MY.DatePicker = Class.create(MY.TextField, {
         var beginningMonth = this.date.getMonth();
         var today = new Date().stripTime();
         var self = this;
-        $R(1, numberOfMonths).each(function(m){
+        $R(1, numberOfMonths).each(function(m) {
             beginningDate.setDate(1);
             beginningDate.setHours(12); // Prevent daylight savings time boundaries from showing a duplicate day
             beginningDate.setMonth(beginningMonth);
@@ -388,7 +397,6 @@ MY.DatePicker = Class.create(MY.TextField, {
                 var day = beginningDate.getDate();
                 var month = beginningDate.getMonth();
                 var cell = self._getCellByIndex(i, m);
-
                 var div = cell.down(); // div element
                 if (month != beginningMonth) div.className = 'other';
                 div.innerHTML = day;
@@ -400,11 +408,23 @@ MY.DatePicker = Class.create(MY.TextField, {
             beginningMonth++;
         });
         // TODO review this code
+        beginningDate = this.date.stripTime();
+        beginningMonth = this.date.getMonth();
         if (this.todayCell) this.todayCell.removeClassName('today');
-        var daysUntil = beginningDate.stripTime().daysDistance(today);
-        if ($R(0, 41).include(daysUntil)) {
-            this.todayCell = this._calendarDayGrid[daysUntil];
-            this.todayCell.addClassName('today');
+        for (var  i = 1; i <= numberOfMonths; i++) {
+            beginningDate.setDate(1);
+            beginningDate.setHours(12);
+            beginningDate.setMonth(beginningMonth);
+            var preDays = beginningDate.getDay(); // draw some days before the fact
+            if (preDays < 3) preDays += 7;
+            beginningDate.setDate(1 - preDays + Date.FIRST_DAY_OF_WEEK);
+            var daysUntil = beginningDate.daysDistance(today);
+            if ($R(0, 41).include(daysUntil)) {
+                this.todayCell = this._getCellByIndex(daysUntil, i);
+                this.todayCell.addClassName('today');
+                break;
+            }
+            beginningMonth++;
         }
     },
 
@@ -498,7 +518,7 @@ MY.DatePicker = Class.create(MY.TextField, {
     _setSelectedClass : function() {
         if (!this.selectionMade) return;
         this._clearSelectedClass();
-        var daysUntil = this.beginningDate.stripTime().daysDistance(this.selectedDate.stripTime());
+        var daysUntil = this.date.stripTime().daysDistance(this.selectedDate.stripTime());
         if ($R(0, 42).include(daysUntil)) {
             this.selectedCell = this._calendarDayGrid[daysUntil];
             this.selectedCell.addClassName('selected');
