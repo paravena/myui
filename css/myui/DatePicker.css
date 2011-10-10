@@ -67,13 +67,15 @@
 }
 
 .my-datepicker-header a.prev {
-    float: left;
+    position: absolute;
+    left: 2px;
     background: url(images/prev.gif) center no-repeat transparent;
     margin-left: 3px;
 }
 
 .my-datepicker-header a.next {
-    float: right;
+    position: absolute;
+    right: 2px;
     background: url(images/next.gif) center no-repeat transparent;
     margin-right: 3px;
 }

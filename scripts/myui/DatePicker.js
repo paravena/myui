@@ -179,28 +179,36 @@ MY.DatePicker = Class.create(MY.TextField, {
         var idx = 0, html = [];
         html[idx++] = '<a href="#" class="next">&nbsp;</a>';
         html[idx++] = '<a href="#" class="prev">&nbsp;</a>';
+        html[idx++] = '<table width="100%" cellpadding="0" cellspacing="0">';
+        html[idx++] = '<tr>';
+        for (var i = 1; i <= numberOfMonths; i++) {
+            html[idx++] = '<td>';
+            if (this.options.changeMonth) {
+                html[idx++] = '<select class="month">';
+                $R(0, 11).each(function(month) {
+                    html[idx++] =  '<option value="'+month+'">'+Date.MONTH_NAMES[month]+'</option>';
+                }),
+                html[idx++] = '</select>';
+            } else {
+                html[idx++] = '<span id="mdpMonthLabel_'+i+'" class="my-datepicker-month-label">';
+                html[idx++] = '</span>';
+            }
 
-        if (this.options.changeMonth) {
-            html[idx++] = '<select class="month">';
-            $R(0, 11).each(function(month) {
-                html[idx++] =  '<option value="'+month+'">'+Date.MONTH_NAMES[month]+'</option>';
-            }),
-            html[idx++] = '</select>';
-        } else {
-            headerDiv.insert(new Element('span', {className : 'my-datepicker-month-label'}));
-            this.monthLabel = headerDiv.down('.my-datepicker-month-label');
+            if (this.options.changeYear) {
+                html[idx++] = '<select class="year">';
+                this.yearRange().each(function(year){
+                    html[idx++] = '<option value="'+year+'">'+year+'</option>';
+                });
+                html[idx++] = '</select>';
+            } else {
+                html[idx++] = '&nbsp;';
+                html[idx++] = '<span id="mdpYearLabel_'+i+'" class="my-datepicker-year-label">';
+                html[idx++] = '</span>';
+            }
+            html[idx++] = '</td>';
         }
-
-        if (this.options.changeYear) {
-            html[idx++] = '<select class="year">';
-            this.yearRange().each(function(year){
-                html[idx++] = '<option value="'+year+'">'+year+'</option>';
-            });
-            html[idx++] = '</select>';
-        } else {
-            headerDiv.insert(new Element('span', {className : 'my-datepicker-year-label'}));
-            this.yearLabel = headerDiv.down('.my-datepicker-year-label');
-        }
+        html[idx++] = '</tr>';
+        html[idx++] = '</table>';
         headerDiv.insert(html.join(''));
     },
 
@@ -444,10 +452,14 @@ MY.DatePicker = Class.create(MY.TextField, {
     _refreshMonthYear : function() {
         var month = this.date.getMonth();
         var year = this.date.getFullYear();
+        var numberOfMonths = this.options.numberOfMonths;
+        
         if (this.options.changeMonth) {
             this._setSelectBoxValue(this.monthSelect, month);
         } else {
-            this.monthLabel.update(Date.MONTH_NAMES[month]);
+            $R(1, numberOfMonths).each(function(i) {
+                $('mdpMonthLabel_'+i).update(Date.MONTH_NAMES[month++ % 12])
+            });
         }
 
         if (this.options.changeYear) {
@@ -462,7 +474,9 @@ MY.DatePicker = Class.create(MY.TextField, {
             }
             this._setSelectBoxValue(this.yearSelect, year)
         } else {
-            this.yearLabel.update('&nbsp' + year.toString());
+            $R(1, numberOfMonths).each(function(i) {
+                $('mdpYearLabel_'+i).update(year);
+            });
         }
     },
 
