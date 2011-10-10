@@ -93,7 +93,7 @@ MY.DatePicker = Class.create(MY.TextField, {
             this._positionCalendarDiv();
             // set the click handler to check if a user has clicked away from the document
             this._closeIfClickedOutHandler = this._closeIfClickedOut.bindAsEventListener(this);
-             $(document).observe('click', this._closeIfClickedOutHandler);
+            $(document).observe('click', this._closeIfClickedOutHandler);
         }
         this._callback('afterShow');
         this.visibleFlg = true;
@@ -218,24 +218,24 @@ MY.DatePicker = Class.create(MY.TextField, {
         var prevMonthButton = headerDiv.down('.prev');
 
         nextMonthButton.observe('click', function() {
-            this.navMonth(this.date.getMonth() + 1);
+            this._navMonth(this.date.getMonth() + 1);
         }.bindAsEventListener(this));
 
         prevMonthButton.observe('click', function() {
-            this.navMonth(this.date.getMonth() - 1);
+            this._navMonth(this.date.getMonth() - 1);
         }.bindAsEventListener(this));
 
         this.monthSelect = headerDiv.down('.month');
         if (this.monthSelect) {
             this.monthSelect.observe('change', function() {
-                this.navMonth($F(this.monthSelect));
+                this._navMonth($F(this.monthSelect));
             }.bindAsEventListener(this));
         }
 
         this.yearSelect = headerDiv.down('.year');
         if (this.yearSelect) {
             this.monthSelect.observe('change', function() {
-                this.navYear($F(this.yearSelect));
+                this._navYear($F(this.yearSelect));
             }.bindAsEventListener(this));
         }
     },
@@ -392,48 +392,48 @@ MY.DatePicker = Class.create(MY.TextField, {
         var numberOfMonths = this.options.numberOfMonths;
         var beginningDate = this.date.stripTime();
         var beginningMonth = this.date.getMonth();
+        var beginningYear = this.date.getFullYear();
         var today = new Date().stripTime();
         var self = this;
+        if (this.todayCell) this.todayCell.removeClassName('today');
         $R(1, numberOfMonths).each(function(m) {
-            beginningDate.setDate(1);
+            beginningDate = new Date(beginningYear, beginningMonth, 1);
+            //beginningDate.setMonth(beginningMonth);
+            //beginningDate.setYear(beginningYear);
+            //beginningDate.setDate(1);
             beginningDate.setHours(12); // Prevent daylight savings time boundaries from showing a duplicate day
-            beginningDate.setMonth(beginningMonth);
             var preDays = beginningDate.getDay(); // draw some days before the fact
             if (preDays < 3) preDays += 7;
             beginningDate.setDate(1 - preDays + Date.FIRST_DAY_OF_WEEK);
+            var setTodayFlg = false;
+            var daysUntil = beginningDate.daysDistance(today);
+            if ($R(0, 41).include(daysUntil) && !setTodayFlg) {
+                self.todayCell = self._getCellByIndex(daysUntil, m).addClassName('today');
+                setTodayFlg = true;
+            }
+            console.log('beginning month ' + beginningMonth);
             for (var i = 0; i < 42; i++) {
                 var day = beginningDate.getDate();
                 var month = beginningDate.getMonth();
                 var cell = self._getCellByIndex(i, m);
                 var div = cell.down(); // div element
-                if (month != beginningMonth) div.className = 'other';
-                div.innerHTML = day;
+                if (month != beginningMonth) {
+                    console.log('month: ' + month + ' day ' + day);
+                    div.className = 'other';
+                }
+                div.update(day);
                 cell.day = day;
                 cell.month = month;
                 cell.year = beginningDate.getFullYear();
                 beginningDate.setDate(day + 1);
             }
-            beginningMonth++;
-        });
-        // TODO review this code
-        beginningDate = this.date.stripTime();
-        beginningMonth = this.date.getMonth();
-        if (this.todayCell) this.todayCell.removeClassName('today');
-        for (var  i = 1; i <= numberOfMonths; i++) {
-            beginningDate.setDate(1);
-            beginningDate.setHours(12);
-            beginningDate.setMonth(beginningMonth);
-            var preDays = beginningDate.getDay(); // draw some days before the fact
-            if (preDays < 3) preDays += 7;
-            beginningDate.setDate(1 - preDays + Date.FIRST_DAY_OF_WEEK);
-            var daysUntil = beginningDate.daysDistance(today);
-            if ($R(0, 41).include(daysUntil)) {
-                this.todayCell = this._getCellByIndex(daysUntil, i);
-                this.todayCell.addClassName('today');
-                break;
+            if ((beginningMonth + 1) > 11) {
+                beginningMonth = 0;
+                beginningYear++;
+            } else {
+                beginningMonth++;
             }
-            beginningMonth++;
-        }
+        });
     },
 
     _getCellByIndex : function(index, monthIdx) {
@@ -449,16 +449,24 @@ MY.DatePicker = Class.create(MY.TextField, {
         return this._calendarDayGrid[offset];
     },
 
+    /**
+     * Refresh months and years at header bar area
+     */
     _refreshMonthYear : function() {
         var month = this.date.getMonth();
         var year = this.date.getFullYear();
         var numberOfMonths = this.options.numberOfMonths;
-        
+
         if (this.options.changeMonth) {
             this._setSelectBoxValue(this.monthSelect, month);
         } else {
             $R(1, numberOfMonths).each(function(i) {
-                $('mdpMonthLabel_'+i).update(Date.MONTH_NAMES[month++ % 12])
+                $('mdpMonthLabel_'+i).update(Date.MONTH_NAMES[month]);
+                if ((month + 1) > 11) {
+                    month = 0;
+                } else {
+                    month++;
+                }
             });
         }
 
@@ -474,8 +482,15 @@ MY.DatePicker = Class.create(MY.TextField, {
             }
             this._setSelectBoxValue(this.yearSelect, year)
         } else {
+            month = this.date.getMonth();
             $R(1, numberOfMonths).each(function(i) {
                 $('mdpYearLabel_'+i).update(year);
+                if ((month + 1) > 11) {
+                    month = 0;
+                    year++;
+                } else {
+                    month++;
+                }
             });
         }
     },
@@ -631,19 +646,19 @@ MY.DatePicker = Class.create(MY.TextField, {
             return (this.options.closeOnClick)
     },
 
-    navMonth : function(month) {
+    _navMonth : function(month) {
         var targetDate = new Date(this.date);
         targetDate.setMonth(month);
-        return (this.navTo(targetDate));
+        return (this._navTo(targetDate));
     },
 
-    navYear : function(year) {
+    _navYear : function(year) {
         var targetDate = new Date(this.date);
         targetDate.setYear(year);
-        return (this.navTo(targetDate));
+        return (this._navTo(targetDate));
     },
 
-    navTo : function(date) {
+    _navTo : function(date) {
         if (!this.validYear(date.getFullYear())) return false;
         this.date = date;
         this.date.setDate(1);
