@@ -411,15 +411,15 @@ MY.DatePicker = Class.create(MY.TextField, {
                 self.todayCell = self._getCellByIndex(daysUntil, m).addClassName('today');
                 setTodayFlg = true;
             }
-            console.log('beginning month ' + beginningMonth);
             for (var i = 0; i < 42; i++) {
                 var day = beginningDate.getDate();
                 var month = beginningDate.getMonth();
                 var cell = self._getCellByIndex(i, m);
                 var div = cell.down(); // div element
                 if (month != beginningMonth) {
-                    console.log('month: ' + month + ' day ' + day);
-                    div.className = 'other';
+                    div.addClassName('other');
+                } else {
+                    div.removeClassName('other');
                 }
                 div.update(day);
                 cell.day = day;
