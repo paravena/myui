@@ -398,9 +398,6 @@ MY.DatePicker = Class.create(MY.TextField, {
         if (this.todayCell) this.todayCell.removeClassName('today');
         $R(1, numberOfMonths).each(function(m) {
             beginningDate = new Date(beginningYear, beginningMonth, 1);
-            //beginningDate.setMonth(beginningMonth);
-            //beginningDate.setYear(beginningYear);
-            //beginningDate.setDate(1);
             beginningDate.setHours(12); // Prevent daylight savings time boundaries from showing a duplicate day
             var preDays = beginningDate.getDay(); // draw some days before the fact
             if (preDays < 3) preDays += 7;
@@ -547,11 +544,31 @@ MY.DatePicker = Class.create(MY.TextField, {
     _setSelectedClass : function() {
         if (!this.selectionMade) return;
         this._clearSelectedClass();
-        var daysUntil = this.date.stripTime().daysDistance(this.selectedDate.stripTime());
-        if ($R(0, 42).include(daysUntil)) {
-            this.selectedCell = this._calendarDayGrid[daysUntil];
-            this.selectedCell.addClassName('selected');
-        }
+        var selectedDate = this.selectedDate.stripTime();
+        var numberOfMonths = this.options.numberOfMonths;
+        var beginningDate = this.date.stripTime();
+        var beginningMonth = this.date.getMonth();
+        var beginningYear = this.date.getFullYear();
+        var self = this;
+        $R(1, numberOfMonths).each(function(m) {
+            beginningDate = new Date(beginningYear, beginningMonth, 1);
+            beginningDate.setHours(12); // Prevent daylight savings time boundaries from showing a duplicate day
+            var preDays = beginningDate.getDay(); // draw some days before the fact
+            if (preDays < 3) preDays += 7;
+            beginningDate.setDate(1 - preDays + Date.FIRST_DAY_OF_WEEK);
+            var setTodayFlg = false;
+            var daysUntil = beginningDate.daysDistance(selectedDate);
+            if ($R(0, 41).include(daysUntil) && !setTodayFlg) {
+                self.selectedCell = self._getCellByIndex(daysUntil, m).addClassName('selected');
+                setTodayFlg = true;
+            }
+            if ((beginningMonth + 1) > 11) {
+                beginningMonth = 0;
+                beginningYear++;
+            } else {
+                beginningMonth++;
+            }
+        });
     },
 
     dateString : function() {
@@ -622,7 +639,7 @@ MY.DatePicker = Class.create(MY.TextField, {
         this._setSelectedClass();
 
         if (this.selectionMade) {
-            this.updateValue();
+            this._updateValue();
             this.validate();
         }
 
@@ -680,10 +697,10 @@ MY.DatePicker = Class.create(MY.TextField, {
         }
     },
 
-    updateValue : function() {
-        var last_value = this.targetElement.value;
+    _updateValue : function() {
+        var lastValue = this.targetElement.value;
         this.targetElement.value = this.dateString();
-        if (last_value != this.targetElement.value) this._callback('onchange');
+        if (lastValue != this.targetElement.value) this._callback('onchange');
     },
 
     today : function(now) {
