@@ -407,6 +407,7 @@ MY.DatePicker = Class.create(MY.TextField, {
 
     _refreshCalendarGrid : function () {
         var numberOfMonths = this.options.numberOfMonths;
+        var showWeek = this.options.showWeek;
         var beginningDate = this.date.stripTime();
         var beginningMonth = this.date.getMonth();
         var beginningYear = this.date.getFullYear();
@@ -429,7 +430,7 @@ MY.DatePicker = Class.create(MY.TextField, {
                 var day = beginningDate.getDate();
                 var month = beginningDate.getMonth();
                 var cell = self._getCellByIndex(i, m);
-                if (i % 7 == 0) {
+                if (i % 7 == 0 && showWeek) {
                     var weekCell = cell.previousSiblings()[0];
                     weekCell.down().update(beginningDate.getWeek());
                 }
