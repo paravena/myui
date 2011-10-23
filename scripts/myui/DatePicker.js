@@ -43,6 +43,7 @@ MY.DatePicker = Class.create(MY.TextField, {
             minuteInterval: 5,
             changeMonth: false,
             changeYear: false,
+            showWeek: false,
             numberOfMonths : 1,
             validate: null
         }).merge(options || {}).toObject();
@@ -243,14 +244,23 @@ MY.DatePicker = Class.create(MY.TextField, {
     _initCalendarGrid : function() {
         var bodyDiv = this._bodyDiv;
         var numberOfMonths = this.options.numberOfMonths;
+        var showWeek = this.options.showWeek;
         this._calendarDayGrid = [];
         var idx = 0, html = [], i = 0;
         html[idx++] = '<table border="0" cellpadding="0" cellspacing="0" width="100%">';
         html[idx++] = '<thead>';
         html[idx++] = '<tr>';
+
         for (i = 0; i < numberOfMonths; i++) {
+            if (showWeek) {
+                if (i > 0) {
+                    html[idx++] = '<th class="new-month-separator">Week</th>'; // TODO hard coded
+                } else {
+                    html[idx++] = '<th>Week</th>'; // TODO hard coded
+                }
+            }
             Date.WEEK_DAYS.each(function(weekday, index) {
-                if (i > 0 && index % 7 == 0) {
+                if (i > 0 && index % 7 == 0 && !showWeek) {
                     html[idx++] = '<th class="new-month-separator">'+weekday+'</th>';
                 } else {
                     html[idx++] = '<th>'+weekday+'</th>';
@@ -263,9 +273,16 @@ MY.DatePicker = Class.create(MY.TextField, {
         for (i = 0; i < 6; i++) {
             html[idx++] = '<tr class="row_' + i + '">';
             for (var j = 0; j < 7 * numberOfMonths; j++) {
+                if (showWeek && j % 7 == 0) {
+                    if (j > 0) {
+                        html[idx++] = '<td class="week-number new-month-separator"><div></div></td>';
+                    } else {
+                        html[idx++] = '<td class="week-number"><div></div></td>';
+                    }
+                }
                 var className = 'day';
                 if ((j % 7 == 0) || ((j + 1) % 7 == 0)) className += ' weekend';
-                if (j > 0 && j % 7 == 0) className += ' new-month-separator';
+                if (j > 0 && j % 7 == 0 && !showWeek) className += ' new-month-separator';
                 html[idx++] = '<td id="mdpC'+this._mdpId+'_'+j+','+i+'" class="'+className+'"><div></div></td>';
             }
             html[idx++] = '</tr>';
@@ -412,6 +429,10 @@ MY.DatePicker = Class.create(MY.TextField, {
                 var day = beginningDate.getDate();
                 var month = beginningDate.getMonth();
                 var cell = self._getCellByIndex(i, m);
+                if (i % 7 == 0) {
+                    var weekCell = cell.previousSiblings()[0];
+                    weekCell.down().update(beginningDate.getWeek());
+                }
                 var div = cell.down(); // div element
                 if (month != beginningMonth) {
                     div.addClassName('other');
