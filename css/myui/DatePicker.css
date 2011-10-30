@@ -168,7 +168,7 @@
 /*************************************************/
 /* DatePicker Buttons                            */
 /*************************************************/
-.my-datepicker-buttons {
+.my-datepicker-footer {
     color: black;
     text-align: center;
     padding: 2px 0;
@@ -176,22 +176,14 @@
     background-color: #e6d7f5;
 }
 
-.my-datepicker-buttons select {
+.my-datepicker-footer select {
     font-size: 11px;
 }
 
-.my-datepicker-buttons a {
+.my-datepicker-footer a {
     color: black;
     vertical-align: middle;
     font-size: 9px;
-}
-
-.my-datepicker-footer {
-    background-color: #e6d7f5;
-    padding: 3px;
-    font-size: 11px;
-    text-align: center;
-    color: black;
 }
 
 .my-datepicker-select-button {

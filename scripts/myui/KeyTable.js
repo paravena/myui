@@ -38,7 +38,7 @@ KeyTable.prototype = {
         } else {
             this._targetTable = targetTable; // a normal table
             this._numberOfRows = this._targetTable.rows.length;
-            this._numberOfColumns = this._targetTable.rows[0].cells.length;
+            this._numberOfColumns = options.numberOfColumns || this._targetTable.rows[0].cells.length;
         }
 
         this.idPrefix = options.idPrefix || '';
