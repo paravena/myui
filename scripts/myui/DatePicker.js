@@ -418,7 +418,7 @@ MY.DatePicker = Class.create(MY.TextField, {
             beginningDate.setDate(1 - preDays + Date.FIRST_DAY_OF_WEEK);
             var setTodayFlg = false;
             var daysUntil = beginningDate.daysDistance(today);
-            if ($R(0, 41).include(daysUntil) && !setTodayFlg) {
+            if ($R(0, 41).include(daysUntil) && !setTodayFlg && today.getMonth() == beginningMonth) {
                 self.todayCell = self._getCellByIndex(daysUntil, m).addClassName('today');
                 setTodayFlg = true;
             }
@@ -584,7 +584,6 @@ MY.DatePicker = Class.create(MY.TextField, {
             beginningDate = new Date(beginningYear, beginningMonth, 1);
             beginningDate.setHours(12); // Prevent daylight savings time boundaries from showing a duplicate day
             var preDays = beginningDate.getDay(); // draw some days before the fact
-            if (preDays < 3) preDays += 7;
             beginningDate.setDate(1 - preDays + Date.FIRST_DAY_OF_WEEK);
             var setTodayFlg = false;
             var daysUntil = beginningDate.daysDistance(selectedDate);
