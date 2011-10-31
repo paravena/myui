@@ -323,7 +323,7 @@ MY.DatePicker = Class.create(MY.TextField, {
         if (this.options.buttons) {
             html[idx++] = '<span>&nbsp;</span>';
             if (this.options.time == 'mixed' || !this.options.time) {
-                html[idx++] = '<a href="#" class="today-button">'+i18n.getMessage('label.today')+'</a>';
+                html[idx++] = '<a href="#" class="toolbar-button today-button"><span class="text">'+i18n.getMessage('label.today')+'</span></a>';
             }
 
             if (this.options.time == 'mixed') {
@@ -331,17 +331,17 @@ MY.DatePicker = Class.create(MY.TextField, {
             }
 
             if (this.options.time) {
-                html[idx++] = '<a href="#" class="now-button">'+i18n.getMessage('label.now')+'</a>';
+                html[idx++] = '<a href="#" class="toolbar-button now-button"><span class="text">'+i18n.getMessage('label.now')+'</span></a>';
             }
 
             if (!this.options.embedded && !this._closeOnClick()) {
                 html[idx++] = '<span class="button-separator">&nbsp;</span>';
-                html[idx++] = '<a href="#" class="close-button">'+i18n.getMessage('label.ok')+'</a>';
+                html[idx++] = '<a href="#" class="toolbar-button close-button"><span class="text">'+i18n.getMessage('label.ok')+'</span></a>';
             }
 
             if (this.options.clearButton) {
                 html[idx++] = '<span class="button-separator">&nbsp;</span>';
-                html[idx++] = '<a href="#" class="clear-button">'+i18n.getMessage('label.clear')+'</a>';
+                html[idx++] = '<a href="#" class="toolbar-button clear-button"><span class="text">'+i18n.getMessage('label.clear')+'</span></a>';
             }
             footerDiv.insert(html.join(''));
         }
@@ -433,7 +433,7 @@ MY.DatePicker = Class.create(MY.TextField, {
                     weekCell.down().update(beginningDate.getWeek());
                 } else {
                     weekCell = cell.previousSiblings()[0];
-                    weekCell.removeClassName('week-number');
+                    if (weekCell) weekCell.removeClassName('week-number');
                 }
                 var div = cell.down(); // div element
                 if (month != beginningMonth) {
@@ -776,7 +776,7 @@ MY.DatePicker = Class.create(MY.TextField, {
     },
 
     _applyKeyboardBehavior : function() {
-        var i= 0, self = this;
+        var i = 0, self = this;
         var numberOfMonths = this.options.numberOfMonths;
         var showWeek = this.options.showWeek;
         this.keys = new KeyTable(this.daysTable, {
@@ -786,39 +786,41 @@ MY.DatePicker = Class.create(MY.TextField, {
         for (i = 0; i < this._calendarDayGrid.length; i++) {
             var element = this._calendarDayGrid[i];
             (function(element) {
-                element.observe('mouseover', function () {
-                    self._dayHover(this);
-                });
+                if (element.hasClassName('day')) {
+                    element.observe('mouseover', function () {
+                            self._dayHover(this);
+                    });
 
-                element.observe('mouseout', function () {
-                    self._dayHoverOut(this)
-                });
+                    element.observe('mouseout', function () {
+                        self._dayHoverOut(this)
+                    });
 
-                element.observe('click', function() {
-                    self.keys.setFocus(element, false);
-                    self.keys.captureKeys();
-                    self.keys.eventFire('focus', element);
-                    self._updateSelectedDate(this, true);
-                });
+                    element.observe('click', function() {
+                        self.keys.setFocus(element, false);
+                        self.keys.captureKeys();
+                        self.keys.eventFire('focus', element);
+                        self._updateSelectedDate(this, true);
+                    });
 
-                self.keys.event.remove.focus(element);
-                var f_focus = (function(element) {
-                    return function() {
-                        self._calendarDayGrid.each(function(td) {
-                            td.removeClassName('focus');
-                        });
-                        self._dayHover(element);
-                    };
-                })(element);
-                self.keys.event.focus(element, f_focus);
+                    self.keys.event.remove.focus(element);
+                    var f_focus = (function(element) {
+                        return function() {
+                            self._calendarDayGrid.each(function(td) {
+                                td.removeClassName('focus');
+                            });
+                            self._dayHover(element);
+                        };
+                    })(element);
+                    self.keys.event.focus(element, f_focus);
 
-                self.keys.event.remove.action(element);
-                var f_action = (function(element) {
-                    return function() {
-                        self._updateSelectedDate(element, true);
-                    };
-                })(element);
-                self.keys.event.action(element, f_action);
+                    self.keys.event.remove.action(element);
+                    var f_action = (function(element) {
+                        return function() {
+                            self._updateSelectedDate(element, true);
+                        };
+                    })(element);
+                    self.keys.event.action(element, f_action);
+                }
             })(element);
         }
 

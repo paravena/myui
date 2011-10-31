@@ -87,6 +87,7 @@ a.toolbar-button span.text {
     color: #333;
     line-height: 16px;
     vertical-align: middle;
+    font-weight: bold;
 }
 
 /* Setting button */
