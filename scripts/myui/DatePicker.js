@@ -176,9 +176,9 @@ MY.DatePicker = Class.create(MY.TextField, {
             this.options.changeYear = false;
         }
         var idx = 0, html = [];
-        html[idx++] = '<a href="#" class="next">&nbsp;</a>';
-        html[idx++] = '<a href="#" class="prev">&nbsp;</a>';
-        html[idx++] = '<span id="mdpSelectedDate_'+id+'"></span>';
+        html[idx++] = '<a href="#" class="toolbar-button prev"><span class="icon" style="margin: 1px 0">&nbsp;</span></a>';
+        html[idx++] = '<a href="#" class="toolbar-button next"><span class="icon" style="margin: 1px 0">&nbsp;</span></a>';
+        html[idx++] = '<span id="mdpSelectedDate_'+id+'" class="selected-date"></span>';
         headerDiv.insert(html.join(''));
     },
 
@@ -295,7 +295,6 @@ MY.DatePicker = Class.create(MY.TextField, {
         var idx = 0, html = [];
         if (this.options.time) {
             var timeItems = $A(this.options.time == 'mixed' ? [[' - ', '']] : []);
-            html[idx++] = '<span class="at-sign">@&nbsp;</span>';
             var currentTime = new Date();
             var self = this;
             html[idx++] = '<select class="hour">';
@@ -306,7 +305,7 @@ MY.DatePicker = Class.create(MY.TextField, {
                     html[idx++] = '<option value="'+hour[1]+'">'+hour[0]+'</option>';
                 });
             html[idx++] = '</select>';
-            html[idx++] = '<span class="separator">:</span>';
+            html[idx++] = '<span class="separator">&nbsp;:&nbsp;</span>';
             html[idx++] = '<select class="minute">';
             timeItems.concat($R(0, 59).select(function(min) {
                     return (min % self.options.minuteInterval == 0)
@@ -321,13 +320,9 @@ MY.DatePicker = Class.create(MY.TextField, {
         }
 
         if (this.options.buttons) {
-            html[idx++] = '<span>&nbsp;</span>';
+            html[idx++] = '<span class="buttons-container">';
             if (this.options.time == 'mixed' || !this.options.time) {
                 html[idx++] = '<a href="#" class="toolbar-button today-button"><span class="text">'+i18n.getMessage('label.today')+'</span></a>';
-            }
-
-            if (this.options.time == 'mixed') {
-                html[idx++] = '<span class="button-separator">&nbsp;</span>';
             }
 
             if (this.options.time) {
@@ -335,16 +330,15 @@ MY.DatePicker = Class.create(MY.TextField, {
             }
 
             if (!this.options.embedded && !this._closeOnClick()) {
-                html[idx++] = '<span class="button-separator">&nbsp;</span>';
                 html[idx++] = '<a href="#" class="toolbar-button close-button"><span class="text">'+i18n.getMessage('label.ok')+'</span></a>';
             }
 
             if (this.options.clearButton) {
-                html[idx++] = '<span class="button-separator">&nbsp;</span>';
                 html[idx++] = '<a href="#" class="toolbar-button clear-button"><span class="text">'+i18n.getMessage('label.clear')+'</span></a>';
             }
-            footerDiv.insert(html.join(''));
+            html[idx++] = '</span>';
         }
+        footerDiv.insert(html.join(''));
     },
 
     _initButtonDivBehavior : function() {
@@ -623,7 +617,7 @@ MY.DatePicker = Class.create(MY.TextField, {
 
     _updateHeader : function(text) {
         if (!text) text = this.dateString();
-        $('mdpSelectedDate_'+this._mdpId).update('<span>'+text+'</span>');
+        $('mdpSelectedDate_'+this._mdpId).update(text);
     },
 
     clearDate : function() {

@@ -24,15 +24,19 @@
 /* DatePicker Header                             */
 /*************************************************/
 .my-datepicker-header {
+    position: relative;
     padding: 3px 0;
-    background-color: #e6d7f5;
+    background-color: #ddd;
     text-align: center;
+    height: 24px;
 }
 
-.my-datepicker-header span {
-    font-size: 11px;
-    color: black;
+.my-datepicker-header span.selected-date {
+    font-size: 12px;
+    color: #609;
     font-weight: bold;
+    padding: 4px;
+    display: block;
 }
 
 .my-datepicker-header select {
@@ -68,16 +72,20 @@
 
 .my-datepicker-header a.prev {
     position: absolute;
-    left: 2px;
+    left: 5px;
+}
+
+.my-datepicker-header a.prev span {
     background: url(images/prev.gif) center no-repeat transparent;
-    margin-left: 3px;
 }
 
 .my-datepicker-header a.next {
     position: absolute;
-    right: 2px;
+    right: 5px;
+}
+
+.my-datepicker-header a.next span {
     background: url(images/next.gif) center no-repeat transparent;
-    margin-right: 3px;
 }
 
 /*************************************************/
@@ -169,21 +177,23 @@
 /* DatePicker Buttons                            */
 /*************************************************/
 .my-datepicker-footer {
-    color: black;
-    text-align: center;
-    padding: 2px 0;
+    position: relative;
+    color: #609;
+    font-weight: bold;
+    padding: 3px;
     vertical-align: middle;
-    background-color: #e6d7f5;
+    background-color: #ddd;
+    height: 24px;
 }
 
 .my-datepicker-footer select {
-    font-size: 11px;
+    font-size: 12px;
 }
 
 .my-datepicker-footer a {
     color: black;
-    vertical-align: middle;
     font-size: 9px;
+    vertical-align: middle;
 }
 
 .my-datepicker-select-button {
@@ -196,6 +206,13 @@
     margin: 0;
     border: solid #609 1px;
     border-left-style: none;
+}
+
+.my-datepicker-footer .buttons-container {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    right: 5px;
 }
 
 .new-month-separator {
