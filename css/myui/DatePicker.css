@@ -94,46 +94,39 @@
 .my-datepicker-body th {
     font-weight: bold;
     font-size: 11px;
-    color: black;
+
+    color: #000;
     background-color: #fff;
-    border-bottom: 2px #696969 solid;
+    border-bottom: 1px #ddd solid;
     padding: 2px;
 }
 
-.my-datepicker-body td {
-    /* weekday */
-    font-size: 11px;
-    background-color: white;
-    text-align: center;
-    vertical-align: middle;
+.my-datepicker-body .month-label {
+    text-transform: uppercase;
+    text-shadow: 0 1px 1px #ddd;
 }
 
-/*
-.my-datepicker-body tbody tr:first-child td {
-    border-top: 2px #fff solid;
-}
-*/
 
 .my-datepicker-body td.week-number {
     padding: 2px;
 }
 
 .my-datepicker-body td.week-number div {
-    background-color: #696969;
+    background-color: #96dd3b;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
     color: #fff;
 }
-
-.my-datepicker-body td.weekend {
-    /* weekend */
+/* Week day */
+.my-datepicker-body td {
+    font-size: 11px;
     background-color: white;
-    padding: 1px;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .my-datepicker-body td div {
-    /* days */
     color: black;
     padding: 2px 4px;
 }
@@ -142,17 +135,28 @@
     color: #aaa;
 }
 
-.my-datepicker-body td.selected div {
-    /* selected date */
-    color: red;
+/* Weekend */
+.my-datepicker-body td.weekend {
+    background-color: white;
+    padding: 1px;
 }
 
+/* selected date */
 .my-datepicker-body td.selected {
     background-color: white;
 }
 
+.my-datepicker-body td.selected div {
+    color: red;
+}
+
+/* current date */
+.my-datepicker-body td.today {
+    border: 1px dashed red;
+}
+
+/* day under cursor */
 .my-datepicker-body td.focus div {
-    /* day under cursor */
     background-color: #90c;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -160,17 +164,7 @@
 }
 
 .my-datepicker-body td.focus div {
-    /* day under cursor */
     color: white;
-}
-
-.my-datepicker-body td.today {
-    /* current date */
-    border: 1px dashed red;
-}
-
-.my-datepicker-body td.disabled div {
-    color: #454545;
 }
 
 /*************************************************/
@@ -216,5 +210,5 @@
 }
 
 .new-month-separator {
-    border-left: solid dimgray 2px;
+    border-left: solid #ddd 1px;
 }

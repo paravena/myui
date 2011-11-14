@@ -228,7 +228,7 @@ MY.DatePicker = Class.create(MY.TextField, {
                 }),
                 html[idx++] = '</select>';
             } else {
-                html[idx++] = '<span id="mdpMonthLabel_'+i+'" class="my-datepicker-month-label">';
+                html[idx++] = '<span id="mdpMonthLabel_'+i+'" class="month-label">';
                 html[idx++] = '</span>';
             }
 
@@ -240,7 +240,7 @@ MY.DatePicker = Class.create(MY.TextField, {
                 html[idx++] = '</select>';
             } else {
                 html[idx++] = '&nbsp;';
-                html[idx++] = '<span id="mdpYearLabel_'+i+'" class="my-datepicker-year-label">';
+                html[idx++] = '<span id="mdpYearLabel_'+i+'" class="year-label">';
                 html[idx++] = '</span>';
             }
             html[idx++] = '</th>';
