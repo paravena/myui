@@ -37,6 +37,7 @@
     font-weight: bold;
     padding: 4px;
     display: block;
+    margin: 0 30px;
 }
 
 .my-datepicker-header select {
@@ -200,13 +201,6 @@
     margin: 0;
     border: solid #609 1px;
     border-left-style: none;
-}
-
-.my-datepicker-footer .buttons-container {
-    position: absolute;
-    padding: 0;
-    margin: 0;
-    right: 5px;
 }
 
 .new-month-separator {

@@ -131,10 +131,10 @@ MY.DatePicker = Class.create(MY.TextField, {
         this._footerDiv = this._calendarDiv.down('.my-datepicker-footer');
 
         this._initHeaderDiv();
-        this._initHeaderDivBehavior();
         this._initButtonsDiv();
         this._initButtonDivBehavior();
         this._initCalendarGrid();
+        this._initHeaderDivBehavior();
         this._updateHeader('&#160;');
         this._refresh();
         this.setUseTime(this.useTimeFlg);
@@ -184,6 +184,7 @@ MY.DatePicker = Class.create(MY.TextField, {
 
     _initHeaderDivBehavior : function() {
         var headerDiv = this._headerDiv;
+        var bodyDiv = this._bodyDiv;
         var nextMonthButton = headerDiv.down('.next');
         var prevMonthButton = headerDiv.down('.prev');
 
@@ -195,14 +196,14 @@ MY.DatePicker = Class.create(MY.TextField, {
             this._navMonth(this.date.getMonth() - 1);
         }.bindAsEventListener(this));
 
-        this.monthSelect = headerDiv.down('.month');
+        this.monthSelect = bodyDiv.down('.month');
         if (this.monthSelect) {
             this.monthSelect.observe('change', function() {
                 this._navMonth($F(this.monthSelect));
             }.bindAsEventListener(this));
         }
 
-        this.yearSelect = headerDiv.down('.year');
+        this.yearSelect = bodyDiv.down('.year');
         if (this.yearSelect) {
             this.monthSelect.observe('change', function() {
                 this._navYear($F(this.yearSelect));
@@ -294,6 +295,7 @@ MY.DatePicker = Class.create(MY.TextField, {
         var footerDiv = this._footerDiv;
         var idx = 0, html = [];
         if (this.options.time) {
+            html[idx++] = '<span class="time-controls">';
             var timeItems = $A(this.options.time == 'mixed' ? [[' - ', '']] : []);
             var currentTime = new Date();
             var self = this;
@@ -315,12 +317,13 @@ MY.DatePicker = Class.create(MY.TextField, {
                     html[idx++] = '<option value="'+min[1]+'">'+min[0]+'</option>';
                 });
             html[idx++] = '</select>';
+            html[idx++] = '</span>';
         } else if (!this.options.buttons) {
             footerDiv.remove(); //TODO review this condition
         }
 
         if (this.options.buttons) {
-            html[idx++] = '<span class="buttons-container">';
+            html[idx++] = '<span class="button-controls">';
             if (this.options.time == 'mixed' || !this.options.time) {
                 html[idx++] = '<a href="#" class="toolbar-button today-button"><span class="text">'+i18n.getMessage('label.today')+'</span></a>';
             }

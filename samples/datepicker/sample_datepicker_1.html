@@ -15,10 +15,10 @@
                 input: 'arrivalDt',
                 format: 'dd-MMM-yyyy',
                 initialText : '22-June-2011',
-                changeYear: false,
-                changeMonth: false,
+                changeYear: true,
+                changeMonth: true,
                 showWeek: true,
-                numberOfMonths: 3,
+                numberOfMonths: 1,
                 time: 'mixed',
                 validate: function(value, errors) {
                     if (value != null && value.isAfter(new Date())) {
