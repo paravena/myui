@@ -192,8 +192,8 @@ MY.DatePicker = Class.create(MY.TextField, {
             this.options.changeYear = false;
         }
         var idx = 0, html = [];
-        html[idx++] = '<a href="#" class="toolbar-button prev"><span class="icon" style="margin: 1px 0">&nbsp;</span></a>';
-        html[idx++] = '<a href="#" class="toolbar-button next"><span class="icon" style="margin: 1px 0">&nbsp;</span></a>';
+        html[idx++] = '<a class="toolbar-button prev"><span class="icon" style="margin: 1px 0">&nbsp;</span></a>';
+        html[idx++] = '<a class="toolbar-button next"><span class="icon" style="margin: 1px 0">&nbsp;</span></a>';
         html[idx++] = '<span id="mdpSelectedDate_'+id+'" class="selected-date"></span>';
         headerDiv.insert(html.join(''));
     },
