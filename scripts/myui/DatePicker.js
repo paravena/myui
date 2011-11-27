@@ -464,6 +464,7 @@ MY.DatePicker = Class.create(MY.TextField, {
                     cell.removeClassName('day');
                     cell.removeClassName('weekend');
                     cell.removeAttribute('id');
+                    div.update('&nbsp;');
                 }
                 beginningDate.setDate(day + 1);
             }

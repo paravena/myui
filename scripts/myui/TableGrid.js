@@ -255,17 +255,17 @@ MY.TableGrid = Class.create({
             html[idx++] = '<div id="mtgHeaderToolbar'+id+'" class="my-tablegrid-toolbar" style="position:absolute;top:'+this.topPos+'px;left:'+this.leftPos+'px;width:'+(this.tableWidth - 4)+'px;height:'+(this.toolbarHeight - 2)+'px;padding:1px 2px;z-index:10">';
             var beforeFlg = false;
             if(elements.indexOf(MY.TableGrid.SAVE_BTN) >= 0) {
-                html[idx++] = '<a href="#" class="toolbar-button" id="mtgSaveBtn'+id+'"><span class="icon save-button">&nbsp;</span><span class="text">'+i18n.getMessage('label.save')+'</span></a>';
+                html[idx++] = '<a class="toolbar-button" id="mtgSaveBtn'+id+'"><span class="icon save-button">&nbsp;</span><span class="text">'+i18n.getMessage('label.save')+'</span></a>';
                 beforeFlg = true;
             }
             if(elements.indexOf(MY.TableGrid.ADD_BTN) >= 0) {
                 if (beforeFlg) html[idx++] = '<div class="toolbar-separator">&#160;</div>';
-                html[idx++] = '<a href="#" class="toolbar-button" id="mtgAddBtn'+id+'"><span class="icon add-button">&nbsp;</span><span class="text">'+i18n.getMessage('label.add')+'</span></a>';
+                html[idx++] = '<a class="toolbar-button" id="mtgAddBtn'+id+'"><span class="icon add-button">&nbsp;</span><span class="text">'+i18n.getMessage('label.add')+'</span></a>';
                 beforeFlg = true;
             }
             if(elements.indexOf(MY.TableGrid.DEL_BTN) >= 0) {
                 if (beforeFlg) html[idx++] = '<div class="toolbar-separator">&#160;</div>';
-                html[idx++] = '<a href="#" class="toolbar-button" id="mtgDelBtn'+id+'"><span class="icon delete-button">&nbsp;</span><span class="text">'+i18n.getMessage('label.delete')+'</span></a>';
+                html[idx++] = '<a class="toolbar-button" id="mtgDelBtn'+id+'"><span class="icon delete-button">&nbsp;</span><span class="text">'+i18n.getMessage('label.delete')+'</span></a>';
             }
             html[idx++] = '</div>';
             this.topPos += this.toolbarHeight + 1;
