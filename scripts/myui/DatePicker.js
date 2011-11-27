@@ -33,6 +33,7 @@ MY.DatePicker = Class.create(MY.TextField, {
         // initialize the date control
         this.options = $H({
             embedded: false,
+            embeddedId: null,
             format: 'MM/dd/yyyy',
             popup: null,
             time: false,
@@ -49,10 +50,21 @@ MY.DatePicker = Class.create(MY.TextField, {
             validate: null
         }).merge(options || {}).toObject();
         this.useTimeFlg = this.options.time == 'mixed';
-        this.format = this.options.format;
-        if (this.useTimeFlg)
-            this.format += ' hh:mm';
-        if (this.targetElement) this.render(this.targetElement);
+        if (this.options.time == 'mixed') {
+            this.options.format += ' hh:mm';
+        }
+        if (!this.options.embedded && this.targetElement) {
+            this.render(this.targetElement);
+        } else if (this.options.embedded) {
+            if (!this.targetElement) {
+                var inputId = this.options.input ? this.options.input : 'myDatePicker' + this._mdpId;
+                var parent = this.options.embeddedId ? this.options.embeddedId : document.body;
+                $(parent).insert('<input type="hidden" id="'+inputId+'" name="'+inputId+'">');
+                this.options.input = inputId;
+                this.targetElement = $(inputId);
+            }
+            this.show();
+        }
     },
 
     render : function($super, input) {
@@ -63,8 +75,8 @@ MY.DatePicker = Class.create(MY.TextField, {
         this.options.onchange = this.targetElement.onchange;
         if (!this.options.embedded) {
             this.targetElement.observe('keydown', this._keyPress.bindAsEventListener(this));
+            this.decorate(this.targetElement);
         }
-        this.decorate(this.targetElement);
     },
 
     decorate : function(element) {
@@ -113,7 +125,7 @@ MY.DatePicker = Class.create(MY.TextField, {
         if (this.options.embedded) {
             parent = this.targetElement.parentNode;
         } else {
-            parent = document.body;
+            parent = this.options.embeddedId ? $(this.options.embeddedId) : document.body;
             style = 'position: absolute; visibility: hidden; left:0; top:0';
         }
 
@@ -121,7 +133,9 @@ MY.DatePicker = Class.create(MY.TextField, {
         html[idx++] = '    <div class="my-datepicker-top" style="clear:left"></div>';
         html[idx++] = '    <div class="my-datepicker-header all-round-corners" style="clear:left"></div>';
         html[idx++] = '    <div class="my-datepicker-body" style="clear:left"></div>';
-        html[idx++] = '    <div class="my-datepicker-footer all-round-corners" style="clear:left"></div>';
+        if (!this.options.embedded) {
+            html[idx++] = '    <div class="my-datepicker-footer all-round-corners" style="clear:left"></div>';
+        }
         html[idx++] = '</div>';
 
         $(parent).insert(html.join(''));
@@ -131,8 +145,10 @@ MY.DatePicker = Class.create(MY.TextField, {
         this._footerDiv = this._calendarDiv.down('.my-datepicker-footer');
 
         this._initHeaderDiv();
-        this._initButtonsDiv();
-        this._initButtonDivBehavior();
+        if (!this.options.embedded) {
+            this._initButtonsDiv();
+            this._initButtonDivBehavior();
+        }
         this._initCalendarGrid();
         this._initHeaderDivBehavior();
         this._updateHeader('&#160;');
@@ -143,11 +159,10 @@ MY.DatePicker = Class.create(MY.TextField, {
 
     _positionCalendarDiv : function() {
         var above = false;
-        var c_dim = this._calendarDiv.getDimensions();
-        var c_height = c_dim.height;
-        //var c_width = c_dim.width;
-        var w_top = document.viewport.getScrollOffsets().top;
-        var w_height = document.viewport.getHeight();
+        var calendarDim = this._calendarDiv.getDimensions();
+        var calendarHeight = calendarDim.height;
+        var windowTop = document.viewport.getScrollOffsets().top;
+        var windowHeight = document.viewport.getHeight();
         var e_dim = $(this.options.popupBy).cumulativeOffset();
         var e_top = e_dim.top;
         if (this.tableGrid)
@@ -158,9 +173,9 @@ MY.DatePicker = Class.create(MY.TextField, {
         var e_height = $(this.options.popupBy).getDimensions().height;
         var e_bottom = e_top + e_height;
 
-        if ((( e_bottom + c_height ) > (w_top + w_height)) && ( e_bottom - c_height > w_top )) above = true;
+        if ((( e_bottom + calendarHeight ) > (windowTop + windowHeight)) && ( e_bottom - calendarHeight > windowTop )) above = true;
         var left_px = e_left.toString() + 'px';
-        var top_px = (above ? (e_top - c_height - 2) : ( e_top + e_height + 2)).toString() + 'px';
+        var top_px = (above ? (e_top - calendarHeight - 2) : ( e_top + e_height + 2)).toString() + 'px';
 
         this._calendarDiv.style.left = left_px;
         this._calendarDiv.style.top = top_px;
@@ -555,7 +570,7 @@ MY.DatePicker = Class.create(MY.TextField, {
         hoverDate.setYear(element.year);
         hoverDate.setMonth(element.month);
         hoverDate.setDate(element.day);
-        this._updateHeader(hoverDate.format(this.format));
+        this._updateHeader(hoverDate.format(this.options.format));
         this.keys.setFocus(element, false);
     },
 
@@ -598,12 +613,12 @@ MY.DatePicker = Class.create(MY.TextField, {
     },
 
     dateString : function() {
-        return (this.selectionMade) ? this.selectedDate.format(this.format) : '&#160;';
+        return (this.selectionMade) ? this.selectedDate.format(this.options.format) : '&#160;';
     },
 
     getValue : function() {
         if (this.input.value != null && this.input.value.strip().length > 0) {
-            return Date.parseString(this.input.value, this.format);
+            return Date.parseString(this.input.value, this.options.format);
         }
         return null;
     },
@@ -611,7 +626,7 @@ MY.DatePicker = Class.create(MY.TextField, {
     _parseDate : function() {
         var value = $F(this.targetElement).strip();
         this.selectionMade = (value != '');
-        this.date = value == '' ? NaN : Date.parseString(this.options.date || value, this.format);
+        this.date = value == '' ? NaN : Date.parseString(this.options.date || value, this.options.format);
         if (isNaN(this.date) || this.date == null) this.date = new Date();
         if (!this.validYear(this.date.getFullYear()))
             this.date.setYear((this.date.getFullYear() < this.yearRange().start) ? this.yearRange().start : this.yearRange().end);
@@ -711,6 +726,7 @@ MY.DatePicker = Class.create(MY.TextField, {
     },
 
     setUseTime : function(turnOnFlg) {
+        if (this.options.embedded) return;
         this.useTimeFlg = this.options.time && (this.options.time == 'mixed' ? turnOnFlg : true); // force use_time to true if time==true && time!='mixed'
         if (this.useTimeFlg && this.selectedDate) { // only set hour/minute if a date is already selected
             var minute = Utilities.floorToInterval(this.selectedDate.getMinutes(), this.options.minuteInterval);
