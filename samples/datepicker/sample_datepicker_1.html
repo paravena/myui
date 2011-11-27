@@ -19,8 +19,6 @@
                 changeMonth: true,
                 showWeek: true,
                 numberOfMonths: 2,
-                embedded: true,
-                embeddedId: 'calendarArea',
                 validate: function(value, errors) {
                     if (value != null && value.isAfter(new Date())) {
                         errors.push('Selected date is after current');
@@ -32,11 +30,7 @@
         });
 	</script>
 	<body style="margin:20px">
-        <!--
         <h1>Date Picker Sample</h1>
         <label for="arrivalDt">Choose a date:</label>&nbsp;<input type="text" id="arrivalDt">
-        -->
-        <div id="calendarArea" style="border:1px red solid;width:500px;height:250px">
-        </div>
 	</body>
 </html>

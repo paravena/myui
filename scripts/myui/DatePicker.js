@@ -27,7 +27,7 @@
 MY.DatePicker = Class.create(MY.TextField, {
     initialize: function(options) {
         this.baseInitialize(options);
-        this._mdpId = $$('.my-datepicker').length + 1;
+        this._mdpId = $$('.my-datepicker-container').length + $$('.my-datepicker').length + 1;
         this.targetElement = $(options.input); // make sure it's an element, not a string
         this.visibleFlg = false;
         // initialize the date control
@@ -158,6 +158,7 @@ MY.DatePicker = Class.create(MY.TextField, {
     },
 
     _positionCalendarDiv : function() {
+        if (this.options.embedded) return;
         var above = false;
         var calendarDim = this._calendarDiv.getDimensions();
         var calendarHeight = calendarDim.height;
@@ -244,7 +245,7 @@ MY.DatePicker = Class.create(MY.TextField, {
                 }),
                 html[idx++] = '</select>';
             } else {
-                html[idx++] = '<span id="mdpMonthLabel_'+i+'" class="month-label">';
+                html[idx++] = '<span id="mdpMonthLabel_'+this._mdpId+'_'+i+'" class="month-label">';
                 html[idx++] = '</span>';
             }
 
@@ -256,7 +257,7 @@ MY.DatePicker = Class.create(MY.TextField, {
                 html[idx++] = '</select>';
             } else {
                 html[idx++] = '&nbsp;';
-                html[idx++] = '<span id="mdpYearLabel_'+i+'" class="year-label">';
+                html[idx++] = '<span id="mdpYearLabel_'+this._mdpId+'_'+i+'" class="year-label">';
                 html[idx++] = '</span>';
             }
             html[idx++] = '</th>';
@@ -495,12 +496,12 @@ MY.DatePicker = Class.create(MY.TextField, {
         var month = this.date.getMonth();
         var year = this.date.getFullYear();
         var numberOfMonths = this.options.numberOfMonths;
-
+        var self = this;
         if (this.options.changeMonth) {
             this._setSelectBoxValue(this.monthSelect, month);
         } else {
             $R(1, numberOfMonths).each(function(i) {
-                $('mdpMonthLabel_'+i).update(Date.MONTH_NAMES[month]);
+                $('mdpMonthLabel_'+self._mdpId+'_'+i).update(Date.MONTH_NAMES[month]);
                 if ((month + 1) > 11) {
                     month = 0;
                 } else {
@@ -523,7 +524,7 @@ MY.DatePicker = Class.create(MY.TextField, {
         } else {
             month = this.date.getMonth();
             $R(1, numberOfMonths).each(function(i) {
-                $('mdpYearLabel_'+i).update(year);
+                $('mdpYearLabel_'+self._mdpId+'_'+i).update(year);
                 if ((month + 1) > 11) {
                     month = 0;
                     year++;
