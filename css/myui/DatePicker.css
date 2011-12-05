@@ -191,6 +191,10 @@
     vertical-align: middle;
 }
 
+.my-datepicker-footer .button-controls {
+    float: right;
+}
+
 .my-datepicker-select-button {
     position: absolute;
     top: 0;

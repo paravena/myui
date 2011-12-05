@@ -18,7 +18,8 @@
                 changeYear: true,
                 changeMonth: true,
                 showWeek: true,
-                numberOfMonths: 2,
+                numberOfMonths: 3,
+                time : 'mixed',
                 validate: function(value, errors) {
                     if (value != null && value.isAfter(new Date())) {
                         errors.push('Selected date is after current');
