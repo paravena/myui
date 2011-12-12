@@ -404,7 +404,7 @@ KeyTable.prototype = {
 
 		// Add the new class to highlight the focused cell
 		$(nTarget).addClassName(this._sFocusClass);
-    	$(nTarget).up('tr').addClassName(this._sFocusClass);
+    	if ($(nTarget).up('tr')) $(nTarget).up('tr').addClassName(this._sFocusClass);
 		/* Cache the information that we are interested in */
 		var aNewPos = this.getCoordsFromCell(nTarget);
 
