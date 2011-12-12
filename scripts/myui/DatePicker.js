@@ -443,6 +443,7 @@ MY.DatePicker = Class.create(MY.TextField, {
                 var weekCell = null;
                 if (i % 7 == 0 && showWeek && (month == beginningMonth || i == 0)) {
                     weekCell = cell.previousSiblings()[0];
+                    weekCell.addClassName('week-number');
                     weekCell.down().update(beginningDate.getWeek());
                 } else {
                     weekCell = cell.previousSiblings()[0];
@@ -465,6 +466,10 @@ MY.DatePicker = Class.create(MY.TextField, {
                     cell.removeClassName('weekend');
                     cell.removeAttribute('id');
                     div.update('&nbsp;');
+                    if (showWeek && i % 7 == 0 && i > 7 * numberOfMonths) {
+                        weekCell = cell.previousSiblings()[0];
+                        weekCell.down().update('&nbsp;');
+                    }
                 }
                 beginningDate.setDate(day + 1);
             }
