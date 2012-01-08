@@ -9,16 +9,17 @@
 		<script type="text/javascript" src="../../scripts/myui/myui.js"></script>
 	</head>
 	<script type="text/javascript">
-        var datePicker = null;
+        var datePicker1 = null;
+        var datePicker2 = null;
         Event.observe(document, 'dom:loaded', function() {
-            datePicker = new MY.DatePicker({
+            datePicker1 = new MY.DatePicker({
                 input: 'arrivalDt',
                 format: 'dd-MMM-yyyy',
                 initialText : '22-June-2011',
                 changeYear: true,
                 changeMonth: true,
                 showWeek: true,
-                numberOfMonths: 3,
+                numberOfMonths: 1,
                 time : 'mixed',
                 validate: function(value, errors) {
                     if (value != null && value.isAfter(new Date())) {
@@ -28,10 +29,35 @@
                     return true;
                 }
             });
+            datePicker2 = new MY.DatePicker({
+                input: 'arrivalDt2',
+                format: 'dd-MMM-yyyy',
+                initialText : 'Select a date',
+                changeYear: true,
+                changeMonth: true,
+                showWeek: true,
+                numberOfMonths: 2
+            });
         });
 	</script>
 	<body style="margin:20px">
         <h1>Date Picker Sample</h1>
         <label for="arrivalDt">Choose a date:</label>&nbsp;<input type="text" id="arrivalDt">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <label for="arrivalDt2">Choose a date:</label>&nbsp;<input type="text" id="arrivalDt2">
 	</body>
 </html>

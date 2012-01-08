@@ -126,7 +126,11 @@ MY.DatePicker = Class.create(MY.TextField, {
             parent = this.targetElement.parentNode;
         } else {
             parent = this.options.embeddedId ? $(this.options.embeddedId) : document.body;
-            style = 'position: absolute; visibility: hidden; left:0; top:0';
+            style = 'position: absolute; visibility: hidden; left:0; top:0;';
+        }
+
+        if (this.options.numberOfMonths == 1) {
+            style += 'width: 270px;';
         }
 
         html[idx++] = '<div id="my-datepicker-div'+this._mdpId+'" class="my-datepicker shadow all-round-corners" style="'+style+'">';
@@ -700,6 +704,7 @@ MY.DatePicker = Class.create(MY.TextField, {
 
         if (viaClickFlg && !this.options.embedded) {
             this._close();
+            if (this.targetElement.type != 'hidden' && ! this.targetElement.disabled) this.targetElement.focus();
         }
     },
 
@@ -770,7 +775,6 @@ MY.DatePicker = Class.create(MY.TextField, {
         this.keys.stop();
         this.keys = null;
         self.visibleFlg = false;
-        if (this.targetElement.type != 'hidden' && ! this.targetElement.disabled) this.targetElement.focus();
         this._callback('afterClose');
     },
 
