@@ -149,6 +149,7 @@ th div.my-tablegrid-inner-header-cell {
     font-size: 11px;
     height: 18px;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 div.my-tablegrid-header-separator {
@@ -216,6 +217,7 @@ td div.my-tablegrid-inner-cell {
     white-space: nowrap;
     font-size: 11px;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 tr.hightlight {
