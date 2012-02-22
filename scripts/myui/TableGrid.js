@@ -2069,13 +2069,12 @@ var HeaderBuilder = Class.create({
      * Creates header row
      */
     _createHeaderRow : function() {
-        var thTmpl = '<th id="mtgHC{id}_{x}" colspan="{colspan}" rowspan="{rowspan}" width="{width}" height="{height}" style="position:relative;width:{width}px;height:{height}px;padding:0;margin:0;border-bottom-color:{color}" class="my-tablegrid-header-cell mtgHC{id}">';
+        var thTmpl = '<th id="mtgHC{id}_{x}" colspan="{colspan}" rowspan="{rowspan}" width="{width}" height="{height}" style="position:relative;width:{width}px;height:{height}px;padding:0;margin:0;border-bottom-color:{color};display:{display}" class="my-tablegrid-header-cell mtgHC{id}">';
         var thTmplLast = '<th id="mtgHC{id}_{x}" colspan="{colspan}" rowspan="{rowspan}" width="{width}" height="{height}" style="width:{width}px;height:{height}px;padding:0;margin:0;border-right:none;border-bottom:1px solid #ccc;" class="my-tablegrid-header-cell mtgHC{id}">';
         var ihcTmpl = '<div id="mtgIHC{id}_{x}" class="my-tablegrid-inner-header-cell mtgIHC{id}" style="float:left;width:{width}px;height:{height}px;padding:4px 3px;z-index:20">';
         var ihcTmplLast = '<div class="my-tablegrid-inner-header-cell" style="position:relative;width:{width}px;height:{height}px;padding:3px;z-index:20">';
         var hsTmpl = '<div id="mtgHS{id}_{x}" class="mtgHS mtgHS{id}" style="float:right;width:1px;height:{height}px;z-index:30">';
         var siTmpl = '<span id="mtgSortIcon{id}_{x}" style="width:8px;height:4px;visibility:hidden">&nbsp;&nbsp;&nbsp;</span>';
-
         var cm = this.columnModel;
         var id = this._mtgId;
         var gap = (this.gap == 0)? 2 : 0;
@@ -2098,15 +2097,19 @@ var HeaderBuilder = Class.create({
                 var colspan = 1;
                 var rowspan = 1;
                 var cnl = this._getHeaderColumnNestedLevel(cell);
+                var display = '';
                 if (cnl == 0) { // is a leaf element
                     rowspan = rnl - i;
                     cell.height = rowspan*(this.cellHeight+2);
                     x = this._getNextIndexPosition(x);
+                    display = !cell.visible ? 'none' : '';
                     temp = thTmpl.replace(/\{id\}/g, id);
                     temp = temp.replace(/\{x\}/g, x);
                     temp = temp.replace(/\{colspan\}/g, colspan);
                     temp = temp.replace(/\{rowspan\}/g, rowspan);
                     temp = temp.replace(/\{color\}/g, '#ccc');
+                    temp = temp.replace(/\{display\}/g, display);
+
                     var cellWidth = cell.width || '80';
                     cellWidth = parseInt(cellWidth);
                     temp = temp.replace(/\{width\}/g, cellWidth);
@@ -2134,6 +2137,9 @@ var HeaderBuilder = Class.create({
                     html[idx++] = '</th>';
                     this.filledPositions.push(x);
                     this._leafElements[x] = cell;
+                    if (!cell.visible) {
+//                        this.headerWidth -= cell.width;
+                    }
                 } else {
                     colspan = this._getNumberOfNestedCells(cell);
                     x += colspan - 1;
@@ -2146,6 +2152,7 @@ var HeaderBuilder = Class.create({
                     temp = temp.replace(/height="\{height\}"/g,'');
                     temp = temp.replace(/height:\{height\}px;/g,'');
                     temp = temp.replace(/\{color\}/g, '#ddd');
+                    temp = temp.replace(/\{display\}/g, display);
                     html[idx++] = temp;
                     temp = ihcTmpl.replace(/\{id\}/g, id);
                     temp = temp.replace(/id="mtgIHC.*?_\{x\}"/g,'');
@@ -2357,7 +2364,6 @@ var HeaderBuilder = Class.create({
     getTableHeaderHeight : function() {
         return this.rnl*(this.cellHeight + 2);
     },
-
 
     getLeafElements : function() {
         var rnl = this.rnl; //row nested level
