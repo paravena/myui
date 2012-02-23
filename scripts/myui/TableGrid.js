@@ -274,6 +274,7 @@ MY.TableGrid = Class.create({
         // Adding Header Row
         html[idx++] = '<div id="headerRowDiv'+id+'" class="my-tablegrid-header-row" style="position:absolute;top:'+this.topPos+'px;left:'+this.leftPos+'px;width:'+this.tableWidth+'px;height:'+this.headerHeight+'px;padding:0;overflow:hidden;z-index:0">';
         //header row box useful for drag and drop
+
         html[idx++] = '<div id="mtgHRB'+id+'" style="position:relative;padding:0;margin:0;width:'+(this.headerWidth+21)+'px;height:'+this.headerHeight+'px;">';
         // Adding Header Row Cells
         html[idx++] = this.hb._createHeaderRow();
@@ -498,10 +499,19 @@ MY.TableGrid = Class.create({
                 html[idx++] = temp;
             } else if (editor instanceof MY.ComboBox) {
                 if (!cm[j].hasOwnProperty('renderer')) {
+                    var listTextPropertyName = cm[j].editor.options.listTextPropertyName;
+                    var listValuePropertyName = cm[j].editor.options.listValuePropertyName;
                     cm[j].renderer = function(value, list) {
                         var result = value;
                         for (var i = 0; i < list.length; i++) {
-                            if (list[i].value == value) result = list[i].text;
+                            if (list[i] instanceof Object) {
+                                if (list[i][listValuePropertyName] === value) {
+                                    result = list[i][listTextPropertyName];
+                                    break;
+                                }
+                            } else {
+                                break; // this happen when list is an array of strings
+                            }
                         }
                         return result;
                     };
@@ -885,7 +895,7 @@ MY.TableGrid = Class.create({
     },
 
     /**
-     * Detects dropable position when the mouse pointer is over a header cell
+     * Detects droppable position when the mouse pointer is over a header cell
      * separator
      */
     _detectDroppablePosition : function(columnPos, width, dragColumn, index) {
@@ -1264,21 +1274,6 @@ MY.TableGrid = Class.create({
             if (editor.hide) editor.hide(); // this only happen when editor is a Combobox
             if (editor instanceof MY.DatePicker && editor.visibleFlg) return false;
             if (editor.reset) editor.reset();
-            /*
-            if (editor.validate) { // this only happen when there is a validate method
-                var isValidFlg = editor.validate();
-                if (editor instanceof MY.ComboBox && !isValidFlg) {
-                    value = editor.getItems()[0][editor.options.listTextPropertyName];
-                } else {
-                    if (!isValidFlg) {
-                        if (y >= 0)
-                            value = this.rows[y][columnId];
-                        else
-                            value = this.newRowsAdded[Math.abs(y)-1][columnId];
-                    }
-                }
-            }
-            */
             element.setStyle({
                 height: cellHeight + 'px'
             });
@@ -1291,11 +1286,10 @@ MY.TableGrid = Class.create({
             }).update(value);
         }
 
-        /*
-        if (editor instanceof MY.ComboBox) { // I hope I can find a better solution
+        // I hope I can find a better solution
+        if (editor instanceof MY.Autocompleter) {
             value = editor.getSelectedValue(value);
         }
-        */
 
         if (y >= 0 && this.rows[y][columnId] != value) {
             this.rows[y][columnId] = value;
@@ -2137,9 +2131,6 @@ var HeaderBuilder = Class.create({
                     html[idx++] = '</th>';
                     this.filledPositions.push(x);
                     this._leafElements[x] = cell;
-                    if (!cell.visible) {
-//                        this.headerWidth -= cell.width;
-                    }
                 } else {
                     colspan = this._getNumberOfNestedCells(cell);
                     x += colspan - 1;
@@ -2354,7 +2345,8 @@ var HeaderBuilder = Class.create({
             for (var j = 0; j < row.length; j++) {
                 var cnl = this._getHeaderColumnNestedLevel(row[j]);
                 if (cnl == 0) { // is a leaf element
-                    result += row[j].width + gap;
+                    if (row[j].visible === undefined || row[j].visible)
+                        result += row[j].width + gap;
                 }
             }
         }

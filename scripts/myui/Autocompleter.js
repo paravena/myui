@@ -491,5 +491,25 @@ MY.Autocompleter = Class.create(MY.TextField, {
             if (newS[index] != oldS[index])
                 return index;
         return boundary;
+    },
+
+    getSelectedValue : function(text) {
+        var items = this.options.items;
+        var listTextPropertyName = this.options.listTextPropertyName;
+        var listValuePropertyName = this.options.listValuePropertyName;
+        var result = text;
+
+        for (var i = 0; i < items.length; i++) {
+            // This check prevents the case when items is just an array of strings
+            if (items[i] instanceof Object) {
+                if (items[i][listTextPropertyName] === text) {
+                    result = items[i][listValuePropertyName];
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+        return result;
     }
 });
