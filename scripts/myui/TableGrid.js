@@ -96,9 +96,6 @@ MY.TableGrid = Class.create({
 
         this.targetColumnId = null;
         this.editedCellId = null;
-
-        this.gap = 2; //diff between width and offsetWidth
-        if (Prototype.Browser.WebKit) this.gap = 0;
     },
 
     show : function(target) {
@@ -417,7 +414,6 @@ MY.TableGrid = Class.create({
         var cellHeight = this.cellHeight;
         var iCellHeight = cellHeight - 6;
         var cm = this.columnModel;
-        var gap = this.gap == 0? 2 : 0;
         var html = [];
         var idx = 0;
         html[idx++] = '<tr id="mtgRow'+id+'_'+rowIdx+'" class="mtgRow'+id+' '+rc(rowIdx)+'" style="'+rs(rowIdx)+'">';
@@ -425,7 +421,7 @@ MY.TableGrid = Class.create({
             var columnId = cm[j].id;
             var type = cm[j].type || 'string';
             var cellWidth = parseInt(cm[j].width); // consider border at both sides
-            var iCellWidth = cellWidth - 6 - gap; // consider padding at both sides
+            var iCellWidth = cellWidth - 6; // consider padding at both sides
             var editor = cm[j].editor || null;
             var normalEditorFlg = !(editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox || editor == 'radio' || editor instanceof MY.TableGrid.CellRadioButton || editor instanceof MY.ComboBox);
             var alignment = 'left';
@@ -661,15 +657,14 @@ MY.TableGrid = Class.create({
         });
 
         var miFlg = false;
-        settingMenu.observe('mousemove', function() {
+        settingMenu.observe('mouseenter', function() {
             miFlg = true;
         });
 
-        settingMenu.observe('mouseout', function(event) {
+        settingMenu.observe('mouseleave', function(event) {
             miFlg = false;
-            var element = event.element();
             setTimeout(function() {
-                if (!element.descendantOf(settingMenu) && !miFlg)
+                if (!miFlg)
                     settingMenu.setStyle({visibility: 'hidden'});
             },500);
         });
@@ -786,7 +781,6 @@ MY.TableGrid = Class.create({
     _resizeColumn: function(index, newWidth) {
         var id = this._mtgId;
         var cm = this.columnModel;
-        var gap = this.gap;
         var self = this;
 
         var oldWidth = parseInt($('mtgHC' + id + '_' + index).width);
@@ -795,7 +789,7 @@ MY.TableGrid = Class.create({
 
         $('mtgHC' + id + '_' + index).width = newWidth;
         $('mtgHC' + id + '_' + index).setStyle({width: newWidth + 'px'});
-        $('mtgIHC' + id + '_' + index).setStyle({width: (newWidth - 8 - ((gap == 0) ? 2 : 0)) + 'px'});
+        $('mtgIHC' + id + '_' + index).setStyle({width: (newWidth - 8) + 'px'});
 
         $$('.mtgC' + id + '_' + index).each(function(cell) {
             cell.width = newWidth;
@@ -807,7 +801,7 @@ MY.TableGrid = Class.create({
             var coords = cellId.substring(cellId.indexOf('_') + 1, cellId.length).split(',');
             var y = coords[1];
             var value = self.getValueAt(index, y);
-            cell.setStyle({width: (newWidth - 6 - ((gap == 0) ? 2 : 0)) + 'px'});
+            cell.setStyle({width: (newWidth - 6) + 'px'});
             if (!checkboxOrRadioFlg) {
                 if (cm[index].renderer) {
                     if (editor instanceof MY.ComboBox)
@@ -904,13 +898,12 @@ MY.TableGrid = Class.create({
         if (this.options.toolbar) topPos += this.headerHeight;
         var sepLeftPos = 0;
         var cm = this.columnModel;
-        var gap = this.gap;
         var scrollLeft = this.scrollLeft;
         var colMoveTopDiv = this.colMoveTopDiv;
         var colMoveBottomDiv = this.colMoveBottomDiv;
 
         for (var i = 0; i < cm.length; i++) {
-            if (cm[i].visible) sepLeftPos += parseInt(cm[i].width) + gap;
+            if (cm[i].visible) sepLeftPos += parseInt(cm[i].width) + 2;
             if (columnPos > (sepLeftPos - scrollLeft)
                     && (columnPos - (sepLeftPos - this.scrollLeft)) < (width / 2)) {
                 colMoveTopDiv.setStyle({
@@ -1421,15 +1414,14 @@ MY.TableGrid = Class.create({
         });
 
         var miFlg = false;
-        Event.observe(headerButtonMenu,'mousemove', function() {
+        Event.observe(headerButtonMenu,'mouseenter', function() {
             miFlg = true;
         });
 
-        Event.observe(headerButtonMenu,'mouseout', function(event) {
+        Event.observe(headerButtonMenu,'mouseleave', function(event) {
             miFlg = false;
-            var element = event.element();
             setTimeout(function() {
-                if (!element.descendantOf(headerButtonMenu) && !miFlg)
+                if (!miFlg)
                     headerButtonMenu.setStyle({visibility: 'hidden'});
             }, 500);
         });
@@ -2047,8 +2039,6 @@ var HeaderBuilder = Class.create({
     initialize : function(id, cm) {
         this.columnModel = cm;
         this._mtgId = id;
-        this.gap = 2; //diff between width and offsetWidth
-        if (Prototype.Browser.WebKit) this.gap = 0;
         this.filledPositions = [];
         this._leafElements = [];
         this.defaultHeaderColumnWidth = 100;
@@ -2071,7 +2061,6 @@ var HeaderBuilder = Class.create({
         var siTmpl = '<span id="mtgSortIcon{id}_{x}" style="width:8px;height:4px;visibility:hidden">&nbsp;&nbsp;&nbsp;</span>';
         var cm = this.columnModel;
         var id = this._mtgId;
-        var gap = (this.gap == 0)? 2 : 0;
         var rnl = this.rnl; //row nested level
 
         var html = [];
@@ -2112,8 +2101,8 @@ var HeaderBuilder = Class.create({
 
                     temp = ihcTmpl.replace(/\{id\}/g, id);
                     temp = temp.replace(/\{x\}/g, x);
-                    temp = temp.replace(/\{width\}/g,  cellWidth - 8 - gap);
-                    temp = temp.replace(/\{height\}/g, cell.height - 6 - gap);
+                    temp = temp.replace(/\{width\}/g,  cellWidth - 8);
+                    temp = temp.replace(/\{height\}/g, cell.height - 6);
                     html[idx++] = temp;
                     html[idx++] = row[j].title;
                     html[idx++] = '&nbsp;';
@@ -2337,7 +2326,6 @@ var HeaderBuilder = Class.create({
     },
 
     getTableHeaderWidth : function() {
-        var gap = this.gap;
         var rnl = this.rnl; //row nested level
         var result = 0;
         for (var i = 0; i < rnl; i++) { // for each nested level
@@ -2346,7 +2334,7 @@ var HeaderBuilder = Class.create({
                 var cnl = this._getHeaderColumnNestedLevel(row[j]);
                 if (cnl == 0) { // is a leaf element
                     if (row[j].visible === undefined || row[j].visible)
-                        result += row[j].width + gap;
+                        result += row[j].width + 2;
                 }
             }
         }
