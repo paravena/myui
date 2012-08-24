@@ -34,10 +34,26 @@ MY.TableGrid = Class.create({
         this.tableModel = tableModel;
         this.columnModel = tableModel.columnModel || [];
         this.rows = tableModel.rows || [];
-        this.options = tableModel.options || {};
         this.name = tableModel.name || '';
-        this.fontSize = 11;
-        this.cellHeight = parseInt(this.options.cellHeight) || 24;
+
+        this.options = $H({
+            cellHeight : 24,
+            pager : null,
+            sortColumnParameter : 'sortColumn',
+            ascDescFlagParameter : 'ascDescFlg',
+            onCellFocus : null,
+            onCellBlur : null,
+            onPageChange : null,
+            afterRender : null,
+            onFailure : null,
+            rowStyle : function() {return '';},
+            rowClass : function() {return '';},
+            addSettingBehavior : true,
+            addDraggingBehavior : true,
+            addLazyRenderingBehavior : true,
+            addNewRowsToEndBehaviour : false
+        }).merge(tableModel.options || {}).toObject();
+
         this.pagerHeight = 24;
         this.titleHeight = 24;
         this.toolbarHeight = 24;
@@ -45,34 +61,25 @@ MY.TableGrid = Class.create({
         this.topPos = 0;
         this.leftPos = 0;
         this.selectedHCIndex = 0;
-        this.pager = this.options.pager || null;
+        this.pager = this.options.pager;
         if (this.options.pager) this.pager.pageParameter = this.options.pager.pageParameter || 'page';
         this.url = tableModel.url || null;
         this.request = tableModel.request || {};
-        this.sortColumnParameter = this.options.sortColumnParameter || 'sortColumn';
-        this.ascDescFlagParameter = this.options.ascDescFlagParameter || 'ascDescFlg';
         this.sortedColumnIndex = 0;
         this.sortedAscDescFlg = 'ASC'; // || 'DESC'
-        this.onCellFocus = this.options.onCellFocus || null;
-        this.onCellBlur = this.options.onCellBlur || null;
         this.modifiedRows = []; //will contain the modified row numbers
-        this.afterRender = this.options.afterRender || null; //after rendering handler
-        this.onFailure = this.options.onFailure || null; //on failure handler
-        this.rowStyle = this.options.rowStyle || null; //row style handler
-        this.rowClass = this.options.rowClass || null; //row class handler
-        this.addSettingBehaviorFlg = (this.options.addSettingBehavior == undefined || this.options.addSettingBehavior)? true : false;
-        this.addDraggingBehaviorFlg = (this.options.addDraggingBehavior == undefined || this.options.addDraggingBehavior)? true : false;
-        this.onPageChange = this.options.onPageChange || null;
         this.renderedRows = 0; //Use for lazy rendering
         this.renderedRowsAllowed = 0; //Use for lazy rendering depends on bodyDiv height
         this.newRowsAdded = [];
         this.deletedRows = [];
-
+        if (this.options.addNewRowsToEndBehaviour) {
+            this.options.addLazyRenderingBehavior = false;
+        }
         // Header builder
         this.hb = new HeaderBuilder(this._mtgId, this.columnModel);
         if (this.hb.getHeaderRowNestedLevel() > 1) {
-            this.addSettingBehaviorFlg = false;
-            this.addDraggingBehaviorFlg = false;
+            this.options.addSettingBehaviorFlg = false;
+            this.options.addDraggingBehaviorFlg = false;
         }
         this.headerWidth = this.hb.getTableHeaderWidth();
         this.headerHeight = this.hb.getTableHeaderHeight();
@@ -80,11 +87,8 @@ MY.TableGrid = Class.create({
         for (var i = 0; i < this.columnModel.length; i++) {
             if (!this.columnModel[i].hasOwnProperty('editor')) this.columnModel[i].editor = new MY.TextField();
             if (!this.columnModel[i].hasOwnProperty('editable')) {
-                this.columnModel[i].editable = false;
-                if (this.columnModel[i].editor == 'checkbox' || this.columnModel[i].editor instanceof MY.TableGrid.CellCheckbox ||
-                    this.columnModel[i].editor == 'radio' || this.columnModel[i].editor instanceof MY.TableGrid.CellRadioButton) {
-                    this.columnModel[i].editable = true;
-                }
+                this.columnModel[i].editable = this.columnModel[i].editor == 'checkbox' || this.columnModel[i].editor instanceof MY.TableGrid.CellCheckbox ||
+                    this.columnModel[i].editor == 'radio' || this.columnModel[i].editor instanceof MY.TableGrid.CellRadioButton;
             }
             if (!this.columnModel[i].hasOwnProperty('visible')) this.columnModel[i].visible = true;
             if (!this.columnModel[i].hasOwnProperty('sortable')) this.columnModel[i].sortable= true;
@@ -134,21 +138,21 @@ MY.TableGrid = Class.create({
             self._applyCellCallbacks();
             self._applyHeaderButtons();
             self._makeAllColumnsResizable();
-            if (self.addDraggingBehaviorFlg) self._makeAllColumnDraggable();
-            if (self.addSettingBehaviorFlg) self._applySettingMenuBehavior();
+            if (self.options.addDraggingBehaviorFlg) self._makeAllColumnDraggable();
+            if (self.options.addSettingBehaviorFlg) self._applySettingMenuBehavior();
             self.keys = new KeyTable(self);
             self._addKeyBehavior();
             if (self.pager) {
                 self._addPagerBehavior();
             }
-            if (self.afterRender) {
-                self.afterRender();
+            if (self.options.afterRender) {
+                self.options.afterRender();
             }
             self._hideLoaderSpinner();
         });
 
         setTimeout(function() {
-            self.renderedRowsAllowed = Math.floor((self.bodyHeight - self.scrollBarWidth - 3)  / self.cellHeight) + 1;
+            self.renderedRowsAllowed = Math.floor((self.bodyHeight - self.scrollBarWidth - 3)  / self.options.cellHeight) + 1;
             if (self.tableModel.hasOwnProperty('rows')) {
                 self.innerBodyDiv.innerHTML = self._createTableBody(self.rows);
                 if (self.pager) {
@@ -165,7 +169,7 @@ MY.TableGrid = Class.create({
         if (this.options.toolbar) {
             var elements = this.options.toolbar.elements || [];
             if (elements.indexOf(MY.TableGrid.ADD_BTN) >= 0) {
-                Event.observe($('mtgAddBtn'+id), 'click', function() {
+                Event.observe($('mtgAddBtn'+id), 'click', function(event) {
                     var addFlg = true;
                     if (self.options.toolbar.onAdd) {
                         addFlg = self.options.toolbar.onAdd.call();
@@ -303,7 +307,7 @@ MY.TableGrid = Class.create({
         }
 
         // Adding Table Setting Button Control
-        if (this.addSettingBehaviorFlg) {
+        if (this.options.addSettingBehaviorFlg) {
             html[idx++] = '<div id="mtgSB'+id+'" class="my-tablegrid-setting-button" style="left:'+(this.tableWidth - 20)+'px"><div class="icon">&nbsp;</div></div>';
             // Adding Table Setting Menu
             html[idx++] = this._createSettingMenu();
@@ -365,13 +369,18 @@ MY.TableGrid = Class.create({
         var id = this._mtgId;
         var renderedRowsAllowed = this.renderedRowsAllowed;
         var renderedRows = this.renderedRows;
-        var cellHeight = this.cellHeight;
+        var cellHeight = this.options.cellHeight;
         var headerWidth = this.headerWidth;
         var self = this;
         var html = [];
         var idx = 0;
         var firstRenderingFlg = false;
-        if (renderedRows == 0) firstRenderingFlg = true;
+        if (renderedRows == 0) {
+            firstRenderingFlg = true;
+            if (!this.options.addLazyRenderingBehavior) {
+                renderedRowsAllowed = this.renderedRowsAllowed = rows.length;
+            }
+        }
 
         if (firstRenderingFlg) {
             this.innerBodyDiv.setStyle({height: (rows.length * cellHeight) + 'px'});
@@ -409,9 +418,9 @@ MY.TableGrid = Class.create({
             checkboxTmpl = '<input id="mtgInput{id}_{x},{y}" name="mtgInput{id}_{x},{y}" type="checkbox" value="{value}" class="mtgInput{id}_{x}" checked="{checked}">';
             radioTmpl = '<input id="mtgInput{id}_{x},{y}" name="mtgInput{id}_{x}" type="radio" value="{value}" class="mtgInput{id}_{x}">';
         }
-        var rs = this.rowStyle || function(){return '';}; // row style handler
-        var rc = this.rowClass || function(){return '';}; // row class handler
-        var cellHeight = this.cellHeight;
+        var rs = this.options.rowStyle; // row style handler
+        var rc = this.options.rowClass; // row class handler
+        var cellHeight = this.options.cellHeight;
         var iCellHeight = cellHeight - 6;
         var cm = this.columnModel;
         var html = [];
@@ -826,6 +835,16 @@ MY.TableGrid = Class.create({
         return (this.headerWidth + 20) > this.tableWidth;
     },
 
+    _scrollToRow : function(rowIndex) {
+        if (this.options.addLazyRenderingBehavior) return; // This only works without lazy rendering
+        var cellHeight = this.options.cellHeight;
+        var bodyHeight = this.bodyHeight;
+        var scrollBarWidth = this.scrollBarWidth;
+        var scrollToPosition = rowIndex * (cellHeight + 1);
+        if (scrollToPosition > bodyHeight - scrollBarWidth - 3) { // Is scrolling necessary?
+            this.scrollTop = this.bodyDiv.scrollTop = scrollToPosition;
+        }
+    },
     /**
      * Makes all columns draggable
      */
@@ -1141,7 +1160,7 @@ MY.TableGrid = Class.create({
                     return function() {
                         if (self._blurCellElement(element))
                             self.editedCellId = null;
-                        if (self.onCellBlur) self.onCellBlur(element, row[x], x, y, cm[x].id);
+                        if (self.options.onCellBlur) self.options.onCellBlur(element, row[x], x, y, cm[x].id);
                     };
                 })(i, j, element);
                 keys.event.blur(element, f_blur);
@@ -1150,8 +1169,8 @@ MY.TableGrid = Class.create({
             keys.event.remove.focus(element);
             var f_focus = (function(x, y, element) {
                 return function() {
-                    if (self.onCellFocus) {
-                        self.onCellFocus(element, row[x], x, y, cm[x].id);
+                    if (self.options.onCellFocus) {
+                        self.options.onCellFocus(element, row[x], x, y, cm[x].id);
                     }
                 };
             })(i, j, element);
@@ -1178,7 +1197,7 @@ MY.TableGrid = Class.create({
 
         if (isInputFlg) {
             element.setStyle({
-                height: this.cellHeight + 'px'
+                height: this.options.cellHeight + 'px'
             });
             innerElement.setStyle({
                 position: 'relative',
@@ -1252,7 +1271,7 @@ MY.TableGrid = Class.create({
         var coords = this.getCurrentPosition();
         var x = coords[0];
         var y = coords[1];
-        var cellHeight = this.cellHeight;
+        var cellHeight = this.options.cellHeight;
         var innerId = 'mtgIC' + id + '_' + x + ',' + y;
         var input = $('mtgInput' + id + '_' + x + ',' + y);
         var innerElement = $(innerId);
@@ -1432,8 +1451,8 @@ MY.TableGrid = Class.create({
         var id = this._mtgId;
         if (cm[idx].sortable) {
             $('mtgSortIcon'+id+'_'+idx).className = (ascDescFlg == 'ASC')? 'my-tablegrid-sort-asc-icon' : 'my-tablegrid-sort-desc-icon';
-            this.request[this.sortColumnParameter] = cm[idx].id;
-            this.request[this.ascDescFlagParameter] = ascDescFlg;
+            this.request[this.options.sortColumnParameter] = cm[idx].id;
+            this.request[this.options.ascDescFlagParameter] = ascDescFlg;
             this._retrieveDataFromUrl(1);
             $('mtgSortIcon'+id+'_'+this.sortedColumnIndex).setStyle({visibility : 'hidden'});
             $('mtgIHC'+id+'_'+this.sortedColumnIndex).setStyle({color : 'dimgray'});
@@ -1502,8 +1521,8 @@ MY.TableGrid = Class.create({
     },
 
     _retrieveDataFromUrl : function(pageNumber, firstTimeFlg) {
-        if (!firstTimeFlg && this.onPageChange) {
-            if (!this.onPageChange()) return;
+        if (!firstTimeFlg && this.options.onPageChange) {
+            if (!this.options.onPageChange()) return;
         }
         var pageParameter = 'page';
         if(this.pager != null && this.pager.pageParameter) pageParameter = this.pager.pageParameter;
@@ -1535,11 +1554,11 @@ MY.TableGrid = Class.create({
                         self.pagerDiv.innerHTML = self._updatePagerInfo(); // update pager info panel
                         self._addPagerBehavior();
                     }
-                    if (self.afterRender) {
-                        self.afterRender();
+                    if (self.options.afterRender) {
+                        self.options.afterRender();
                     }
                 } catch (ex) {
-                    if (self.onFailure) self.onFailure(response);
+                    if (self.options.onFailure) self.options.onFailure(response);
                 } finally {
                     self._toggleLoadingOverlay();
                     self.scrollTop = self.bodyDiv.scrollTop = 0;
@@ -1547,7 +1566,7 @@ MY.TableGrid = Class.create({
                 }
             },
             onFailure : function(transport) {
-                if (self.onFailure) self.onFailure(transport);
+                if (self.options.onFailure) self.options.onFailure(transport);
                 self._toggleLoadingOverlay();
                 self.scrollTop = self.bodyDiv.scrollTop = 0;
                 if (firstTimeFlg) self.bodyDiv.fire('dom:dataLoaded');
@@ -1728,7 +1747,7 @@ MY.TableGrid = Class.create({
             });
         }
 
-        this.renderedRowsAllowed = Math.floor(this.bodyDiv.clientHeight / this.cellHeight);
+        this.renderedRowsAllowed = Math.floor(this.bodyDiv.clientHeight / this.options.cellHeight);
 
         if (tallerFlg) {
             var html = this._createTableBody(this.rows);
@@ -1959,13 +1978,19 @@ MY.TableGrid = Class.create({
                 newRow[cm[j].id] = '';
             }
         }
-        bodyTable.down('tbody').insert({top: this._createRow(newRow, -i)});
         this.newRowsAdded[i-1] = newRow;
-        keys.setTopLimit(-i);
+        if (!this.options.addNewRowsToEndBehaviour) {
+            bodyTable.down('tbody').insert({top: this._createRow(newRow, -i)});
+            keys.setTopLimit(-i);
+            this.scrollTop = this.bodyDiv.scrollTop = 0;
+        } else {
+            bodyTable.down('tbody').insert({bottom: this._createRow(newRow, -i)});
+            var rowIndex = this.rows.length + this.newRowsAdded.length;
+            this._scrollToRow(rowIndex);
+        }
         this._addKeyBehaviorToRow(newRow, -i);
         keys.addMouseBehaviorToRow(-i);
         this._applyCellCallbackToRow(-i);
-        this.scrollTop = this.bodyDiv.scrollTop = 0;
     },
 
     deleteRows : function() {
