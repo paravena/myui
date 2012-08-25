@@ -44,7 +44,7 @@ KeyTable.prototype = {
         this.idPrefix = options.idPrefix || '';
         if (this._tableGrid) this.idPrefix = 'mtgC'+ this._tableGrid._mtgId + '_';
 
-        this.nBody = this._targetTable.down('tbody'); // Cache the tbody node of interest
+        this._tableBody = this._targetTable.down('tbody'); // Cache the tbody node of interest
 		this._xCurrentPos = null;
 		this._yCurrentPos = null;
 		this._nCurrentFocus = null;
@@ -114,7 +114,19 @@ KeyTable.prototype = {
         this._onClickHandler = f_onClick.bindAsEventListener(this);
 		$(document).observe('click', this._onClickHandler);
 
-        if (targetTable instanceof MY.TableGrid) this.addMouseBehavior();
+        this._tableBody.observe('click', function(event) {
+            var cell = Event.element(event).up('td');
+            if (cell != self._nCurrentFocus) {
+                self.setFocus(cell);
+                self.captureKeys();
+            }
+            self.eventFire('focus', cell);
+        });
+
+        this._tableBody.observe('dblclick', function(event) {
+            var cell = Event.element(event).up('td');
+            self.eventFire('action', cell);
+        });
 
         var f_onKeyPress = function(event) {
             var result = this.onKeyPress(event);
@@ -124,39 +136,6 @@ KeyTable.prototype = {
         this._onKeyPressHandler = f_onKeyPress.bindAsEventListener(this);
         $(document).observe('keydown', this._onKeyPressHandler);
 	},
-
-	addMouseBehavior : function() {
-		var tableGrid = this._tableGrid;
-		var renderedRows = tableGrid.renderedRows;
-		var renderedRowsAllowed = tableGrid.renderedRowsAllowed;
-		var beginAtRow = renderedRows - renderedRowsAllowed;
-		if (beginAtRow < 0) beginAtRow = 0;
-		for (var j = beginAtRow; j < renderedRows; j++) {
-            this.addMouseBehaviorToRow(j);
-		}
-	},
-
-    addMouseBehaviorToRow : function(y) {
-        var self = this;
-        for (var i = 0; i < this._numberOfColumns; i++) {
-            var element = this.getCellFromCoords(i, y);
-            var f_click = (function(element){
-                return function(event) {
-                    self.onClick(event);
-                    self.eventFire('focus', element);
-                };
-            })(element);
-
-            element.observe('click', f_click.bindAsEventListener(this));
-
-            var f_dblclick = (function(element){
-                return function() {
-                    self.eventFire('action', element);
-                };
-            })(element);
-            element.observe('dblclick', f_dblclick);
-        }
-    },
 
 	/**
 	 * Purpose:  Create a function (with closure for sKey) event addition API
@@ -559,24 +538,6 @@ KeyTable.prototype = {
 	getCellFromCoords : function(x, y) {
 		return $(this.idPrefix + x + ',' + y);
         //return this._targetTable.rows[y].cells[x]; <-- this sadly doesn't work
-	},
-
-	/**
-	 * Focus on the element that has been clicked on by the user
-	 *
-	 * @param event click event
-	 */
-	onClick : function(event) {
-		/*
-		var nTarget = event.target;
-		while (nTarget.nodeName != "TD") {
-			nTarget = nTarget.parentNode;
-		}*/
-		var nTarget = Event.findElement(event, 'TD');
-		if (nTarget != this._nCurrentFocus) {
-			this.setFocus(nTarget);
-			this.captureKeys();
-		}
 	},
 
 	/**

@@ -707,7 +707,6 @@ MY.TableGrid = Class.create({
             bodyTable.down('tbody').insert(html);
             this._addKeyBehavior();
             this._applyCellCallbacks();
-            keys.addMouseBehavior();
         }
     },
 
@@ -1754,7 +1753,6 @@ MY.TableGrid = Class.create({
             this.bodyTable.down('tbody').insert(html);
             this._addKeyBehavior();
             this._applyCellCallbacks();
-            this.keys.addMouseBehavior();
         }
     },
 
@@ -1989,7 +1987,6 @@ MY.TableGrid = Class.create({
             this._scrollToRow(rowIndex);
         }
         this._addKeyBehaviorToRow(newRow, -i);
-        keys.addMouseBehaviorToRow(-i);
         this._applyCellCallbackToRow(-i);
     },
 
