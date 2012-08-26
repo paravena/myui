@@ -1759,10 +1759,16 @@ MY.TableGrid = Class.create({
     getValueAt : function(x, y) {
         var value = null;
         var columnId = this.columnModel[x].id;
-        if (y >= 0)
-            value = this.rows[y][columnId];
-        else
-            value = this.newRowsAdded[Math.abs(y)-1][columnId];
+        var rows = this.rows;
+        var newRowsAdded = this.newRowsAdded;
+
+        if (y >= 0 && y < rows.length) {
+            value = rows[y][columnId];
+        } else if (y < 0) {
+            value = newRowsAdded[Math.abs(y)-1][columnId];
+        } else {
+            value = newRowsAdded[Math.abs(y) - rows.length][columnId];
+        }
         return value;
     },
 
@@ -1878,6 +1884,7 @@ MY.TableGrid = Class.create({
         var cm = this.columnModel;
         var newRowsAdded = this.newRowsAdded;
         var renderedRows = this.renderedRows;
+        var addNewRowsToEndBehaviorFlg = this.options.addNewRowsToEndBehaviour;
         idx = idx || -1; // Selectable column index
         var selectAllFlg = false;
         if (idx == -1) {
@@ -1897,9 +1904,16 @@ MY.TableGrid = Class.create({
             var j = 0;
             var y = 0;
             if (newRowsAdded.length > 0) { // there are new rows added
-                for (j = 0; j < newRowsAdded.length; j++) {
-                    y = -(j + 1);
-                    if ($('mtgInput'+id+'_'+idx+','+y).checked) result.push(y);
+                if (!addNewRowsToEndBehaviorFlg) {
+                    for (j = 0; j < newRowsAdded.length; j++) {
+                        y = -(j + 1);
+                        if ($('mtgInput'+id+'_'+idx+','+y).checked) result.push(y);
+                    }
+                } else {
+                    for (j = 0; j < newRowsAdded.length; j++) {
+                        y = j + renderedRows;
+                        if ($('mtgInput'+id+'_'+idx+','+y).checked) result.push(y);
+                    }
                 }
             }
 
@@ -1969,25 +1983,30 @@ MY.TableGrid = Class.create({
         var keys = this.keys;
         var bodyTable = this.bodyTable;
         var cm = this.columnModel;
-        var i = this.newRowsAdded.length + 1;
+        var index = this.newRowsAdded.length;
+        var renderedRows = this.renderedRows;
+
         if (newRow == undefined) {
             newRow = {};
             for (var j = 0; j < cm.length; j++) {
                 newRow[cm[j].id] = '';
             }
         }
-        this.newRowsAdded[i-1] = newRow;
+        this.newRowsAdded.push(newRow);
         if (!this.options.addNewRowsToEndBehaviour) {
-            bodyTable.down('tbody').insert({top: this._createRow(newRow, -i)});
-            keys.setTopLimit(-i);
+            index = -(index + 1);
+            bodyTable.down('tbody').insert({top: this._createRow(newRow, index)});
+            keys.setTopLimit(index);
             this.scrollTop = this.bodyDiv.scrollTop = 0;
         } else {
-            bodyTable.down('tbody').insert({bottom: this._createRow(newRow, -i)});
-            var rowIndex = this.rows.length + this.newRowsAdded.length;
-            this._scrollToRow(rowIndex);
+            index = renderedRows + index;
+            bodyTable.down('tbody').insert({bottom: this._createRow(newRow, index)});
+            var numberOfRows = renderedRows + this.newRowsAdded.length;
+            keys.setNumberOfRows(numberOfRows);
+            this._scrollToRow(numberOfRows);
         }
-        this._addKeyBehaviorToRow(newRow, -i);
-        this._applyCellCallbackToRow(-i);
+        this._addKeyBehaviorToRow(newRow, index);
+        this._applyCellCallbackToRow(index);
     },
 
     deleteRows : function() {
