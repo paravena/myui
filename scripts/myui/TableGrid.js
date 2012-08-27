@@ -1302,12 +1302,14 @@ MY.TableGrid = Class.create({
             value = editor.getSelectedValue(value);
         }
 
-        if (y >= 0 && this.rows[y][columnId] != value) {
+        if (y >= 0 && y < this.rows.length && this.rows[y][columnId] != value) {
             this.rows[y][columnId] = value;
             innerElement.addClassName('modified-cell');
             if (this.modifiedRows.indexOf(y) == -1) this.modifiedRows.push(y); //if doesn't exist in the array the row is registered
         } else if (y < 0) {
             this.newRowsAdded[Math.abs(y)-1][columnId] = value;
+        } else if (y >= this.rows.length) {
+            this.newRowsAdded[Math.abs(y) - this.rows.length][columnId] = value;
         }
 
         if ((editor instanceof MY.BrowseInput || editor instanceof MY.TextField || editor instanceof MY.DatePicker) && editor.afterUpdateCallback) {
@@ -1766,7 +1768,7 @@ MY.TableGrid = Class.create({
             value = rows[y][columnId];
         } else if (y < 0) {
             value = newRowsAdded[Math.abs(y)-1][columnId];
-        } else {
+        } else if (y >= rows.length) {
             value = newRowsAdded[Math.abs(y) - rows.length][columnId];
         }
         return value;
@@ -1870,10 +1872,13 @@ MY.TableGrid = Class.create({
         var selectedRowsIdx = this._getSelectedRowsIdx(idx);
         for (var i = 0; i < selectedRowsIdx.length; i++) {
             var rowIdx = selectedRowsIdx[i];
-            if (rowIdx >= 0)
+            if (rowIdx >= 0 && rowIdx < rows.length) {
                 result.push(rows[rowIdx]);
-            else
-                result.push(newRowsAdded[Math.abs(rowIdx)-1])
+            } else if (rowIdx < 0) {
+                result.push(newRowsAdded[Math.abs(rowIdx) - 1]);
+            } else if (rowIdx >= rows.length) {
+                result.push(newRowsAdded[Math.abs(rowIdx) - rows.length]);
+            }
         }
         return result;
     },
@@ -2016,11 +2021,14 @@ MY.TableGrid = Class.create({
         var y = 0;
         for (i = 0; i < selectedRows.length; i++) {
             y = selectedRows[i];
-            if (y >=0) {
+            if (y >= 0 && y < this.rows.length) {
                 this.deletedRows.push(this.getRow(y));
-            } else {
-                this.newRowsAdded[Math.abs(y)-1] = null;
+            } else if (y < 0) {
+                this.newRowsAdded[Math.abs(y) - 1] = null;
+            } else if (y >= this.rows.length) {
+                this.newRowsAdded[Math.abs(y) - this.rows.length] = null;
             }
+            this.newRowsAdded = this.newRowsAdded.compact();
             $('mtgRow'+id+'_'+y).hide();
         }
         var totalDiv = $('mtgTotal');
