@@ -1802,10 +1802,12 @@ MY.TableGrid = Class.create({
                 $('mtgIC'+id+'_'+x+','+y).innerHTML = value;
             }
         }
-        if (y >= 0)
+        if (y >= 0 && y < this.rows.length)
             this.rows[y][columnId] = value;
-        else
-            this.newRowsAdded[Math.abs(y)-1][columnId] = value;
+        else if (y < 0)
+            this.newRowsAdded[Math.abs(y) - 1][columnId] = value;
+        else if (y >= this.rows.length)
+            this.newRowsAdded[Math.abs(y) - this.rows.length][columnId] = value;
     },
 
     getColumnIndex : function(id) {
