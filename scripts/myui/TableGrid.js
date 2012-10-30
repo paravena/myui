@@ -78,8 +78,8 @@ MY.TableGrid = Class.create({
         // Header builder
         this.hb = new HeaderBuilder(this._mtgId, this.columnModel);
         if (this.hb.getHeaderRowNestedLevel() > 1) {
-            this.options.addSettingBehaviorFlg = false;
-            this.options.addDraggingBehaviorFlg = false;
+            this.options.addSettingBehavior = false;
+            this.options.addDraggingBehavior = false;
         }
         this.headerWidth = this.hb.getTableHeaderWidth();
         this.headerHeight = this.hb.getTableHeaderHeight();
@@ -129,17 +129,19 @@ MY.TableGrid = Class.create({
         this.scrollLeft = 0;
         this.scrollTop = 0;
         this.targetColumnId = null;
-
+        this.alreadyLoadedFlg = false;
         var self = this;
 
         this.bodyDiv.observe('dom:dataLoaded', function() {
             self._showLoaderSpinner();
             self.bodyTable = $('mtgBT' + id);
-            self._applyCellCallbacks();
-            self._applyHeaderButtons();
-            self._makeAllColumnsResizable();
-            if (self.options.addDraggingBehaviorFlg) self._makeAllColumnDraggable();
-            if (self.options.addSettingBehaviorFlg) self._applySettingMenuBehavior();
+            if (!self.alreadyLoadedFlg) {
+                self._applyCellCallbacks();
+                self._applyHeaderButtons();
+                self._makeAllColumnsResizable();
+                if (self.options.addDraggingBehavior) self._makeAllColumnDraggable();
+                if (self.options.addSettingBehavior) self._applySettingMenuBehavior();
+            }
             self.keys = new KeyTable(self);
             self._addKeyBehavior();
             if (self.pager) {
@@ -149,6 +151,7 @@ MY.TableGrid = Class.create({
                 self.options.afterRender();
             }
             self._hideLoaderSpinner();
+            self.alreadyLoadedFlg = true;
         });
 
         setTimeout(function() {
@@ -307,7 +310,7 @@ MY.TableGrid = Class.create({
         }
 
         // Adding Table Setting Button Control
-        if (this.options.addSettingBehaviorFlg) {
+        if (this.options.addSettingBehavior) {
             html[idx++] = '<div id="mtgSB'+id+'" class="my-tablegrid-setting-button" style="left:'+(this.tableWidth - 20)+'px"><div class="icon">&nbsp;</div></div>';
             // Adding Table Setting Menu
             html[idx++] = this._createSettingMenu();
@@ -1449,19 +1452,81 @@ MY.TableGrid = Class.create({
 
     _sortData : function(idx, ascDescFlg) {
         var cm = this.columnModel;
+        if (!cm[idx].sortable) return;
         var id = this._mtgId;
-        if (cm[idx].sortable) {
-            $('mtgSortIcon'+id+'_'+idx).className = (ascDescFlg == 'ASC')? 'my-tablegrid-sort-asc-icon' : 'my-tablegrid-sort-desc-icon';
+        $('mtgSortIcon'+id+'_'+idx).className = (ascDescFlg == 'ASC')? 'my-tablegrid-sort-asc-icon' : 'my-tablegrid-sort-desc-icon';
+        $('mtgSortIcon'+id+'_'+this.sortedColumnIndex).setStyle({visibility : 'hidden'});
+        $('mtgIHC'+id+'_'+this.sortedColumnIndex).setStyle({color : 'dimgray'});
+        $('mtgSortIcon'+id+'_'+idx).setStyle({visibility : 'visible'});
+        $('mtgIHC'+id+'_'+idx).setStyle({color : 'black'});
+
+        if (this.url) {
             this.request[this.options.sortColumnParameter] = cm[idx].id;
             this.request[this.options.ascDescFlagParameter] = ascDescFlg;
             this._retrieveDataFromUrl(1);
-            $('mtgSortIcon'+id+'_'+this.sortedColumnIndex).setStyle({visibility : 'hidden'});
-            $('mtgIHC'+id+'_'+this.sortedColumnIndex).setStyle({color : 'dimgray'});
-            $('mtgSortIcon'+id+'_'+idx).setStyle({visibility : 'visible'});
-            $('mtgIHC'+id+'_'+idx).setStyle({color : 'black'});
-            this.sortedColumnIndex = idx;
-            cm[idx].sortedAscDescFlg = ascDescFlg;
+        } else if (this.rows && this.rows.length > 0) {
+            var columnValues = this.getColumnValues(cm[idx].id, false);
+            var hashIndex = {};
+            var temp = [];
+            var word = null;
+            for (var i = 0; i < columnValues.length; i++) {
+                word = columnValues[i];
+                if (!hashIndex.hasOwnProperty(word)) {
+                    hashIndex[word] = {};
+                }
+
+                if (!hashIndex[word].hasOwnProperty('current')) {
+                    hashIndex[word].current = [];
+                    hashIndex[word].current.push(i);
+                } else {
+                    temp = [];
+                    temp.push(hashIndex[word].current);
+                    temp.push(i);
+                    temp = temp.flatten();
+                    hashIndex[columnValues[i]].current = temp;
+                }
+
+            }
+            columnValues = columnValues.sort();
+            if (ascDescFlg == 'DESC') columnValues = columnValues.reverse();
+            for (i = 0; i < columnValues.length; i++) {
+                word = columnValues[i];
+                if (!hashIndex[word].hasOwnProperty('after')) {
+                    hashIndex[word].after = [];
+                    hashIndex[word].after.push(i);
+                } else { // there is a repetition
+                    temp = [];
+                    temp.push(hashIndex[word].after);
+                    temp.push(i);
+                    temp = temp.flatten();
+                    hashIndex[columnValues[i]].after = temp;
+                }
+            }
+
+            var result = [];
+            var rows = this.rows;
+            var positions = null;
+            var pos = null;
+            columnValues = columnValues.uniq();
+            for (i = 0; i < columnValues.length; i++) { // for each word
+                word = columnValues[i];
+                positions = hashIndex[word].current;
+                for (var j = 0; j < positions.length; j++) {
+                    pos = positions[j];
+                    result.push(rows[pos]);
+                }
+            }
+            this.rows = result;
+            this.renderedRows = 0;
+            this.innerBodyDiv.innerHTML = this._createTableBody(this.rows);
+            if (this.pager) {
+                this.pagerDiv.innerHTML = this._updatePagerInfo();
+            }
+            this.scrollTop = this.bodyDiv.scrollTop = 0;
+            this.bodyDiv.fire('dom:dataLoaded');
         }
+        cm[idx].sortedAscDescFlg = ascDescFlg;
+        this.sortedColumnIndex = idx;
     },
 
     _toggleSortData : function(idx) {
@@ -1966,14 +2031,15 @@ MY.TableGrid = Class.create({
         return result;
     },
 
-    getColumnValues : function(id) {
+    getColumnValues : function(id, includeAddedFlg) {
+        if (includeAddedFlg === undefined) includeAddedFlg = true;
         var result = [];
-        var j = 0;
-        var i = 0;
-        for (i = 0; i < this.newRowsAdded.length; i++) {
-            result[j++] = this.newRowsAdded[i][id];
+        var j = 0, i = 0;
+        if (includeAddedFlg) {
+            for (i = 0; i < this.newRowsAdded.length; i++) {
+                result[j++] = this.newRowsAdded[i][id];
+            }
         }
-
         for (i = 0; i < this.rows.length; i++) {
             result[j++] = this.rows[i][id];
         }
