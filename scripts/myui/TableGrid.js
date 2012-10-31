@@ -1471,37 +1471,13 @@ MY.TableGrid = Class.create({
             var word = null;
             for (var i = 0; i < columnValues.length; i++) {
                 word = columnValues[i];
-                if (!hashIndex.hasOwnProperty(word)) {
-                    hashIndex[word] = {};
+                if (hashIndex[word] === undefined) {
+                    hashIndex[word] = [];
                 }
-
-                if (!hashIndex[word].hasOwnProperty('current')) {
-                    hashIndex[word].current = [];
-                    hashIndex[word].current.push(i);
-                } else {
-                    temp = [];
-                    temp.push(hashIndex[word].current);
-                    temp.push(i);
-                    temp = temp.flatten();
-                    hashIndex[columnValues[i]].current = temp;
-                }
-
+                hashIndex[word].push(i);
             }
             columnValues = columnValues.sort();
             if (ascDescFlg == 'DESC') columnValues = columnValues.reverse();
-            for (i = 0; i < columnValues.length; i++) {
-                word = columnValues[i];
-                if (!hashIndex[word].hasOwnProperty('after')) {
-                    hashIndex[word].after = [];
-                    hashIndex[word].after.push(i);
-                } else { // there is a repetition
-                    temp = [];
-                    temp.push(hashIndex[word].after);
-                    temp.push(i);
-                    temp = temp.flatten();
-                    hashIndex[columnValues[i]].after = temp;
-                }
-            }
 
             var result = [];
             var rows = this.rows;
@@ -1510,7 +1486,7 @@ MY.TableGrid = Class.create({
             columnValues = columnValues.uniq();
             for (i = 0; i < columnValues.length; i++) { // for each word
                 word = columnValues[i];
-                positions = hashIndex[word].current;
+                positions = hashIndex[word];
                 for (var j = 0; j < positions.length; j++) {
                     pos = positions[j];
                     result.push(rows[pos]);
