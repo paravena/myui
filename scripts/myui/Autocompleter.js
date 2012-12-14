@@ -358,6 +358,10 @@ MY.Autocompleter = Class.create(MY.TextField, {
         this._syncScroll(this._getEntry(this.index), true);
     },
 
+    reset : function() {
+        this.options.items = null;
+    },
+
     _getEntry : function(index) {
         return this.update.firstChild.childNodes[index];
     },
