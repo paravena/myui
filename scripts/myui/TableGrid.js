@@ -511,14 +511,16 @@ MY.TableGrid = Class.create({
                     var listValuePropertyName = cm[j].editor.options.listValuePropertyName;
                     cm[j].renderer = function(value, list) {
                         var result = value;
-                        for (var i = 0; i < list.length; i++) {
-                            if (list[i] instanceof Object) {
-                                if (list[i][listValuePropertyName] === value) {
-                                    result = list[i][listTextPropertyName];
-                                    break;
+                        if (list && list.length > 0) {
+                            for (var i = 0; i < list.length; i++) {
+                                if (list[i] instanceof Object) {
+                                    if (list[i][listValuePropertyName] === value) {
+                                        result = list[i][listTextPropertyName];
+                                        break;
+                                    }
+                                } else {
+                                    break; // this happen when list is an array of strings
                                 }
-                            } else {
-                                break; // this happen when list is an array of strings
                             }
                         }
                         return result;
