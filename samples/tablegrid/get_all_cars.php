@@ -72,7 +72,7 @@
         $idx = 0;
         
         while($row = mysql_fetch_array($result)) {
-            $rows[$idx++] = array($row['car_id'], $row['manuf_name'], $row['model_name'], $row['model_year'], $row['car_ask_price'], $row['car_date_acquired'], 'US', $row['model_name'], '1');
+            $rows[$idx++] = array('carId' => $row['car_id'], 'manufacturer' => $row['manuf_name'], 'model' => $row['model_name'], 'year' => $row['model_year'], 'price' => $row['car_ask_price'], 'dateAcquired' => $row['car_date_acquired'], 'manuf_name' => $row['model_name']);
         }
     } 
     mysql_close($con);

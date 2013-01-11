@@ -469,7 +469,7 @@ MY.TableGrid = Class.create({
                 if (!cm[j].hasOwnProperty('renderer')) {
                     html[idx++] = row[columnId];
                 } else {
-                    html[idx++] = cm[j].renderer(row[columnId], this.getRow(rowIdx));
+                    html[idx++] = cm[j].renderer(row[columnId], row);
                 }
             } else if (editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox) {
                 temp = checkboxTmpl.replace(/\{id\}/g, id);
@@ -526,7 +526,7 @@ MY.TableGrid = Class.create({
                         return result;
                     };
                 }
-                html[idx++] = cm[j].renderer(row[columnId], editor.getItems(), this.getRow(rowIdx));
+                html[idx++] = cm[j].renderer(row[columnId], editor.getItems(), row);
             }
             html[idx++] = '</div>';
             html[idx++] = '</td>';

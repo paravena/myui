@@ -111,13 +111,16 @@
                 editor: new MY.DatePicker({})
             },
             {
-                id : 'origCountry',
-                title : 'Origin Country',
+                id : 'manuf_name',
+                title : 'Name Manufactuer',
                 width : 100,
                 editable: true,
                 editor: new MY.ComboBox({
-                    items: countryList
-                })
+                    url: 'get_manufacturers_list.php'
+                }),
+                renderer : function(value, list, row) {
+                    return row['manufacturer'];
+                }
             }
         ],
         url: 'get_all_cars.php'
