@@ -502,16 +502,17 @@ MY.Autocompleter = Class.create(MY.TextField, {
         var listTextPropertyName = this.options.listTextPropertyName;
         var listValuePropertyName = this.options.listValuePropertyName;
         var result = text;
-
-        for (var i = 0; i < items.length; i++) {
-            // This check prevents the case when items is just an array of strings
-            if (items[i] instanceof Object) {
-                if (items[i][listTextPropertyName] === text) {
-                    result = items[i][listValuePropertyName];
+        if (items) {
+            for (var i = 0; i < items.length; i++) {
+                // This check prevents the case when items is just an array of strings
+                if (items[i] instanceof Object) {
+                    if (items[i][listTextPropertyName] === text) {
+                        result = items[i][listValuePropertyName];
+                        break;
+                    }
+                } else {
                     break;
                 }
-            } else {
-                break;
             }
         }
         return result;
