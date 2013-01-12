@@ -53,6 +53,7 @@
         
         $query = 'select a.* from ( '.
                  'select m.manuf_name, ' .
+                 '       m.manuf_id, ' .
                  '       cm.model_id, ' .
                  '       cm.model_name, ' .
                  '       cm.model_year, ' .
@@ -72,7 +73,15 @@
         $idx = 0;
         
         while($row = mysql_fetch_array($result)) {
-            $rows[$idx++] = array('carId' => $row['car_id'], 'manufacturer' => $row['manuf_name'], 'model' => $row['model_name'], 'year' => $row['model_year'], 'price' => $row['car_ask_price'], 'dateAcquired' => $row['car_date_acquired'], 'manuf_name' => $row['model_name']);
+            $rows[$idx++] = array('carId' => $row['car_id'],
+                'manufacturer_id' => $row['manuf_id'],
+                'manufacturer' => $row['manuf_name'],
+                'model' => $row['model_name'],
+                'year' => $row['model_year'],
+                'price' => $row['car_ask_price'],
+                'dateAcquired' => $row['car_date_acquired'],
+                'model_name' => $row['model_name'],
+                'is_new' => 'Y');
         }
     } 
     mysql_close($con);

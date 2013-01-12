@@ -1213,7 +1213,7 @@ MY.TableGrid = Class.create({
             });
             innerElement.innerHTML = '';
             if (editor instanceof MY.ComboBox) { // when is a list
-                value = cm[x].renderer(value, editor.getItems(), this.getRow(y));
+                value = cm[x].renderer(value, editor.getItems(), this.getRow(y)) || '';
             }
             // Creating a normal input
             var inputId = 'mtgInput' + this._mtgId + '_' + x + ',' + y;
@@ -1284,7 +1284,7 @@ MY.TableGrid = Class.create({
         var type = cm[x].type || 'string';
         var columnId = cm[x].id;
         var alignment = (type == 'number')? 'right' : 'left';
-
+        if (cm[x].align) alignment = cm[x].align;
         var isInputFlg = !(editor == 'radio' || editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox || editor instanceof MY.TableGrid.CellRadioButton);
         if (isInputFlg) {
             if (editor.hide) editor.hide(); // this only happen when editor is a Combobox
