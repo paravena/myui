@@ -1211,10 +1211,13 @@ MY.TableGrid = Class.create({
                 border: '0',
                 margin: '0'
             });
-            innerElement.innerHTML = '';
+
             if (editor instanceof MY.ComboBox) { // when is a list
                 value = cm[x].renderer(value, editor.getItems(), this.getRow(y)) || '';
+                if (y < 0 || y >= this.rows.length) // is a new row
+                    value = innerElement.innerHTML;
             }
+            innerElement.innerHTML = '';
             // Creating a normal input
             var inputId = 'mtgInput' + this._mtgId + '_' + x + ',' + y;
             input = new Element('input', {id: inputId, type: 'text', value: value});
@@ -2002,10 +2005,12 @@ MY.TableGrid = Class.create({
 
     getRow : function(y) {
         var result = null;
-        if (y >= 0)
+        if (y >= 0 && y < this.rows.length)
             result = this.rows[y];
-        else
-            result = this.newRowsAdded[-(y+1)];
+        else if (y < 0)
+            result = this.newRowsAdded[-(y + 1)];
+        else if (y >= this.rows.length)
+            result = this.newRowsAdded[y - this.rows.length];
         return result;
     },
 
