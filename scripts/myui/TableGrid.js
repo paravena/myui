@@ -572,8 +572,8 @@ MY.TableGrid = Class.create({
                     return function() {
                         if (editor.selectable == undefined || !editor.selectable) {
                             var coords = element.id.substring(element.id.indexOf('_') + 1, element.id.length).split(',');
-                            var x = coords[0];
-                            var y = coords[1];
+                            var x = parseInt(coords[0]);
+                            var y = parseInt(coords[1]);
                             var value = element.checked;
                             if (editor.hasOwnProperty('getValueOf')) value = editor.getValueOf(element.checked);
                             self.setValueAt(value, x, y, false);
@@ -1311,9 +1311,11 @@ MY.TableGrid = Class.create({
         }
 
         if (y >= 0 && y < this.rows.length && this.rows[y][columnId] != value) {
-            this.rows[y][columnId] = value;
-            innerElement.addClassName('modified-cell');
-            if (this.modifiedRows.indexOf(y) == -1) this.modifiedRows.push(y); //if doesn't exist in the array the row is registered
+            if (isInputFlg || !editor.selectable) {
+                this.rows[y][columnId] = value;
+                innerElement.addClassName('modified-cell');
+                if (this.modifiedRows.indexOf(y) == -1) this.modifiedRows.push(y); //if doesn't exist in the array the row is registered
+            }
         } else if (y < 0) {
             this.newRowsAdded[Math.abs(y)-1][columnId] = value;
         } else if (y >= this.rows.length) {
