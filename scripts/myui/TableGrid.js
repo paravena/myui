@@ -51,7 +51,8 @@ MY.TableGrid = Class.create({
             addSettingBehavior : true,
             addDraggingBehavior : true,
             addLazyRenderingBehavior : true,
-            addNewRowsToEndBehaviour : false
+            addNewRowsToEndBehaviour : false,
+            defaultAddRow : null
         }).merge(tableModel.options || {}).toObject();
 
         this.pagerHeight = 24;
@@ -95,6 +96,7 @@ MY.TableGrid = Class.create({
             if (!this.columnModel[i].hasOwnProperty('type')) this.columnModel[i].type = 'string';
             if (!this.columnModel[i].hasOwnProperty('selectAllFlg')) this.columnModel[i].selectAllFlg = false;
             if (!this.columnModel[i].hasOwnProperty('sortedAscDescFlg')) this.columnModel[i].sortedAscDescFlg = 'DESC';
+            if (!this.columnModel[i].hasOwnProperty('defaultValue')) this.columnModel[i].defaultValue = '';
             this.columnModel[i].positionIndex = i;
         }
 
@@ -2045,9 +2047,13 @@ MY.TableGrid = Class.create({
         var renderedRows = this.renderedRows;
 
         if (newRow == undefined) {
-            newRow = {};
-            for (var j = 0; j < cm.length; j++) {
-                newRow[cm[j].id] = '';
+            if (this.options.defaultAddRow) {
+                newRow = this.options.defaultAddRow;
+            } else {
+                newRow = {};
+                for (var j = 0; j < cm.length; j++) {
+                    newRow[cm[j].id] = cm[j].defaultValue;
+                }
             }
         }
         this.newRowsAdded.push(newRow);
