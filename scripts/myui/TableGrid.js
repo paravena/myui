@@ -1308,8 +1308,13 @@ MY.TableGrid = Class.create({
         }
 
         // I hope I can find a better solution
+        var textValue = value;
         if (editor instanceof MY.Autocompleter) {
             value = editor.getSelectedValue(value);
+        }
+
+        if (cm[x].onBlur) {
+            cm[x].onBlur(value, this.getRow(y), textValue);
         }
 
         if (y >= 0 && y < this.rows.length && this.rows[y][columnId] != value) {
@@ -1350,6 +1355,7 @@ MY.TableGrid = Class.create({
             var editor = null;
             var sortable = true;
             var hbHeight = null;
+            var selectable = false;
             element.observe('mousemove', function() {
                 var cm = self.columnModel;
                 if (!element.id) return;
@@ -1357,7 +1363,8 @@ MY.TableGrid = Class.create({
                 editor = cm[selectedHCIndex].editor;
                 sortable = cm[selectedHCIndex].sortable;
                 hbHeight = cm[selectedHCIndex].height;
-                if (sortable || editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox) {
+                if (editor.selectable) selectable = editor.selectable;
+                if (sortable || selectable) {
                     var hc = element.up();
                     var leftPos = hc.offsetLeft + hc.offsetWidth;
                     leftPos = leftPos - 16 - self.scrollLeft;
@@ -1389,6 +1396,8 @@ MY.TableGrid = Class.create({
 
         headerButton.observe('click', function() {
             var cm = self.columnModel;
+            var editor = cm[selectedHCIndex].editor;
+            var selectable = false;
             if (headerButtonMenu.getStyle('visibility') == 'hidden') {
                 if (cm[selectedHCIndex].sortable) {
                     $('mtgSortDesc'+self._mtgId).show();
@@ -1397,18 +1406,14 @@ MY.TableGrid = Class.create({
                     $('mtgSortDesc'+self._mtgId).hide();
                     $('mtgSortAsc'+self._mtgId).hide();
                 }
-
+                if (editor.selectable) selectable = editor.selectable;
                 var selectAllItem = $$('#mtgHBM' + id + ' .mtgSelectAll')[0];
-                if (self.renderedRows > 0
-                        && (cm[selectedHCIndex].editor == 'checkbox'
-                            || cm[selectedHCIndex].editor instanceof MY.TableGrid.CellCheckbox)) {
+                if (selectable && self.renderedRows > 0 && (editor == 'checkbox' || editor instanceof MY.TableGrid.CellCheckbox)) {
                     selectAllItem.down('input').checked = cm[selectedHCIndex].selectAllFlg;
                     selectAllItem.show();
                     var selectAllHandler = function() { // onclick handler
                         var flag = cm[selectedHCIndex].selectAllFlg = $('mtgSelectAll' + id).checked;
                         var selectableFlg = false;
-                        if (cm[selectedHCIndex].editor instanceof MY.TableGrid.CellCheckbox
-                                && cm[selectedHCIndex].editor.selectable) selectableFlg = true;
                         var renderedRows = self.renderedRows;
                         var beginAtRow = 0;
                         if (self.newRowsAdded.length > 0) beginAtRow = -self.newRowsAdded.length;
@@ -1416,12 +1421,14 @@ MY.TableGrid = Class.create({
                         for (var y = beginAtRow; y < renderedRows; y++) {
                             var element = $('mtgInput' + id + '_' + x +','+y);
                             var value = element.checked = flag;
-                            if (!selectableFlg) {
+                            /* TODO think about this behavior
+                            if (!selectable) {
                                 if (cm[x].editor.hasOwnProperty('getValueOf')) value = cm[x].editor.getValueOf(element.checked);
                                 self.setValueAt(value, x, y, false);
                                 // if doesn't exist in the array the row is registered
                                 if (y >= 0 && self.modifiedRows.indexOf(y) == -1) self.modifiedRows.push(y);
                             }
+                            */
                         }
                         //if (cm[selectedHCIndex].editor instanceof MY.TableGrid.CellCheckbox // Maybe this is a mistake
                         //        && cm[selectedHCIndex].editor.onClickCallback) cm[selectedHCIndex].editor.onClickCallback();
