@@ -571,11 +571,17 @@ MY.TableGrid = Class.create({
                 var element = $('mtgInput'+id + '_' + i + ',' + y);
                 var innerElement = $('mtgIC'+id + '_' + i + ',' + y);
                 var elementClickHandler = (function(editor, element, innerElement) {
-                    return function() {
+                    return function(event) {
+                        var coords = element.id.substring(element.id.indexOf('_') + 1, element.id.length).split(',');
+                        var x = parseInt(coords[0]);
+                        var y = parseInt(coords[1]);
+                        if (cm[x].editable && cm[x].editable instanceof Function) {
+                            if (!cm[x].editable(x, y)) {
+                                event.stop();
+                                return false;
+                            }
+                        }
                         if (editor.selectable == undefined || !editor.selectable) {
-                            var coords = element.id.substring(element.id.indexOf('_') + 1, element.id.length).split(',');
-                            var x = parseInt(coords[0]);
-                            var y = parseInt(coords[1]);
                             var value = element.checked;
                             if (editor.hasOwnProperty('getValueOf')) value = editor.getValueOf(element.checked);
                             self.setValueAt(value, x, y, false);
@@ -584,6 +590,7 @@ MY.TableGrid = Class.create({
                         if (editor.onClickCallback) editor.onClickCallback(element.value, element.checked);
                         if (editor.selectable == undefined || !editor.selectable)
                             innerElement.addClassName('modified-cell');
+                        return true;
                     };
                 })(editor, element, innerElement);
                 element.observe('click', elementClickHandler.bindAsEventListener(this));
@@ -1141,8 +1148,11 @@ MY.TableGrid = Class.create({
                 keys.event.remove.esc(element);
                 keys.event.remove.blur(element);
 
-                var f_action = (function(element) {
+                var f_action = (function(element, x, y) {
                     return function() {
+                        if (cm[x].editable instanceof Function) {
+                             if (!cm[x].editable(x,y)) return;
+                        }
                         if (self.editedCellId == null || self.editedCellId != element.id) {
                             self.editedCellId = element.id;
                             self._editCellElement(element);
@@ -1151,7 +1161,7 @@ MY.TableGrid = Class.create({
                                 self.editedCellId = null;
                         }
                     };
-                })(element);
+                })(element, i, j);
                 keys.event.action(element, f_action);
 
                 var f_esc = (function(element) {
@@ -2052,14 +2062,18 @@ MY.TableGrid = Class.create({
         var cm = this.columnModel;
         var index = this.newRowsAdded.length;
         var renderedRows = this.renderedRows;
-
+        var i = 0;
         if (newRow == undefined) {
             if (this.options.defaultAddRow) {
-                newRow = this.options.defaultAddRow;
+                var newRowTmpl = this.options.defaultAddRow;
+                newRow = {};
+                for (var p in newRowTmpl) {
+                    if (newRowTmpl.hasOwnProperty(p)) newRow[p] = newRowTmpl[p];
+                }
             } else {
                 newRow = {};
-                for (var j = 0; j < cm.length; j++) {
-                    newRow[cm[j].id] = cm[j].defaultValue;
+                for (i = 0; i < cm.length; i++) {
+                    newRow[cm[i].id] = cm[i].defaultValue;
                 }
             }
         }
@@ -2089,6 +2103,11 @@ MY.TableGrid = Class.create({
             y = selectedRows[i];
             if (y >= 0 && y < this.rows.length) {
                 this.deletedRows.push(this.getRow(y));
+                if (this.modifiedRows.indexOf(y) >= 0) {
+                    var idx = this.modifiedRows.indexOf(y);
+                    this.modifiedRows[idx] = null;
+                    this.modifiedRows = this.modifiedRows.compact();
+                }
             } else if (y < 0) {
                 this.newRowsAdded[Math.abs(y) - 1] = null;
             } else if (y >= this.rows.length) {
