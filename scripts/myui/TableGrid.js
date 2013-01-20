@@ -415,7 +415,7 @@ MY.TableGrid = Class.create({
      */
     _createRow : function(row, rowIdx) {
         var id = this._mtgId;
-        var tdTmpl = '<td id="mtgC{id}_{x},{y}" height="{height}" width="{width}" style="width:{width}px;height:{height}px;padding:0;margin:0;display:{display}" class="my-tablegrid-cell mtgC{id} mtgC{id}_{x} mtgR{id}_{y}">';
+        var tdTmpl = '<td id="mtgC{id}_{x},{y}" height="{height}" width="{width}" style="width:{width}px;height:{height}px;display:{display}" class="my-tablegrid-cell mtgC{id} mtgC{id}_{x} mtgR{id}_{y}">';
         var icTmpl = '<div id="mtgIC{id}_{x},{y}" style="width:{width}px;height:{height}px;padding:3px;text-align:{align}" class="my-tablegrid-inner-cell mtgIC{id} mtgIC{id}_{x} mtgIR{id}_{y}">';
         var checkboxTmpl = '<input id="mtgInput{id}_{x},{y}" name="mtgInput{id}_{x},{y}" type="checkbox" value="{value}" class="mtgInput{id}_{x} mtgInputCheckbox" checked="{checked}">';
         var radioTmpl = '<input id="mtgInput{id}_{x},{y}" name="mtgInput{id}_{x}" type="radio" value="{value}" class="mtgInput{id}_{x} mtgInputRadio">';
@@ -485,20 +485,20 @@ MY.TableGrid = Class.create({
                         if (row[columnId] == trueVal || selectAllFlg) {
                             temp = temp.replace(/\{checked\}/, 'checked');
                         } else {
-                            temp = temp.replace(/checked=.*?>/, '');
+                            temp = temp.replace(/checked=.*?>/, '>');
                         }
                     } else {
                         if (eval(row[columnId]) || selectAllFlg) {  //must be true or false
                             temp = temp.replace(/\{checked\}/, 'checked');
                         } else {
-                            temp = temp.replace(/checked=.*?>/, '');
+                            temp = temp.replace(/checked=.*?>/, '>');
                         }
                     }
                 } else { // When is selectable
                     if (cm[j].selectAllFlg)
                         temp = temp.replace(/\{checked\}/, 'checked');
                     else
-                        temp = temp.replace(/checked=.*?>/, '');
+                        temp = temp.replace(/checked=.*?>/, '>');
                 }
                 html[idx++] = temp;
             } else if (editor == 'radio' || editor instanceof MY.TableGrid.CellRadioButton) {
@@ -2139,11 +2139,16 @@ MY.TableGrid = Class.create({
     },
 
     empty : function() {
-        var bodyTable = this.bodyTable;
-        bodyTable.down('tbody').innerHTML = '';
+        this.modifiedRows = [];
+        this.deletedRows = [];
+        this.newRowsAdded = [];
         this.rows = [];
         this.pager.total = 0;
+        this.renderedRows = 0;
+        this.innerBodyDiv.innerHTML = this._createTableBody(this.rows);
+        this.bodyTable = $('mtgBT' + this._mtgId);
         this.pagerDiv.innerHTML = this._updatePagerInfo();
+        this.bodyDiv.fire('dom:dataLoaded')
     },
 
     /**
