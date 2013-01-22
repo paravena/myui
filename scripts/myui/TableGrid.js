@@ -1613,7 +1613,7 @@ MY.TableGrid = Class.create({
                     self.renderedRows = 0;
                     self.innerBodyDiv.innerHTML = self._createTableBody(tableModel.rows);
                     self.bodyTable = $('mtgBT' + self._mtgId);
-                    if (tableModel.rows.length > 0 && !firstTimeFlg) {
+                    if (tableModel.rows.length >= 0 && !firstTimeFlg) {
                         self._applyCellCallbacks();
                         self.keys = new KeyTable(self);
                         self._addKeyBehavior();
