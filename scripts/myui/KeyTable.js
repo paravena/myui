@@ -51,7 +51,6 @@ KeyTable.prototype = {
 		this._nOldFocus = null;
         this._topLimit = 0;
 		// Table grid key navigation handling flags
-		this.blockFlg = false;
 		this.blockKeyCaptureFlg = false;
 
 		this._nInput = null;
@@ -260,7 +259,7 @@ KeyTable.prototype = {
 	 * @param event key event
 	 */
 	 onKeyPress : function(event) {
-        if (this.blockFlg || !this.blockKeyCaptureFlg) return true;
+        if (this.blockKeyCaptureFlg) return true;
 		// If a modifier key is pressed (except shift), ignore the event
 		if (event.metaKey || event.altKey || event.ctrlKey) return true;
 		var x = this._xCurrentPos;
@@ -544,16 +543,14 @@ KeyTable.prototype = {
 	 * Start capturing key events for this table
 	 */
 	captureKeys : function() {
-		if (!this.blockKeyCaptureFlg) {
-			this.blockKeyCaptureFlg = true;
-		}
+        this.blockKeyCaptureFlg = false;
 	},
 
 	/**
 	 * Stop capturing key events for this table
 	 */
 	releaseKeys : function() {
-		this.blockKeyCaptureFlg = false;
+		this.blockKeyCaptureFlg = true;
 	},
 
     /**

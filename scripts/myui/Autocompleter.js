@@ -269,7 +269,7 @@ MY.Autocompleter = Class.create(MY.TextField, {
                 case Event.KEY_TAB:
                 case Event.KEY_RETURN:
                     this.selectEntry();
-                    event.stop();
+                    Event.stop(event);
                 case Event.KEY_ESC:
                     this.hide();
                     this.active = false;
