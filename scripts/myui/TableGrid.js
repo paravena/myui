@@ -2113,9 +2113,9 @@ MY.TableGrid = Class.create({
             } else if (y >= this.rows.length) {
                 this.newRowsAdded[Math.abs(y) - this.rows.length] = null;
             }
-            this.newRowsAdded = this.newRowsAdded.compact();
             $('mtgRow'+id+'_'+y).hide();
         }
+        this.newRowsAdded = this.newRowsAdded.compact();
         var totalDiv = $('mtgTotal');
         if (totalDiv) {
             var total = parseInt(totalDiv.innerHTML);
