@@ -1613,11 +1613,6 @@ MY.TableGrid = Class.create({
                     self.renderedRows = 0;
                     self.innerBodyDiv.innerHTML = self._createTableBody(tableModel.rows);
                     self.bodyTable = $('mtgBT' + self._mtgId);
-                    if (tableModel.rows.length >= 0 && !firstTimeFlg) {
-                        self._applyCellCallbacks();
-                        self.keys = new KeyTable(self);
-                        self._addKeyBehavior();
-                    }
                     if (self.pager) {
                         self.pagerDiv.innerHTML = self._updatePagerInfo(); // update pager info panel
                         self._addPagerBehavior();
@@ -1630,7 +1625,10 @@ MY.TableGrid = Class.create({
                 } finally {
                     self._toggleLoadingOverlay();
                     self.scrollTop = self.bodyDiv.scrollTop = 0;
-                    if (firstTimeFlg) self.bodyDiv.fire('dom:dataLoaded');
+                    if (firstTimeFlg) {
+                        if (self.keys != null) self.keys.stop();
+                        self.bodyDiv.fire('dom:dataLoaded');
+                    }
                 }
             },
             onFailure : function(transport) {
@@ -2135,7 +2133,7 @@ MY.TableGrid = Class.create({
         this.modifiedRows = [];
         this.deletedRows = [];
         this.newRowsAdded = [];
-        this._retrieveDataFromUrl(1,false);
+        this._retrieveDataFromUrl(1, true);
     },
 
     empty : function() {
