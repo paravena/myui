@@ -30,8 +30,9 @@
     mysql_select_db("jawdb", $con);
 
     $manuf_id = null;
-    if (isset($_REQUEST['manuf_id']))
-        $page = $_REQUEST['manuf_id'];
+    if (isset($_REQUEST['manuf_id'])) {
+        $manuf_id = $_REQUEST['manuf_id'];
+    }
 
     $query = 'select count(1) ' .
              'from cars_for_sale cfs, ' .
@@ -73,8 +74,13 @@
                  '     car_models cm, ' .
                  '     manufacturers m ' .
                  'where cfs.model_id = cm.model_id and ' .
-                 'cm.manuf_id = m.manuf_id ' .
-                 'order by ' . $sortColumn . ' ' . $ascDescFlg . ') a ' .
+                 'cm.manuf_id = m.manuf_id ';
+
+        if ($manuf_id != null) {
+            $query = $query . ' and m.manuf_id =  ' . $manuf_id;
+        }
+
+        $query = $query . ' order by ' . $sortColumn . ' ' . $ascDescFlg . ') a ' .
                  'limit ' . $from . ',' . $to;
     
         $result = mysql_query($query);

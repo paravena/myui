@@ -144,6 +144,9 @@ MY.TableGrid = Class.create({
                 if (self.options.addDraggingBehavior) self._makeAllColumnDraggable();
                 if (self.options.addSettingBehavior) self._applySettingMenuBehavior();
             }
+            if (self.keys != null) {
+                self.keys.stop();
+            }
             self.keys = new KeyTable(self);
             self._addKeyBehavior();
             if (self.pager) {
@@ -1489,7 +1492,7 @@ MY.TableGrid = Class.create({
         if (this.url) {
             this.request[this.options.sortColumnParameter] = cm[idx].id;
             this.request[this.options.ascDescFlagParameter] = ascDescFlg;
-            this._retrieveDataFromUrl(1);
+            this._retrieveDataFromUrl(1, true);
         } else if (this.rows && this.rows.length > 0) {
             var columnValues = this.getColumnValues(cm[idx].id, false);
             var hashIndex = {};
@@ -1626,7 +1629,6 @@ MY.TableGrid = Class.create({
                     self._toggleLoadingOverlay();
                     self.scrollTop = self.bodyDiv.scrollTop = 0;
                     if (firstTimeFlg) {
-                        if (self.keys != null) self.keys.stop();
                         self.bodyDiv.fire('dom:dataLoaded');
                     }
                 }
