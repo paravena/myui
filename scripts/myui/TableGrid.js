@@ -73,6 +73,7 @@ MY.TableGrid = Class.create({
         this.renderedRowsAllowed = 0; //Use for lazy rendering depends on bodyDiv height
         this.newRowsAdded = [];
         this.deletedRows = [];
+        this.deletedRowsIdx = [];
         if (this.options.addNewRowsToEndBehaviour) {
             this.options.addLazyRenderingBehavior = false;
         }
@@ -2053,6 +2054,7 @@ MY.TableGrid = Class.create({
     clear : function() {
         this.modifiedRows = [];
         this.deletedRows = [];
+        this.deletedRowsIdx = [];
         this.newRowsAdded = [];
     },
 
@@ -2103,6 +2105,7 @@ MY.TableGrid = Class.create({
             y = selectedRows[i];
             if (y >= 0 && y < this.rows.length) {
                 this.deletedRows.push(this.getRow(y));
+                this.deletedRowsIdx.push(y);
                 if (this.modifiedRows.indexOf(y) >= 0) {
                     var idx = this.modifiedRows.indexOf(y);
                     this.modifiedRows[idx] = null;
@@ -2134,6 +2137,7 @@ MY.TableGrid = Class.create({
     refresh : function() {
         this.modifiedRows = [];
         this.deletedRows = [];
+        this.deletedRowsIdx = [];
         this.newRowsAdded = [];
         this._retrieveDataFromUrl(1, true);
     },
@@ -2141,6 +2145,7 @@ MY.TableGrid = Class.create({
     empty : function() {
         this.modifiedRows = [];
         this.deletedRows = [];
+        this.deletedRowsIdx = [];
         this.newRowsAdded = [];
         this.rows = [];
         this.pager.total = 0;
@@ -2167,6 +2172,30 @@ MY.TableGrid = Class.create({
             result = row;
         }
         return result;
+    },
+
+    /**
+     * Returns all rows including those already added
+     * @return {Array}
+     */
+    getAllRows : function() {
+        var result = [];
+        var newRowsAdded = this.newRowsAdded;
+        var rows = this.rows;
+        var i = 0;
+        for (i = 0; i < newRowsAdded.length; i++) {
+            result.push(newRowsAdded[i]);
+        }
+        var deletedRowsIdx = this.deletedRowsIdx;
+        for (i = 0; i < rows.length; i++) {
+            if (deletedRowsIdx.indexOf(i) >= 0) continue;
+            result.push(rows[i]);
+        }
+        return result;
+    },
+
+    getRowCount : function() {
+        return this.getAllRows().length;
     }
 });
 
