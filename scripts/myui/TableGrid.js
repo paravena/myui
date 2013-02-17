@@ -138,8 +138,8 @@ MY.TableGrid = Class.create({
         this.bodyDiv.observe('dom:dataLoaded', function() {
             self._showLoaderSpinner();
             self.bodyTable = $('mtgBT' + id);
+            self._applyCellCallbacks();
             if (!self.alreadyLoadedFlg) {
-                self._applyCellCallbacks();
                 self._applyHeaderButtons();
                 self._makeAllColumnsResizable();
                 if (self.options.addDraggingBehavior) self._makeAllColumnDraggable();
